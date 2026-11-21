@@ -1,0 +1,2230 @@
+openapi: 3.0.3
+info:
+  title: Lost & Found Kampus UII - API Contract
+  version: 0.1.0-draft
+  description: |
+    Draft API contract berdasarkan **FSD Lost & Found Kampus UII v0.3**.
+    Status: DRAFT untuk divalidasi bareng BE, FE, DB, SOC, QA.
+
+    ## Konvensi
+    - Base path `/v1`. Semua waktu ISO 8601 dengan offset, disimpan UTC. FE menampilkan WIB.
+    - Nilai enum memakai snake_case. Label tampilan (Indonesia) ada di tabel "Status".
+    - Semua validasi dijalankan di server (FSD bag. 5). Pesan error per field.
+    - Format error seragam: lihat schema `Error`. Pesan ke pengguna **selalu umum**, detail teknis hanya di log server (SEC-19).
+    - Tiga kelompok endpoint: `public` (tanpa login, OTP WhatsApp), `staff` (satpam + admin), `admin` (admin + MFA).
+
+    ## Status (label FSD -> kode API)
+    | Objek | Kode API -> label |
+    |---|---|
+    | Laporan temuan | `menunggu_penyerahan` Menunggu Penyerahan, `diterima` Diterima, `ditolak` Ditolak, `kedaluwarsa` Kedaluwarsa |
+    | Barang | `barang_ditemukan` Barang Ditemukan, `proses_verifikasi` Proses Verifikasi, `telah_diambil` Telah Diambil, `ditahan` Ditahan, `dilimpahkan` Dilimpahkan |
+    | Laporan kehilangan | `aktif` Aktif, `memiliki_kandidat` Memiliki Kandidat, `selesai` Selesai, `ditutup` Ditutup |
+
+    ## Keamanan
+    - Staff: cookie sesi `lf_session` (HttpOnly, Secure, SameSite=Strict). Semua request ubah data wajib header `X-CSRF-Token` (didapat dari `POST /auth/login` atau `GET /auth/me`).
+    - Otorisasi dicek **per aksi dan per objek** di server (SEC-03). Default deny.
+    - Rate limit: respons `429` dengan header `Retry-After`. Angka batas di FSD 6.1.
+    - `Idempotency-Key` (UUID v4) wajib di semua `POST` publik pembuat laporan dan di aksi serah terima.
+      Key yang sama + body sama -> respons asli diulang (header `Idempotent-Replayed: true`). Key sama + body beda -> `422 IDEMPOTENCY_KEY_REUSED`. TTL key 24 jam.
+    - Tidak ada endpoint publik untuk cek status laporan kehilangan (BR-03).
+
+    ## Asumsi yang perlu dikonfirmasi
+    Lihat bagian `x-open-questions` di paling bawah file.
+  contact:
+    name: Tim Study Case Lost & Found
+servers:
+  - url: https://lostfound.example.uii.ac.id/v1
+    description: Placeholder (nama aplikasi & domain belum diputuskan, OI01)
+tags:
+  - name: public-meta
+    description: Data dropdown formulir publik
+  - name: public-otp
+    description: FR-01 verifikasi OTP WhatsApp
+  - name: public-report
+    description: FR-02, FR-03 laporan kehilangan dan temuan
+  - name: public-items
+    description: FR-04 daftar barang publik (allowlist)
+  - name: auth
+    description: FR-05 login dan sesi
+  - name: staff-intake
+    description: FR-06 penerimaan barang
+  - name: staff-items
+    description: Daftar barang, data rahasia, koreksi (FR-10, FR-12)
+  - name: staff-matching
+    description: FR-07, FR-08 hasil matching dan notifikasi
+  - name: staff-verification
+    description: FR-11 verifikasi dan serah terima
+  - name: staff-lost-reports
+    description: Laporan kehilangan (sisi satpam)
+  - name: admin
+    description: FR-13 panel admin BSI
+
+paths:
+  # ------------------------------------------------------------------ PUBLIC META
+  /public/meta/form-options:
+    get:
+      tags: [public-meta]
+      summary: Opsi dropdown formulir (kategori, warna, lokasi)
+      description: Hanya kategori dan lokasi `is_active = true`. Boleh di-cache singkat.
+      operationId: getFormOptions
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [categories, colors, locations]
+                properties:
+                  categories:
+                    type: array
+                    items: { $ref: '#/components/schemas/CategoryOption' }
+                  colors:
+                    type: array
+                    items: { $ref: '#/components/schemas/ColorOption' }
+                  locations:
+                    type: array
+                    items: { $ref: '#/components/schemas/LocationOption' }
+
+  # ------------------------------------------------------------------ PUBLIC OTP
+  /public/otp/request:
+    post:
+      tags: [public-otp]
+      summary: Minta kode OTP WhatsApp
+      description: |
+        Urutan di server (FR-01): normalisasi nomor ke +62 (tolak non-Indonesia) -> cek batas kirim ->
+        buat kode 6 digit (CSPRNG), simpan hash, berlaku 5 menit, terikat nomor + tujuan -> kirim lewat template autentikasi WhatsApp.
+
+        Batas: jeda 60 detik, 3/nomor/jam, 5/nomor/hari, 10/IP/jam. CAPTCHA wajib bila IP melewati batas atau terdeteksi bot.
+        Respons **sama** apa pun status nomor di sistem (tidak membocorkan apakah nomor punya laporan).
+        Kode OTP tidak pernah ada di respons, URL, atau log.
+      operationId: requestOtp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OtpRequest' }
+      responses:
+        '202':
+          description: Permintaan diterima. Kode dikirim ke WhatsApp.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OtpRequestAccepted' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403':
+          description: CAPTCHA diperlukan atau gagal (`CAPTCHA_REQUIRED`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /public/otp/verify:
+    post:
+      tags: [public-otp]
+      summary: Verifikasi kode OTP dan dapatkan token verifikasi
+      description: |
+        Maks. 5 percobaan salah per kode, lalu kode hangus dan nomor dikunci 15 menit (`429 OTP_LOCKED`).
+        Kode benar -> ditandai terpakai, server menerbitkan token verifikasi (berlaku 15 menit, sekali pakai,
+        terikat nomor + tujuan) yang wajib dibawa saat formulir dikirim.
+
+        Semua kegagalan (salah, kedaluwarsa, sudah dipakai, tidak ada) memakai pesan yang sama:
+        `Kode salah atau kedaluwarsa`.
+      operationId: verifyOtp
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OtpVerify' }
+      responses:
+        '200':
+          description: OTP benar.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OtpVerified' }
+        '400':
+          description: Kode salah / kedaluwarsa (`OTP_INVALID`) atau format salah (`VALIDATION_ERROR`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '429':
+          description: Nomor terkunci 15 menit (`OTP_LOCKED`) atau rate limit.
+          headers:
+            Retry-After: { $ref: '#/components/headers/RetryAfter' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  # ------------------------------------------------------------------ PUBLIC REPORTS
+  /public/lost-reports:
+    post:
+      tags: [public-report]
+      summary: Buat laporan kehilangan (FR-02)
+      description: |
+        Validasi server -> cek token OTP -> cek rate limit (3/nomor/jam, 10/IP/jam) -> simpan status `aktif`
+        dengan ID acak `HL-XXXX-XXXX` -> jalankan matching (FR-07).
+        Laporan kehilangan **tidak pernah** tampil di publik dan tidak ada endpoint cek status (BR-03).
+
+        Honeypot (`website`) terisi -> tolak diam-diam (lihat `x-open-questions` no. 6).
+      operationId: createLostReport
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LostReportCreate' }
+      responses:
+        '201':
+          description: Laporan tersimpan.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LostReportCreated' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '422': { $ref: '#/components/responses/TokenInvalidOrIdempotency' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /public/found-reports:
+    post:
+      tags: [public-report]
+      summary: Buat laporan temuan (FR-03)
+      description: |
+        Multipart karena ada foto opsional. Status awal `menunggu_penyerahan`, berlaku 1x24 jam
+        (`expires_at`), ID `TM-XXXX-XXXX`. Tidak tampil di publik dan tidak ikut matching sebelum diterima satpam.
+        Foto: JPG/PNG/WebP, maks. 5 MB, maks. 4000x4000 px, dicek magic bytes, di-encode ulang, EXIF dihapus (FSD 6.4).
+      operationId: createFoundReport
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: '#/components/schemas/FoundReportCreate' }
+            encoding:
+              photo:
+                contentType: image/jpeg, image/png, image/webp
+      responses:
+        '201':
+          description: Laporan tersimpan.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FoundReportCreated' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '413':
+          description: File lebih dari 5 MB (`FILE_TOO_LARGE`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '415':
+          description: Tipe file bukan JPG/PNG/WebP berdasarkan isi file (`UNSUPPORTED_MEDIA_TYPE`).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/TokenInvalidOrIdempotency' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  # ------------------------------------------------------------------ PUBLIC ITEMS
+  /public/items:
+    get:
+      tags: [public-items]
+      summary: Daftar barang publik (FR-04)
+      description: |
+        Hanya barang berstatus `barang_ditemukan`. Filter **hanya** kategori dan warna.
+        Urutan tetap (terbaru masuk lebih dulu) dan **tidak** bisa diubah klien. Parameter lain (`sort`, `fields`,
+        `include`, dst.) diabaikan atau ditolak 400, tidak pernah memengaruhi output
+        (sort berdasar kolom rahasia bisa membocorkan data lewat urutan).
+        Respons memakai DTO allowlist, difilter di server, bukan di frontend (SEC-04).
+      operationId: listPublicItems
+      security: []
+      parameters:
+        - name: category_id
+          in: query
+          schema: { type: integer }
+        - name: color
+          in: query
+          schema: { type: string }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/PublicItem' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '400': { $ref: '#/components/responses/ValidationError' }
+
+  /public/items/{item_id}:
+    get:
+      tags: [public-items]
+      summary: Detail barang publik (FR-04)
+      description: |
+        Field publik + langkah pengambilan di pos. Item berstatus selain `barang_ditemukan` -> `404` (sama persis
+        dengan item yang tidak ada, supaya status tidak bocor).
+      operationId: getPublicItem
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PublicItemDetail' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  # ------------------------------------------------------------------ AUTH
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Login staf (FR-05)
+      description: |
+        Hash Argon2id/bcrypt. 5x gagal berturut-turut -> akun terkunci 15 menit dan dicatat (penanda A5 di 3x gagal).
+        Limit 20 percobaan/IP/jam. Sesi dibuat ulang setelah login (anti session fixation).
+        Idle 15 menit -> logout otomatis, maksimal 8 jam. Admin wajib `mfa_code`.
+
+        **Semua** kegagalan (salah username, salah password, akun terkunci, nonaktif, MFA salah)
+        mengembalikan respons identik: `401` + `Username atau password salah`.
+      operationId: login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          description: Login berhasil. Header `Set-Cookie` berisi cookie sesi.
+          headers:
+            Set-Cookie:
+              schema: { type: string }
+              description: "lf_session=...; HttpOnly; Secure; SameSite=Strict; Path=/"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+        '401':
+          description: Kredensial salah / akun terkunci / nonaktif. Pesan sama untuk semua.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /auth/logout:
+    post:
+      tags: [auth]
+      summary: Logout
+      operationId: logout
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      responses:
+        '204':
+          description: Sesi dihancurkan.
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+
+  /auth/me:
+    get:
+      tags: [auth]
+      summary: Info sesi saat ini
+      operationId: getMe
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+
+  # ------------------------------------------------------------------ STAFF INTAKE
+  /staff/found-reports:
+    get:
+      tags: [staff-intake]
+      summary: Cari laporan temuan
+      description: Role `satpam`, `admin` (baca). Field rahasia tersamar; dibuka lewat endpoint `reveal`.
+      operationId: listFoundReports
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/FoundReportStatus' }
+        - name: q
+          in: query
+          description: Cari persis berdasarkan ID laporan (TM-...). Bukan pencarian teks bebas.
+          schema: { type: string }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/StaffFoundReport' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /staff/found-reports/{report_id}:
+    get:
+      tags: [staff-intake]
+      summary: Detail laporan temuan (tersamar)
+      operationId: getFoundReport
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/FoundReportId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffFoundReport' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /staff/found-reports/{report_id}/receive:
+    post:
+      tags: [staff-intake]
+      summary: Terima barang dari laporan temuan (FR-06)
+      description: |
+        Role `satpam`. Foto barang **wajib** (BR-11), tanpa foto -> `400 PHOTO_REQUIRED` (AC-06).
+        Dalam satu transaksi: buat `item` (Item ID berurutan untuk label rak), laporan -> `diterima`, item -> `barang_ditemukan`,
+        tulis `item_history` + `audit_log`. Data asli penemu (category/color/description di found_report) tidak berubah;
+        penyesuaian kategori/warna oleh satpam disimpan di `item` dan tercatat (penanda A4).
+        Setelah commit: antre WhatsApp ke penemu dan jalankan matching (di luar transaksi, gagalnya WA tidak membatalkan penerimaan, NFR-05).
+        Hanya laporan `menunggu_penyerahan` yang belum kedaluwarsa yang bisa diterima.
+      operationId: receiveFoundReport
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/FoundReportId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: '#/components/schemas/ReceiveItemForm' }
+            encoding:
+              photo:
+                contentType: image/jpeg, image/png, image/webp
+      responses:
+        '201':
+          description: Barang diterima.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ItemReceived' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /staff/found-reports/{report_id}/reject:
+    post:
+      tags: [staff-intake]
+      summary: Tolak laporan temuan
+      description: Role `satpam`. Alasan wajib. Transisi `menunggu_penyerahan -> ditolak`.
+      operationId: rejectFoundReport
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/FoundReportId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReasonBody' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffFoundReport' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /staff/items/walk-in:
+    post:
+      tags: [staff-intake]
+      summary: Terima barang dari penemu tanpa laporan (UC-07, AC-07)
+      description: |
+        Role `satpam`. Satpam mengisi formulir atas nama penemu asli. Identitas satpam pencatat disimpan terpisah
+        (`created_by_staff_id`), tidak menimpa data penemu. `source = pos`. Membuat `found_report` + `item` dalam satu transaksi.
+        Pengecekan duplikat: ada laporan TM aktif dengan kategori + warna sama dalam 24 jam terakhir -> `409 DUPLICATE_SUSPECTED`
+        (satpam bisa kirim ulang dengan `confirm_not_duplicate = true`, tercatat di audit).
+        Nomor WhatsApp penemu di jalur ini **tidak** diverifikasi OTP (lihat `x-open-questions` no. 4).
+      operationId: createWalkInItem
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: '#/components/schemas/WalkInForm' }
+            encoding:
+              photo:
+                contentType: image/jpeg, image/png, image/webp
+      responses:
+        '201':
+          description: Barang diterima.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ItemReceived' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  # ------------------------------------------------------------------ STAFF ITEMS
+  /staff/items:
+    get:
+      tags: [staff-items]
+      summary: Daftar barang (tersamar)
+      operationId: listStaffItems
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/ItemStatus' }
+        - name: item_id
+          in: query
+          description: Cari persis berdasarkan Item ID.
+          schema: { type: string }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/StaffItem' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /staff/items/{item_id}:
+    get:
+      tags: [staff-items]
+      summary: Detail barang (tersamar)
+      description: Deskripsi, foto, lokasi, waktu penemuan dan kontak **tidak** disertakan. Gunakan `reveal`.
+      operationId: getStaffItem
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffItem' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /staff/items/{item_id}/reveal:
+    post:
+      tags: [staff-items]
+      summary: Buka data rahasia barang (FR-10)
+      description: |
+        Role `satpam`. **Setiap pemanggilan** menulis `audit_log` (satpam, waktu, objek, field yang dibuka,
+        apakah sedang `proses_verifikasi`). Lebih dari 3 pembukaan/jam/satpam di luar Proses Verifikasi -> penanda A3.
+        URL foto ditandatangani, berlaku 5 menit. Tidak boleh di-cache (`Cache-Control: no-store`).
+        Dipakai POST (bukan GET) karena punya efek samping (audit).
+      operationId: revealItem
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fields]
+              properties:
+                fields:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    enum: [description, photo, found_location, found_at, finder_name, finder_whatsapp]
+      responses:
+        '200':
+          description: OK
+          headers:
+            Cache-Control:
+              schema: { type: string, example: no-store }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ItemSecrets' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /staff/items/{item_id}/corrections:
+    post:
+      tags: [staff-items]
+      summary: Koreksi data barang (FR-12)
+      description: |
+        Role `satpam`. Boleh mengoreksi `category_id`, `color`, `condition`, `storage_rack`. Alasan wajib.
+        Hanya mengubah tabel `item`; data asli penemu tidak berubah. Audit menyimpan nilai lama dan baru.
+        Perubahan kategori/warna setelah diterima -> penanda A4. Koreksi memicu matching ulang.
+      operationId: correctItem
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ItemCorrection' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffItem' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /staff/items/{item_id}/history:
+    get:
+      tags: [staff-items]
+      summary: Riwayat status barang (FR-09)
+      operationId: getItemHistory
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/ItemHistoryEntry' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  # ------------------------------------------------------------------ STAFF LOST REPORTS
+  /staff/lost-reports:
+    get:
+      tags: [staff-lost-reports]
+      summary: Daftar laporan kehilangan (tersamar)
+      operationId: listLostReports
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/LostReportStatus' }
+        - name: report_id
+          in: query
+          description: Cari persis berdasarkan ID laporan (HL-...).
+          schema: { type: string }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/StaffLostReport' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /staff/lost-reports/{report_id}/reveal:
+    post:
+      tags: [staff-lost-reports]
+      summary: Buka data rahasia laporan kehilangan (FR-10)
+      description: Sama dengan reveal barang. Tercatat di audit, respons `Cache-Control no-store`.
+      operationId: revealLostReport
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/LostReportId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fields]
+              properties:
+                fields:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    enum: [description, lost_location, lost_at, reporter_name, reporter_whatsapp]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LostReportSecrets' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /staff/lost-reports/{report_id}/close:
+    post:
+      tags: [staff-lost-reports]
+      summary: Tutup laporan kehilangan (UC-12)
+      description: Role `satpam`. Alasan wajib. `aktif`/`memiliki_kandidat` -> `ditutup`. (Penutupan otomatis 60 hari dilakukan job harian.)
+      operationId: closeLostReport
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/LostReportId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReasonBody' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffLostReport' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  # ------------------------------------------------------------------ MATCHING & NOTIF
+  /staff/matches:
+    get:
+      tags: [staff-matching]
+      summary: Daftar hasil matching (UC-08)
+      description: |
+        Hanya `tinggi` dan `sedang` yang ditampilkan (`rendah` disimpan untuk analisis, tidak ditampilkan).
+        Urutan: `final_score` turun, lalu `description_priority` turun. Rincian per komponen disertakan.
+      operationId: listMatches
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: band
+          in: query
+          schema: { type: string, enum: [tinggi, sedang] }
+        - name: needs_review
+          in: query
+          description: true = hanya yang butuh dicek (sedang, atau tinggi yang masuk antrean karena batas harian WA).
+          schema: { type: boolean }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/MatchResult' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /staff/matches/{matching_id}/notify:
+    post:
+      tags: [staff-matching]
+      summary: Kirim WhatsApp kecocokan manual (FR-08)
+      description: |
+        Role `satpam`. Satu notifikasi per pasangan laporan + barang: sudah pernah dikirim -> `409 ALREADY_NOTIFIED`.
+        Isi pesan memakai template tetap, tanpa tautan dan tanpa detail barang.
+      operationId: notifyMatch
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - name: matching_id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        '202':
+          description: Notifikasi masuk antrean.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Notification' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /staff/notifications:
+    get:
+      tags: [staff-matching]
+      summary: Daftar notifikasi WhatsApp
+      operationId: listNotifications
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/NotificationStatus' }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Notification' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /staff/notifications/{notification_id}/resend:
+    post:
+      tags: [staff-matching]
+      summary: Kirim ulang notifikasi yang gagal (UC-14)
+      description: Hanya notifikasi berstatus `gagal`. Pengiriman ulang otomatis maks. 3x (jeda 1, 5, 30 menit) sudah dilakukan sistem sebelum status `gagal`.
+      operationId: resendNotification
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - name: notification_id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        '202':
+          description: Masuk antrean.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Notification' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  # ------------------------------------------------------------------ VERIFICATION
+  /staff/items/{item_id}/verifications:
+    post:
+      tags: [staff-verification]
+      summary: Mulai verifikasi kepemilikan (FR-11 langkah 1-2)
+      description: |
+        Role `satpam`. Item `barang_ditemukan -> proses_verifikasi` secara atomik (kunci database, satu proses per barang).
+        Respons berisi penanda A1/A2 aktif untuk ditampilkan ke satpam. Tanpa aksi 30 menit -> job mengembalikan item ke `barang_ditemukan`.
+        Hanya barang `barang_ditemukan` yang bisa diverifikasi (`ditahan` tidak).
+      operationId: startVerification
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lost_report_id:
+                  type: string
+                  description: ID laporan kehilangan yang disebut pemohon (opsional).
+                  example: HL-3M7R-9DQ2
+      responses:
+        '201':
+          description: Verifikasi dimulai.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Verification' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /staff/verifications/{claim_id}/reject:
+    post:
+      tags: [staff-verification]
+      summary: Hasil verifikasi - Tidak cocok (FR-11 langkah 7)
+      description: Alasan wajib. Klaim ditolak tercatat, item kembali `barang_ditemukan`, penanda A1/A2 diperbarui.
+      operationId: rejectVerification
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ClaimId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReasonBody' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Verification' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /staff/verifications/{claim_id}/handover:
+    post:
+      tags: [staff-verification]
+      summary: Hasil verifikasi - Cocok, serah terima (FR-11 langkah 5-6)
+      description: |
+        Role `satpam` yang memulai verifikasi tersebut (admin tidak boleh menyerahkan barang). Foto serah terima **wajib**.
+        Dilarang mengirim foto KTP/KTM dan nomor identitas lengkap (BR-10): hanya `id_type`, nama sesuai identitas, 4 digit terakhir.
+
+        Dalam satu transaksi dengan row lock: item `proses_verifikasi -> telah_diambil`, klaim `cocok`, laporan kehilangan terkait `selesai`,
+        `item_history` + `audit_log`. Dua permintaan bersamaan -> tepat satu sukses, lainnya `409 ALREADY_HANDED_OVER` atau `409 INVALID_STATE_TRANSITION`.
+        Bila ada penanda A1/A2 aktif, `flag_note` wajib.
+        Nomor WhatsApp penerima beda dari pelapor kehilangan terkait -> penanda A7 + WhatsApp peringatan ke pelapor asli.
+        WhatsApp bukti dikirim ke penerima dan penemu (di luar transaksi).
+      operationId: handoverItem
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ClaimId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: '#/components/schemas/HandoverForm' }
+            encoding:
+              handover_photo:
+                contentType: image/jpeg, image/png, image/webp
+      responses:
+        '200':
+          description: Serah terima selesai.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Verification' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  # ------------------------------------------------------------------ ADMIN
+  /admin/staff:
+    get:
+      tags: [admin]
+      summary: Daftar akun staf
+      operationId: adminListStaff
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/StaffAccount' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      tags: [admin]
+      summary: Buat akun satpam
+      description: Role `admin`. Satu akun satu orang. Password awal sementara, wajib diganti saat login pertama (lihat `x-open-questions` no. 8).
+      operationId: adminCreateStaff
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/StaffCreate' }
+      responses:
+        '201':
+          description: Dibuat.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffAccount' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /admin/staff/{staff_id}/deactivate:
+    post:
+      tags: [admin]
+      summary: Nonaktifkan akun staf
+      description: Admin tidak bisa mengubah akunnya sendiri tanpa admin lain (`403 SELF_MODIFICATION_FORBIDDEN`). Sesi aktif akun dicabut.
+      operationId: adminDeactivateStaff
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/StaffId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReasonBody' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffAccount' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /admin/staff/{staff_id}/unlock:
+    post:
+      tags: [admin]
+      summary: Buka kunci akun staf
+      description: Hanya admin. Satpam tidak boleh membuka kunci akunnya sendiri.
+      operationId: adminUnlockStaff
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/StaffId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffAccount' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /admin/staff/{staff_id}/reset-password:
+    post:
+      tags: [admin]
+      summary: Reset password akun staf
+      operationId: adminResetPassword
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/StaffId'
+      responses:
+        '204':
+          description: Password sementara dibuat; sesi akun dicabut.
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /admin/audit-logs:
+    get:
+      tags: [admin]
+      summary: Baca audit log (FR-13)
+      description: Read-only. Tidak ada endpoint ubah/hapus audit log. Membaca audit log sendiri tercatat.
+      operationId: adminListAuditLogs
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: staff_id
+          in: query
+          schema: { type: integer }
+        - name: action
+          in: query
+          schema: { type: string }
+        - name: entity_type
+          in: query
+          schema: { type: string }
+        - name: entity_id
+          in: query
+          schema: { type: string }
+        - name: from
+          in: query
+          schema: { type: string, format: date-time }
+        - name: to
+          in: query
+          schema: { type: string, format: date-time }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/AuditLogEntry' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/audit-logs/export:
+    get:
+      tags: [admin]
+      summary: Ekspor audit log CSV
+      description: Filter sama dengan list. Ekspor itu sendiri tercatat di audit log. Nomor WhatsApp tidak pernah utuh.
+      operationId: adminExportAuditLogs
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, format: date-time }
+        - name: to
+          in: query
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: CSV
+          content:
+            text/csv:
+              schema: { type: string, format: binary }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/audit-logs/verify-integrity:
+    post:
+      tags: [admin]
+      summary: Cek integritas rantai hash audit log
+      description: Hitung ulang `entry_hash` dari `prev_hash` berurutan. Melaporkan entri pertama yang rantainya putus.
+      operationId: adminVerifyAuditIntegrity
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, checked_entries]
+                properties:
+                  ok: { type: boolean }
+                  checked_entries: { type: integer, format: int64 }
+                  first_broken_audit_id: { type: integer, format: int64, nullable: true }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/anomaly-flags:
+    get:
+      tags: [admin]
+      summary: Daftar penanda anomali A1-A8
+      operationId: adminListAnomalyFlags
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: rule_id
+          in: query
+          schema: { type: string, enum: [A1, A2, A3, A4, A5, A6, A7, A8] }
+        - name: status
+          in: query
+          schema: { type: string, enum: [baru, ditinjau] }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/AnomalyFlag' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/anomaly-flags/{flag_id}/review:
+    post:
+      tags: [admin]
+      summary: Tandai penanda "Ditinjau" dengan catatan
+      operationId: adminReviewAnomalyFlag
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - name: flag_id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [review_note]
+              properties:
+                review_note: { type: string, minLength: 1, maxLength: 500 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AnomalyFlag' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /admin/settings:
+    get:
+      tags: [admin]
+      summary: Baca parameter (bobot, ambang, batas, masa simpan)
+      operationId: adminGetSettings
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Setting' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    patch:
+      tags: [admin]
+      summary: Ubah parameter
+      description: |
+        Setiap perubahan tercatat (nilai lama dan baru). Validasi: jumlah bobot matching harus 1,00;
+        `threshold_mid < threshold_high`; batas rate limit > 0. Perubahan berlaku untuk matching berikutnya, tidak menghitung ulang hasil lama.
+      operationId: adminUpdateSettings
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [changes, reason]
+              properties:
+                changes:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required: [key, value]
+                    properties:
+                      key: { type: string, example: match.weight.color }
+                      value: { type: string, example: '0.35' }
+                reason: { type: string, minLength: 1, maxLength: 500 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Setting' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/items/{item_id}/hold:
+    post:
+      tags: [admin]
+      summary: Tahan barang (sengketa / insiden)
+      description: '`barang_ditemukan -> ditahan`. Barang `ditahan` tidak bisa diverifikasi atau diserahkan sampai admin melepas (BR-19). Alasan wajib.'
+      operationId: adminHoldItem
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReasonBody' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffItem' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /admin/items/{item_id}/release:
+    post:
+      tags: [admin]
+      summary: Lepas barang yang ditahan
+      description: '`ditahan -> barang_ditemukan`. Hanya admin (FR-09).'
+      operationId: adminReleaseItem
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReasonBody' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffItem' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /admin/items/aged:
+    get:
+      tags: [admin]
+      summary: Barang melewati masa simpan (> 30 hari)
+      operationId: adminListAgedItems
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, page, page_size, total]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/StaffItem' }
+                  page: { type: integer }
+                  page_size: { type: integer }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/items/{item_id}/transfer:
+    post:
+      tags: [admin]
+      summary: Limpahkan barang sesuai SOP (> 30 hari)
+      description: '`barang_ditemukan -> dilimpahkan`. Hanya jika lewat masa simpan 30 hari. SOP final: OI07.'
+      operationId: adminTransferItem
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason, destination_unit]
+              properties:
+                reason: { type: string, minLength: 1, maxLength: 500 }
+                destination_unit: { type: string, maxLength: 120 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StaffItem' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /admin/categories:
+    get:
+      tags: [admin]
+      summary: Daftar kategori (termasuk nonaktif)
+      operationId: adminListCategories
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/CategoryAdmin' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      tags: [admin]
+      summary: Tambah kategori
+      operationId: adminCreateCategory
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CategoryWrite' }
+      responses:
+        '201':
+          description: Dibuat.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CategoryAdmin' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /admin/locations:
+    get:
+      tags: [admin]
+      summary: Daftar lokasi (termasuk nonaktif)
+      operationId: adminListLocations
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/LocationAdmin' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      tags: [admin]
+      summary: Tambah lokasi
+      operationId: adminCreateLocation
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LocationWrite' }
+      responses:
+        '201':
+          description: Dibuat.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LocationAdmin' }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+# ====================================================================== COMPONENTS
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: lf_session
+    csrfToken:
+      type: apiKey
+      in: header
+      name: X-CSRF-Token
+      description: Wajib di semua request ubah data oleh staf.
+
+  headers:
+    RetryAfter:
+      description: Detik sampai boleh mencoba lagi.
+      schema: { type: integer }
+
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: UUID v4 per pengiriman formulir. Dibuat FE saat formulir dibuka, bukan saat tombol diklik.
+      schema: { type: string, format: uuid }
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      name: page_size
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 50, default: 20 }
+    ItemId:
+      name: item_id
+      in: path
+      required: true
+      description: Item ID (label rak).
+      schema: { type: string, example: B-0462 }
+    FoundReportId:
+      name: report_id
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/FoundReportCode' }
+    LostReportId:
+      name: report_id
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/LostReportCode' }
+    ClaimId:
+      name: claim_id
+      in: path
+      required: true
+      schema: { type: integer, format: int64 }
+    StaffId:
+      name: staff_id
+      in: path
+      required: true
+      schema: { type: integer }
+
+  responses:
+    ValidationError:
+      description: Input tidak valid (`VALIDATION_ERROR`). Daftar `fields` per field.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthenticated:
+      description: Belum login / sesi habis (`UNAUTHENTICATED`).
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Role atau objek tidak diizinkan (`FORBIDDEN`), atau CSRF tidak valid (`CSRF_INVALID`).
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Tidak ditemukan (`NOT_FOUND`). Juga dipakai untuk objek yang tidak boleh diketahui keberadaannya.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Conflict:
+      description: |
+        Konflik status atau aturan bisnis. Kode: `INVALID_STATE_TRANSITION`, `ALREADY_HANDED_OVER`,
+        `VERIFICATION_IN_PROGRESS`, `ALREADY_NOTIFIED`, `DUPLICATE_SUSPECTED`, `ITEM_ON_HOLD`, `FLAG_NOTE_REQUIRED`, `USERNAME_TAKEN`.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    RateLimited:
+      description: Kena batas (`RATE_LIMITED`). Header `Retry-After` diisi.
+      headers:
+        Retry-After: { $ref: '#/components/headers/RetryAfter' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    TokenInvalidOrIdempotency:
+      description: |
+        Token verifikasi OTP palsu, kedaluwarsa, sudah dipakai, atau milik nomor/tujuan lain
+        (`VERIFICATION_TOKEN_INVALID`, satu kode untuk semua alasan), atau `IDEMPOTENCY_KEY_REUSED`.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    ServiceUnavailable:
+      description: Layanan WhatsApp/penyimpanan counter tidak tersedia (`SERVICE_UNAVAILABLE`). Fail closed untuk OTP.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+
+  schemas:
+    # ---------------------------------------------------------------- common
+    Error:
+      type: object
+      required: [code, message, request_id]
+      properties:
+        code:
+          type: string
+          description: Kode mesin yang stabil.
+          example: VALIDATION_ERROR
+        message:
+          type: string
+          description: Pesan umum untuk pengguna. Tanpa detail teknis atau data orang lain.
+          example: Input tidak valid.
+        request_id:
+          type: string
+          description: Untuk dicocokkan dengan log server.
+        fields:
+          type: array
+          description: Hanya untuk `VALIDATION_ERROR`.
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field: { type: string, example: description }
+              message: { type: string, example: Deskripsi minimal 10 karakter. }
+
+    ReasonBody:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 1, maxLength: 500 }
+
+    LostReportCode:
+      type: string
+      pattern: '^HL-[A-Z0-9]{4}-[A-Z0-9]{4}$'
+      example: HL-3M7R-9DQ2
+    FoundReportCode:
+      type: string
+      pattern: '^TM-[A-Z0-9]{4}-[A-Z0-9]{4}$'
+      example: TM-8K2P-4WXN
+
+    FoundReportStatus:
+      type: string
+      enum: [menunggu_penyerahan, diterima, ditolak, kedaluwarsa]
+    ItemStatus:
+      type: string
+      enum: [barang_ditemukan, proses_verifikasi, telah_diambil, ditahan, dilimpahkan]
+    LostReportStatus:
+      type: string
+      enum: [aktif, memiliki_kandidat, selesai, ditutup]
+    NotificationStatus:
+      type: string
+      enum: [pending, terkirim, gagal, ulang]
+    MatchBand:
+      type: string
+      enum: [tinggi, sedang, rendah, data_tidak_memadai]
+    Role:
+      type: string
+      enum: [satpam, admin]
+
+    # ---------------------------------------------------------------- options
+    CategoryOption:
+      type: object
+      required: [category_id, name]
+      properties:
+        category_id: { type: integer }
+        name: { type: string, example: Dompet }
+    ColorOption:
+      type: object
+      required: [code, label]
+      properties:
+        code: { type: string, example: hitam, description: "Kode `lainnya` = komponen warna tidak dihitung di matching." }
+        label: { type: string, example: Hitam }
+    LocationOption:
+      type: object
+      required: [location_id, name]
+      properties:
+        location_id: { type: integer }
+        name: { type: string, example: Perpustakaan Pusat }
+        is_other:
+          type: boolean
+          description: true untuk opsi "Lainnya" (komponen lokasi tidak dihitung).
+
+    # ---------------------------------------------------------------- OTP
+    PhoneNumber:
+      type: string
+      description: Format `08...` atau `+62...`. Server menormalkan ke `+62` dan menolak non-Indonesia. 10-14 digit setelah 0 (lihat `x-open-questions` no. 5).
+      example: '081234567890'
+    OtpPurpose:
+      type: string
+      enum: [lapor_hilang, lapor_temuan]
+    OtpRequest:
+      type: object
+      required: [phone, purpose]
+      properties:
+        phone: { $ref: '#/components/schemas/PhoneNumber' }
+        purpose: { $ref: '#/components/schemas/OtpPurpose' }
+        captcha_token:
+          type: string
+          description: Wajib bila server sebelumnya membalas `CAPTCHA_REQUIRED`.
+    OtpRequestAccepted:
+      type: object
+      required: [expires_in, resend_after]
+      properties:
+        expires_in: { type: integer, example: 300, description: Detik masa berlaku kode. }
+        resend_after: { type: integer, example: 60, description: Detik sampai boleh minta ulang. }
+    OtpVerify:
+      type: object
+      required: [phone, purpose, code]
+      properties:
+        phone: { $ref: '#/components/schemas/PhoneNumber' }
+        purpose: { $ref: '#/components/schemas/OtpPurpose' }
+        code:
+          type: string
+          pattern: '^[0-9]{6}$'
+    OtpVerified:
+      type: object
+      required: [verification_token, expires_in]
+      properties:
+        verification_token:
+          type: string
+          description: Sekali pakai, terikat nomor + tujuan. Jangan dicatat di log atau URL.
+        expires_in: { type: integer, example: 900 }
+
+    # ---------------------------------------------------------------- public reports
+    LostReportCreate:
+      type: object
+      required: [verification_token, category_id, color, location_id, lost_at, description, reporter_name, reporter_whatsapp, consent]
+      properties:
+        verification_token: { type: string }
+        category_id: { type: integer }
+        color: { type: string, example: hitam }
+        location_id: { type: integer }
+        lost_at:
+          type: string
+          format: date-time
+          description: Perkiraan waktu hilang. Tidak di masa depan, tidak lebih dari 60 hari lalu.
+        description:
+          type: string
+          minLength: 10
+          maxLength: 300
+          description: Karakter kontrol (kecuali baris baru) ditolak. Disimpan apa adanya, di-escape saat tampil.
+        reporter_name:
+          type: string
+          minLength: 3
+          maxLength: 60
+          description: Huruf, spasi, titik, apostrof, tanda hubung.
+        reporter_whatsapp: { $ref: '#/components/schemas/PhoneNumber' }
+        consent:
+          type: boolean
+          enum: [true]
+          description: Waktu persetujuan disimpan server.
+        website:
+          type: string
+          description: Honeypot. Disembunyikan di UI. Harus kosong.
+    LostReportCreated:
+      type: object
+      required: [report_id, status]
+      properties:
+        report_id: { $ref: '#/components/schemas/LostReportCode' }
+        status: { type: string, enum: [aktif] }
+        notice:
+          type: string
+          example: Kabar kecocokan dikirim lewat WhatsApp.
+
+    FoundReportCreate:
+      type: object
+      required: [verification_token, category_id, color, location_id, found_at, description, reporter_whatsapp, consent]
+      properties:
+        verification_token: { type: string }
+        category_id: { type: integer }
+        color: { type: string }
+        location_id: { type: integer }
+        found_at: { type: string, format: date-time }
+        description: { type: string, minLength: 10, maxLength: 300 }
+        photo: { type: string, format: binary }
+        finder_name:
+          type: string
+          maxLength: 60
+          description: Opsional.
+        reporter_whatsapp: { $ref: '#/components/schemas/PhoneNumber' }
+        consent: { type: boolean }
+        website: { type: string, description: Honeypot. }
+    FoundReportCreated:
+      type: object
+      required: [report_id, status, expires_at, handover_info]
+      properties:
+        report_id: { $ref: '#/components/schemas/FoundReportCode' }
+        status: { type: string, enum: [menunggu_penyerahan] }
+        expires_at:
+          type: string
+          format: date-time
+          description: created_at + 24 jam.
+        handover_info:
+          type: object
+          required: [post_name, service_hours]
+          properties:
+            post_name: { type: string, example: Pos Satpam Gedung Rektorat }
+            service_hours: { type: string, example: 'Senin-Jumat 07.00-17.00' }
+
+    # ---------------------------------------------------------------- public items (ALLOWLIST)
+    PublicItem:
+      type: object
+      description: |
+        **DTO allowlist FR-04 / SEC-04.** Hanya field di bawah. `additionalProperties: false`:
+        QA (AC-S04) mengecek respons tidak punya key lain.
+        Tidak pernah: foto, deskripsi, nama bebas, lokasi, tanggal/jam penemuan, rak, data penemu.
+      additionalProperties: false
+      required: [item_id, category, color, post]
+      properties:
+        item_id: { type: string, example: B-0462 }
+        category:
+          type: object
+          additionalProperties: false
+          required: [category_id, name]
+          properties:
+            category_id: { type: integer }
+            name: { type: string }
+        color:
+          type: object
+          additionalProperties: false
+          required: [code, label]
+          properties:
+            code: { type: string }
+            label: { type: string }
+        post:
+          type: object
+          additionalProperties: false
+          required: [name, service_hours]
+          properties:
+            name: { type: string }
+            service_hours: { type: string }
+        received_label:
+          type: string
+          enum: [hari_ini, kemarin, minggu_ini, lebih_lama]
+          description: Opsional, bentuk kasar "masuk pos". Dihitung di server, bukan timestamp.
+    PublicItemDetail:
+      allOf:
+        - $ref: '#/components/schemas/PublicItem'
+        - type: object
+          required: [pickup_steps]
+          properties:
+            pickup_steps:
+              type: array
+              description: Langkah pengambilan di pos + kontak BSI.
+              items: { type: string }
+            bsi_contact:
+              type: string
+              description: Kontak BSI untuk pengaduan (OI08).
+
+    # ---------------------------------------------------------------- auth
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string, maxLength: 64 }
+        password: { type: string, minLength: 12, maxLength: 128, format: password }
+        mfa_code:
+          type: string
+          pattern: '^[0-9]{6}$'
+          description: Wajib untuk admin.
+    Session:
+      type: object
+      required: [staff, csrf_token, idle_timeout_seconds, session_expires_at]
+      properties:
+        staff:
+          type: object
+          required: [staff_id, name, role]
+          properties:
+            staff_id: { type: integer }
+            name: { type: string }
+            role: { $ref: '#/components/schemas/Role' }
+        csrf_token: { type: string }
+        idle_timeout_seconds: { type: integer, example: 900 }
+        session_expires_at:
+          type: string
+          format: date-time
+          description: Batas mutlak 8 jam sejak login.
+
+    # ---------------------------------------------------------------- staff views (masked)
+    MaskedPhone:
+      type: string
+      example: 0812••••890
+    StaffFoundReport:
+      type: object
+      required: [report_id, status, category, color, source, expires_at, created_at, has_secret]
+      properties:
+        report_id: { $ref: '#/components/schemas/FoundReportCode' }
+        status: { $ref: '#/components/schemas/FoundReportStatus' }
+        category: { $ref: '#/components/schemas/CategoryOption' }
+        color: { type: string }
+        source: { type: string, enum: [aplikasi, pos] }
+        finder_whatsapp_masked: { $ref: '#/components/schemas/MaskedPhone' }
+        expires_at: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+        has_secret:
+          type: boolean
+          description: Ada deskripsi/foto/lokasi yang bisa dibuka lewat `reveal`.
+    StaffItem:
+      type: object
+      required: [item_id, status, category, color, condition, storage_rack, received_at, received_by, active_flags]
+      properties:
+        item_id: { type: string, example: B-0462 }
+        found_report_id: { $ref: '#/components/schemas/FoundReportCode' }
+        status: { $ref: '#/components/schemas/ItemStatus' }
+        category: { $ref: '#/components/schemas/CategoryOption' }
+        color: { type: string }
+        condition: { type: string, example: baik }
+        storage_rack: { type: string, example: Rak B-2 }
+        received_at: { type: string, format: date-time }
+        received_by:
+          type: object
+          properties:
+            staff_id: { type: integer }
+            name: { type: string }
+        active_flags:
+          type: array
+          description: Penanda A1/A2 yang relevan untuk barang ini (ditampilkan saat verifikasi).
+          items: { type: string, enum: [A1, A2] }
+    ItemSecrets:
+      type: object
+      description: Hanya field yang diminta. Field lain tidak ada di respons.
+      properties:
+        item_id: { type: string }
+        in_verification: { type: boolean }
+        description: { type: string }
+        photo:
+          type: object
+          properties:
+            url: { type: string, description: URL bertanda tangan, berlaku 5 menit. }
+            expires_at: { type: string, format: date-time }
+        found_location: { $ref: '#/components/schemas/LocationOption' }
+        found_at: { type: string, format: date-time }
+        finder_name: { type: string }
+        finder_whatsapp: { type: string }
+    StaffLostReport:
+      type: object
+      required: [report_id, status, category, color, created_at, has_secret]
+      properties:
+        report_id: { $ref: '#/components/schemas/LostReportCode' }
+        status: { $ref: '#/components/schemas/LostReportStatus' }
+        category: { $ref: '#/components/schemas/CategoryOption' }
+        color: { type: string }
+        reporter_whatsapp_masked: { $ref: '#/components/schemas/MaskedPhone' }
+        closed_reason: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+        has_secret: { type: boolean }
+    LostReportSecrets:
+      type: object
+      properties:
+        report_id: { type: string }
+        description: { type: string }
+        lost_location: { $ref: '#/components/schemas/LocationOption' }
+        lost_at: { type: string, format: date-time }
+        reporter_name: { type: string }
+        reporter_whatsapp: { type: string }
+
+    ReceiveItemForm:
+      type: object
+      required: [category_id, color, condition, storage_rack, photo]
+      properties:
+        category_id: { type: integer, description: "Boleh berbeda dari laporan penemu; perbedaan dicatat (A4)." }
+        color: { type: string }
+        condition: { type: string, example: baik }
+        storage_rack: { type: string, maxLength: 30 }
+        photo: { type: string, format: binary }
+    WalkInForm:
+      type: object
+      required: [category_id, color, location_id, found_at, description, finder_whatsapp, condition, storage_rack, photo]
+      properties:
+        category_id: { type: integer }
+        color: { type: string }
+        location_id: { type: integer }
+        found_at: { type: string, format: date-time }
+        description: { type: string, minLength: 10, maxLength: 300 }
+        finder_name: { type: string, maxLength: 60 }
+        finder_whatsapp: { $ref: '#/components/schemas/PhoneNumber' }
+        condition: { type: string }
+        storage_rack: { type: string }
+        photo: { type: string, format: binary }
+        confirm_not_duplicate: { type: boolean, default: false }
+    ItemReceived:
+      type: object
+      required: [item_id, status, storage_rack, received_at]
+      properties:
+        item_id: { type: string, example: B-0462 }
+        status: { type: string, enum: [barang_ditemukan] }
+        storage_rack: { type: string }
+        received_at: { type: string, format: date-time }
+        label_to_print: { type: string, description: Teks label rak (Item ID). }
+    ItemCorrection:
+      type: object
+      required: [reason]
+      minProperties: 2
+      properties:
+        category_id: { type: integer }
+        color: { type: string }
+        condition: { type: string }
+        storage_rack: { type: string }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+    ItemHistoryEntry:
+      type: object
+      required: [history_id, previous_status, new_status, staff, changed_at]
+      properties:
+        history_id: { type: integer, format: int64 }
+        previous_status: { type: string, nullable: true }
+        new_status: { type: string }
+        staff:
+          type: object
+          properties:
+            staff_id: { type: integer, nullable: true }
+            name: { type: string, nullable: true }
+        reason: { type: string, nullable: true }
+        changed_at: { type: string, format: date-time }
+
+    # ---------------------------------------------------------------- matching / notification
+    MatchResult:
+      type: object
+      required: [matching_id, lost_report_id, item_id, band, final_score, color_score, location_score, time_score, description_priority, notified, processed_at]
+      properties:
+        matching_id: { type: integer, format: int64 }
+        lost_report_id: { $ref: '#/components/schemas/LostReportCode' }
+        item_id: { type: string }
+        category: { type: string }
+        band: { $ref: '#/components/schemas/MatchBand' }
+        final_score:
+          type: number
+          format: double
+          nullable: true
+          description: 0-100, 2 desimal. null bila `data_tidak_memadai`.
+        color_score: { type: number, nullable: true, description: "null = tidak dihitung (Lainnya)." }
+        location_score: { type: number, nullable: true }
+        time_score: { type: number, nullable: true }
+        description_priority:
+          type: number
+          description: Jaccard 0-1. Hanya untuk urutan, tidak ikut skor.
+        notified: { type: boolean }
+        queued_for_review:
+          type: boolean
+          description: true bila skor tinggi tapi WA otomatis ditahan karena batas 3/nomor/hari.
+        processed_at: { type: string, format: date-time }
+    Notification:
+      type: object
+      required: [notification_id, event_type, status, attempt_count, created_at]
+      properties:
+        notification_id: { type: integer, format: int64 }
+        matching_id: { type: integer, format: int64, nullable: true }
+        event_type:
+          type: string
+          enum: [match, item_received, handover_proof, finder_closure, handover_warning]
+        status: { $ref: '#/components/schemas/NotificationStatus' }
+        attempt_count: { type: integer }
+        sent_at: { type: string, format: date-time, nullable: true }
+        created_at: { type: string, format: date-time }
+
+    # ---------------------------------------------------------------- verification
+    Verification:
+      type: object
+      required: [claim_id, item_id, status, started_at, active_flags]
+      properties:
+        claim_id: { type: integer, format: int64 }
+        item_id: { type: string }
+        lost_report_id: { $ref: '#/components/schemas/LostReportCode' }
+        status:
+          type: string
+          enum: [berjalan, cocok, tidak_cocok, dibatalkan_otomatis]
+        active_flags:
+          type: array
+          items: { type: string, enum: [A1, A2] }
+        started_at: { type: string, format: date-time }
+        expires_at:
+          type: string
+          format: date-time
+          description: started_at + 30 menit.
+        completed_at: { type: string, format: date-time, nullable: true }
+    HandoverForm:
+      type: object
+      required: [id_type, claimant_name, id_last4, claimant_whatsapp, handover_photo]
+      properties:
+        id_type: { type: string, enum: [ktm, ktp, sim, paspor, lainnya] }
+        claimant_name: { type: string, minLength: 3, maxLength: 60, description: Nama sesuai identitas. }
+        id_last4:
+          type: string
+          pattern: '^[A-Za-z0-9]{4}$'
+          description: 4 digit terakhir saja. Nomor lengkap ditolak.
+        claimant_whatsapp: { $ref: '#/components/schemas/PhoneNumber' }
+        lost_report_id: { $ref: '#/components/schemas/LostReportCode' }
+        flag_note:
+          type: string
+          maxLength: 500
+          description: Wajib bila ada penanda A1/A2 aktif.
+        handover_photo:
+          type: string
+          format: binary
+          description: Foto penerima + barang. **Bukan** foto KTP/KTM.
+
+    # ---------------------------------------------------------------- admin
+    StaffCreate:
+      type: object
+      required: [name, username, role]
+      properties:
+        name: { type: string, minLength: 3, maxLength: 60 }
+        username: { type: string, minLength: 3, maxLength: 64 }
+        role: { $ref: '#/components/schemas/Role' }
+    StaffAccount:
+      type: object
+      required: [staff_id, name, username, role, is_active, is_locked]
+      properties:
+        staff_id: { type: integer }
+        name: { type: string }
+        username: { type: string }
+        role: { $ref: '#/components/schemas/Role' }
+        is_active: { type: boolean }
+        is_locked: { type: boolean }
+        locked_until: { type: string, format: date-time, nullable: true }
+        created_by: { type: integer, nullable: true }
+        created_at: { type: string, format: date-time }
+    AuditLogEntry:
+      type: object
+      required: [audit_id, actor_type, action, entity_type, created_at]
+      properties:
+        audit_id: { type: integer, format: int64 }
+        actor_type: { type: string, enum: [staff, publik, sistem] }
+        staff_id: { type: integer, nullable: true }
+        action: { type: string, example: reveal_secret }
+        entity_type: { type: string, example: item }
+        entity_id: { type: string }
+        old_value: { type: object, nullable: true, additionalProperties: true }
+        new_value: { type: object, nullable: true, additionalProperties: true }
+        reason: { type: string, nullable: true }
+        ip_hash: { type: string }
+        user_agent: { type: string }
+        prev_hash: { type: string }
+        entry_hash: { type: string }
+        created_at: { type: string, format: date-time }
+    AnomalyFlag:
+      type: object
+      required: [flag_id, rule_id, subject_type, subject_ref, status, created_at]
+      properties:
+        flag_id: { type: integer, format: int64 }
+        rule_id: { type: string, enum: [A1, A2, A3, A4, A5, A6, A7, A8] }
+        subject_type: { type: string, example: phone_hash }
+        subject_ref: { type: string, description: Hash/ID, bukan nomor utuh. }
+        detail: { type: string }
+        status: { type: string, enum: [baru, ditinjau] }
+        reviewed_by: { type: integer, nullable: true }
+        review_note: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+        reviewed_at: { type: string, format: date-time, nullable: true }
+    Setting:
+      type: object
+      required: [key, value]
+      properties:
+        key: { type: string, example: match.threshold.high }
+        value: { type: string, example: '80' }
+        updated_by: { type: integer, nullable: true }
+        updated_at: { type: string, format: date-time, nullable: true }
+    CategoryWrite:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, maxLength: 60 }
+        is_high_value: { type: boolean, default: false }
+        is_active: { type: boolean, default: true }
+    CategoryAdmin:
+      allOf:
+        - $ref: '#/components/schemas/CategoryWrite'
+        - type: object
+          required: [category_id]
+          properties:
+            category_id: { type: integer }
+    LocationWrite:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, maxLength: 100 }
+        parent_location_id: { type: integer, nullable: true, description: Zona/gedung induk. }
+        is_other: { type: boolean, default: false }
+        is_active: { type: boolean, default: true }
+    LocationAdmin:
+      allOf:
+        - $ref: '#/components/schemas/LocationWrite'
+        - type: object
+          required: [location_id]
+          properties:
+            location_id: { type: integer }
+
+# ====================================================================== OPEN QUESTIONS
+x-open-questions:
+  - no: 1
+    topic: Entitas pos (post) belum ada di ERD
+    detail: FR-04 mewajibkan "pos satpam penyimpan" dan "jam layanan" di DTO publik, tetapi ERD v0.3 tidak punya tabel pos / kolom item.post_id. Jam layanan juga belum ada (OI06).
+  - no: 2
+    topic: Nilai enum condition
+    detail: FSD hanya menyebut "kondisi". Nilai enum final (mis. baik, lecet, rusak) perlu ditetapkan SA/UI.
+  - no: 3
+    topic: Kapan laporan kehilangan menjadi memiliki_kandidat
+    detail: AC-08 jelas untuk skor >= 80 (WA otomatis). Untuk skor 50-79 lalu satpam kirim WA manual, apakah status juga berubah? Usulan - ya, berubah saat WA terkirim (otomatis atau manual).
+  - no: 4
+    topic: WhatsApp penemu di jalur walk-in tidak lewat OTP
+    detail: Satpam mengisi nomor penemu tanpa OTP, jadi WA "barang diterima" dan "kembali ke pemilik" bisa terkirim ke nomor yang tidak terverifikasi. Pertimbangkan konfirmasi lisan nomor, atau tanpa WA untuk walk-in.
+  - no: 5
+    topic: Format nomor WhatsApp
+    detail: FSD bag. 5.1 menulis "10-14 digit setelah 0". Usulan - validasi 10-14 digit nasional (mis. 08xxxxxxxxx) setelah normalisasi; perlu konfirmasi karena rentang +62 dan 0 berbeda satu digit.
+  - no: 6
+    topic: Perilaku honeypot "tolak diam-diam"
+    detail: Usulan - balas 201 dengan bentuk respons identik tetapi tidak menyimpan apa pun dan menghitung sebagai pemicu A8. Perlu keputusan apakah ID palsu boleh ditampilkan.
+  - no: 7
+    topic: Skor tinggi dengan dua komponen
+    detail: Bila warna "Lainnya", lokasi sama + waktu <= 24 jam = skor 100 (otomatis WA). Ini konsekuensi normalisasi bobot di FR-07. Mohon dikonfirmasi disengaja atau perlu batas minimum komponen (lihat matching_spec.md bagian 6).
+  - no: 8
+    topic: Alur password awal akun satpam
+    detail: FSD tidak menjelaskan cara password awal diberikan dan apakah wajib diganti. Endpoint ganti password belum ada di kontrak ini.
+  - no: 9
+    topic: Pemicu CAPTCHA
+    detail: Provider CAPTCHA dan skema token belum diputuskan; di kontrak ini hanya `captcha_token` opsional.
