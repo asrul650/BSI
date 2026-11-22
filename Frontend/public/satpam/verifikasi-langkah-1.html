@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-background": "#191c1e", "surface": "#f7f9fb", "tertiary-fixed": "#c4e7ff", "error-container": "#ffdad6", "primary-fixed": "#dae2fd", "on-error": "#ffffff", "on-tertiary-fixed": "#001e2c", "on-secondary": "#ffffff", "surface-container": "#eceef0", "surface-container-low": "#f2f4f6", "on-primary-container": "#7c839b", "tertiary": "#000000", "on-tertiary-fixed-variant": "#004c69", "primary": "#000000", "inverse-surface": "#2d3133", "tertiary-container": "#001e2c", "on-primary-fixed": "#131b2e", "tertiary-fixed-dim": "#7bd0ff", "surface-tint": "#565e74", "on-primary": "#ffffff", "on-secondary-fixed": "#001d31", "secondary-fixed": "#cce5ff", "surface-bright": "#f7f9fb", "primary-container": "#131b2e", "on-primary-fixed-variant": "#3f465c", "secondary-fixed-dim": "#93ccff", "outline": "#76777d", "inverse-on-surface": "#eff1f3", "on-secondary-fixed-variant": "#004b73", "surface-dim": "#d8dadc", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "surface-container-highest": "#e0e3e5", "on-tertiary": "#ffffff", "inverse-primary": "#bec6e0", "on-surface-variant": "#45464d", "secondary-container": "#5bb8fe", "outline-variant": "#c6c6cd", "on-tertiary-container": "#008ebf", "on-secondary-container": "#00476e", "primary-fixed-dim": "#bec6e0", "surface-variant": "#e0e3e5", "background": "#f7f9fb", "error": "#ba1a1a", "on-surface": "#191c1e", "secondary": "#006398", "surface-container-high": "#e6e8ea" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2rem", "space-lg": "2rem", "gutter-mobile": "1rem", "gutter": "1.5rem", "space-md": "1.25rem", "space-xs": "0.375rem", "space-xl": "3rem", "space-sm": "0.75rem", "margin-mobile": "1rem" }, "fontFamily": { "label-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"] }, "fontSize": { "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }], "display": ["40px", { "lineHeight": "52px", "fontWeight": "700" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "700" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "display-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="p-gutter pb-space-sm flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm"><span class="material-symbols-outlined text-secondary-fixed">verified_user</span></div><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate tracking-tight">Lost &amp; Found UII</span><span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">PORTAL SATPAM KAMPUS</span></div></div><div class="px-gutter py-space-xs"><div class="h-px bg-surface-container-high w-full"></div></div><div class="px-space-sm py-space-xs"><span class="px-space-sm py-space-xs font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block">Navigasi Utama</span></div><nav class="flex flex-col gap-1 px-space-sm" data-active-classes="bg-primary text-on-primary font-label-lg shadow-sm"><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="beranda" href="#"><span>Beranda</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="penerimaan" href="#"><span>Penerimaan</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="barang" href="#"><span>Barang</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="hasil-matching" href="#"><span>Hasil Matching</span><span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">AI</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="verifikasi" href="#"><span>Verifikasi</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="laporan-kehilangan" href="#"><span>Laporan Kehilangan</span></a></nav></div><div class="p-space-sm flex flex-col gap-space-sm"><div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col gap-1"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm font-semibold text-on-surface uppercase tracking-wider">Pos Jaga Aktif</span></div><p class="font-headline-sm text-headline-sm text-on-surface font-semibold">Posko Induk GKU</p><span class="font-body-sm text-body-sm text-on-surface-variant">Shift Siang (07:00 - 15:30 WIB)</span></div><div class="px-space-sm py-1 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">contact_support</span> BSI Helpdesk: x102</span><span>v2.4.0</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter"><div class="flex items-center gap-gutter flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input class="w-full h-10 pl-10 pr-4 rounded-full bg-surface-container-lowest font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-sm transition-all" placeholder="Cari nomor tiket TM- / HL- / nama barang..." type="text"/></div></div><div class="flex items-center gap-space-md shrink-0"><div class="hidden xl:flex flex-col text-right"><span class="font-label-lg text-label-lg text-on-surface">Kamis, 24 Oktober 2024</span><span class="font-body-sm text-body-sm text-on-surface-variant">Pukul 11:42 WIB</span></div><div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[16px]">shield</span><span>Status Siaga 1</span></div><div class="h-8 w-px bg-surface-container-high hidden sm:block"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right hidden md:block"><span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Bripka Hendra Kurniawan</span><span class="font-body-sm text-body-sm text-on-surface-variant">Petugas Pos Jaga Induk GKU (SEC-042)</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><a class="p-1.5 rounded-lg text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-colors ml-1" data-path="login" href="#" title="Keluar Portal"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></header><main class="w-full pt-16 bg-surface min-h-screen px-gutter py-space-lg"><div class="flex flex-col w-full">
+<!-- Stepper & Wizard Header -->
+<div class="flex flex-col gap-space-sm mb-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold tracking-wide uppercase">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+            SOP No. 04/SK-BSI/2024
+          </span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">SEC-VRF-4019</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">Verifikasi Kepemilikan Barang</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl mt-0.5">
+          Proses verifikasi identitas pemohon dan pencocokan kepemilikan fisik tatap muka di pos jaga sebelum serah terima resmi.
+        </p>
+</div>
+<!-- Quick Session Indicator -->
+<div class="flex items-center gap-3 bg-surface-container-lowest px-4 py-2.5 rounded-xl shadow-sm border border-outline-variant/30 self-start sm:self-auto">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">videocam</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">Kamera Jaga #02 Aktif</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Audit Visual Sinkron</span>
+</div>
+</div>
+</div>
+<!-- Stepper Navigation 4 Langkah -->
+<div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] mt-2">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+<!-- Step 1 (Active) -->
+<div class="flex items-center gap-3 p-3 rounded-lg bg-primary text-on-primary shadow-sm transition-all">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest text-primary font-label-md text-label-md flex items-center justify-center shrink-0 font-bold shadow-sm">
+            1
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-secondary-fixed font-semibold tracking-wide uppercase">Langkah 1 (Aktif)</span>
+<span class="font-label-lg text-label-lg font-bold truncate">Cari Barang &amp; Identitas</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low text-on-surface-variant transition-all hover:bg-surface-container">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-label-md flex items-center justify-center shrink-0 font-semibold">
+            2
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Langkah Berikutnya</span>
+<span class="font-label-lg text-label-lg font-semibold truncate text-on-surface">Validasi Identitas</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low text-on-surface-variant transition-all hover:bg-surface-container">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-label-md flex items-center justify-center shrink-0 font-semibold">
+            3
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Langkah 3</span>
+<span class="font-label-lg text-label-lg font-semibold truncate text-on-surface">Bandingkan Ciri Khusus</span>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-low text-on-surface-variant transition-all hover:bg-surface-container">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-label-md flex items-center justify-center shrink-0 font-semibold">
+            4
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Langkah Akhir</span>
+<span class="font-label-lg text-label-lg font-semibold truncate text-on-surface">Serah Terima &amp; BAST</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Grid Content Area -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md">
+<!-- Left Column: Search & Item Information (7 Cols) -->
+<div class="xl:col-span-7 flex flex-col gap-space-md">
+<!-- Section 1: Pencarian Barang & Quick Selection -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[22px]">manage_search</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Pencarian Barang Inventaris Pos</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Database Sinkron Real-time</span>
+</div>
+<!-- Input and Search Button -->
+<div class="flex flex-col sm:flex-row gap-2 mt-1">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">qr_code_scanner</span>
+<input class="w-full h-11 pl-11 pr-10 rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary transition-all" id="itemSearchInput" placeholder="Masukkan Item ID (contoh: BRG-2024-0142) atau Nomor Laporan (HL-88219)..." type="text" value="BRG-2024-0142"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface p-1 rounded-full transition-colors" onclick="document.getElementById('itemSearchInput').value=''" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<button class="h-11 px-5 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-on-surface transition-all shadow-sm shrink-0" type="button">
+<span class="material-symbols-outlined text-[18px]">search</span>
+<span>Cari Barang</span>
+</button>
+</div>
+<!-- Quick Matching Chips -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Kandidat Teratas:</span>
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold hover:bg-secondary hover:text-on-secondary transition-all shadow-xs" onclick="setValidState()" type="button">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+<span>BRG-2024-0142 (Flashdisk Sandisk 64GB - HL-88219)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-medium hover:bg-surface-dim transition-all" onclick="setBlockedState()" type="button">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>BRG-2024-0115 (Ditahan BSI)</span>
+</button>
+</div>
+</div>
+<!-- Simulation State Switcher (Demo Interactive) -->
+<div class="bg-surface-container-low p-3 rounded-lg flex items-center justify-between gap-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">tune</span>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface uppercase tracking-wider">Simulasi Status Barang:</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-lowest p-1 rounded-lg shadow-xs">
+<button class="px-3 py-1 rounded text-label-sm font-label-sm font-semibold bg-primary text-on-primary shadow-xs transition-all flex items-center gap-1" id="btnStateValid" onclick="setValidState()" type="button">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+<span>Tersedia (Normal)</span>
+</button>
+<button class="px-3 py-1 rounded text-label-sm font-label-sm font-medium text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1" id="btnStateBlocked" onclick="setBlockedState()" type="button">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span>Ditahan / Error</span>
+</button>
+</div>
+</div>
+<!-- State 1: VALID ITEM CARD -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col transition-all" id="validItemCard">
+<!-- Card Header -->
+<div class="p-space-md bg-surface-container-low/60 flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-lowest text-secondary flex items-center justify-center font-headline-sm font-bold shadow-sm">
+<span class="material-symbols-outlined text-[24px]">usb</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">BRG-2024-0142</span>
+<span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                  Barang Ditemukan (Di Brankas)
+                </span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Laporan Temuan Ref: TM-7F3P9X • Tiket Kehilangan: HL-88219</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-lowest shadow-xs text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-secondary text-[16px]">inventory_2</span>
+<span>Locker GKU-A04 (Posko Induk)</span>
+</div>
+</div>
+<!-- Card Body with Image & Details -->
+<div class="p-space-md grid grid-cols-1 sm:grid-cols-12 gap-space-md">
+<!-- Thumbnail & Documentation -->
+<div class="sm:col-span-4 flex flex-col gap-2">
+<div class="relative rounded-lg overflow-hidden bg-surface-container aspect-4/3 shadow-sm group">
+<img class="w-full h-full object-cover" data-alt="A macro studio photograph of a compact black and red Sandisk Cruzer Blade USB flash drive resting on a dark slate verification tray under clear security post lighting, crisp texture and subtle scratches documented with high fidelity, institutional archive aesthetic with neutral tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdeUzKutNeK-TDgVC6lqSAyZVsQvm2U1tJX4O4W38_ZtJ9TjWs95SUl8A5hrYz1VyHsEal01FRJwUU796fy7iJuzr5GdstCwfIwJ7aoZnrfNu0XoCOi3cwgQFaojdIF_C1XgRpvdioZCDqXq47ejYcmkgUanNMgFcuxGtnd39a0yrW2JdgMkM0DmkSXkL9zlHPebwOOB0pvxMh4TdXhor_FXKMWq3klJFm-a0zc3k"/>
+<span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-on-surface/80 backdrop-blur-md text-on-primary font-label-sm text-label-sm font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">photo_camera</span>
+                Webcam Pos Induk
+              </span>
+<div class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-surface-container-lowest/90 text-on-surface font-label-sm text-label-sm font-mono text-[10px]">
+                20/11/24 15:12
+              </div>
+</div>
+<div class="flex items-center justify-between px-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant">ID Fisik Tag: #TAG-0982</span>
+<a class="font-label-sm text-label-sm text-secondary hover:underline flex items-center gap-0.5" href="#">
+<span>Perbesar Foto</span>
+<span class="material-symbols-outlined text-[14px]">open_in_full</span>
+</a>
+</div>
+</div>
+<!-- Item Metadata Attributes -->
+<div class="sm:col-span-8 flex flex-col justify-between">
+<div class="flex flex-col gap-2.5">
+<div>
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Elektronik &amp; Aksesoris</span>
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Flashdisk Sandisk Cruzer Blade 64GB</h3>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-2 py-2">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Warna &amp; Tekstur</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="w-3 h-3 rounded-full bg-red-600 inline-block"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Merah - Hitam Doff</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kondisi Fisik</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5">Baik / Normal (Tutup Utuh)</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Waktu Penerimaan</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5">20 Nov 2024, 15:10 WIB</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Petugas Penerima</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5 truncate">Bripka Hendra K. (SEC-042)</span>
+</div>
+</div>
+</div>
+<!-- Lokasi Penemuan -->
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center gap-2.5 mt-2">
+<span class="material-symbols-outlined text-secondary text-[20px] shrink-0">pin_drop</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">Lokasi Ditemukan</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Meja Dosen Lab Komputer 3.2, Gedung FTI Kampus Terpadu UII</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- State 2: BLOCKING ERROR CARD (Hidden by default, shown via simulation) -->
+<div class="hidden bg-error-container/40 p-space-md rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col gap-space-sm border-l-4 border-error" id="blockedItemCard">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-error text-on-error flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">block</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-on-error-container">Tidak Dapat Diproses (Barang Ditahan / Terkunci)</span>
+<span class="px-2 py-0.5 rounded bg-error text-on-error font-label-sm text-label-sm font-bold uppercase">Restricted</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-1">
+              Barang dengan ID <strong>BRG-2024-0115</strong> berstatus <strong>DITAHAN</strong> untuk penyelidikan lanjutan oleh Kepala Pengamanan Badan Sistem Informasi (BSI). Verifikasi klaim dan serah terima tidak diizinkan untuk item ini tanpa otorisasi tertulis komandan regu.
+            </p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 bg-surface-container-lowest/80 p-3 rounded-lg">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Alasan Penahanan:</span>
+<span class="font-body-sm text-body-sm font-semibold text-error">Investigasi Pelanggaran Integritas Data Akademik</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Penanggung Jawab Penahanan:</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">Kompol Agus Santoso (Kasi Pam BSI)</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">info</span>
+            Segera hubungi Posko Komando untuk konfirmasi eskalasi.
+          </span>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant font-label-md text-label-md cursor-not-allowed opacity-60" disabled="" type="button">
+            Aksi Dikunci Petugas
+          </button>
+</div>
+</div>
+<!-- Section 3: Prior-Failed-Claims Warning Banner (Anomali Klaim Sebelumnya) -->
+<div class="bg-amber-50 p-space-md rounded-xl shadow-sm flex flex-col gap-2.5" id="anomalyWarningCard">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-lg bg-amber-500 text-surface-container-lowest flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">warning</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm font-bold text-amber-950">Peringatan Anomali Pos Jaga: 1 Riwayat Klaim Gagal</span>
+<span class="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 font-label-sm text-label-sm font-bold">Perhatian Khusus</span>
+</div>
+<p class="font-body-md text-body-md text-amber-900 mt-1">
+              Pada <strong>22 Nov 2024, 09:15 WIB</strong>, pemohon an. <strong>Rendy S. (NIM: 20523***)</strong> <span class="font-semibold text-error">gagal</span> menyebutkan kapasitas partisi folder dan ciri goresan rahasia pada stiker casing.
+            </p>
+</div>
+</div>
+<div class="p-3 bg-white/80 rounded-lg flex items-center justify-between text-amber-900 mt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-600 text-[18px]">gavel</span>
+<span class="font-body-sm text-body-sm font-medium">Instruksi Satpam: Lakukan pengujian detail folder "SKRIPSI_FINAL" dan 4 digit identitas fisik.</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-amber-800">Tingkat Kewaspadaan: Tinggi</span>
+</div>
+</div>
+<!-- Trust & Physical Evidence Visual Strip -->
+<div class="grid grid-cols-3 gap-3">
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-xs flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm font-bold text-on-surface truncate">KTM Asli Wajib</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Cek hologram resmi</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-xs flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">person_check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm font-bold text-on-surface truncate">Tatap Muka Pos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Sesuai wajah pemohon</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl shadow-xs flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm font-bold text-on-surface truncate">BAST Digital</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Tanda tangan elektronik</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Applicant Presence & Identity Verification Form (5 Cols) -->
+<div class="xl:col-span-5 flex flex-col gap-space-md">
+<!-- Section 4: Formulir Identitas Pemohon Hadir di Pos -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col gap-space-sm h-full justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Data Identitas Pemohon Hadir</h2>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Wajib diperiksa langsung dari kartu identitas fisik asli yang ditunjukkan pemohon di meja pos jaga.
+            </p>
+</div>
+<!-- Privacy Protection Callout Badge -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-start gap-2.5">
+<span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">privacy_tip</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Tanpa Foto KTP / KTM (Kebijakan Privasi UII)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Hanya periksa keaslian fisik dan simpan 4 digit terakhir nomor identitas demi keamanan data mahasiswa/dosen.
+              </span>
+</div>
+</div>
+<!-- Form Fields -->
+<form class="flex flex-col gap-space-sm mt-1">
+<!-- Field 1: Jenis Identitas -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm font-semibold text-on-surface">Jenis Identitas Fisik:</label>
+<div class="grid grid-cols-3 gap-2">
+<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold cursor-pointer shadow-xs transition-all">
+<input checked="" class="hidden" name="idType" type="radio" value="KTM"/>
+<span class="material-symbols-outlined text-[16px]">school</span>
+<span>KTM UII</span>
+</label>
+<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium hover:bg-surface-container cursor-pointer transition-all">
+<input class="hidden" name="idType" type="radio" value="KTP"/>
+<span class="material-symbols-outlined text-[16px]">badge</span>
+<span>KTP / SIM</span>
+</label>
+<label class="flex items-center justify-center gap-1.5 p-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium hover:bg-surface-container cursor-pointer transition-all">
+<input class="hidden" name="idType" type="radio" value="PEGAWAI"/>
+<span class="material-symbols-outlined text-[16px]">business_center</span>
+<span>Pegawai</span>
+</label>
+</div>
+</div>
+<!-- Field 2: Nama Lengkap Pemohon -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm font-semibold text-on-surface">Nama Lengkap Pemohon</label>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Sesuai Kartu Identitas</span>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">person</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface font-medium focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none transition-all" type="text" value="M. Alif Fadhlorrahman"/>
+</div>
+</div>
+<!-- Field 3: 4 Digit Terakhir Nomor Identitas -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm font-semibold text-on-surface">4 Digit Terakhir NIM / NIK</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Proteksi Data Pribadi</span>
+</div>
+<div class="grid grid-cols-12 gap-2">
+<div class="col-span-5 h-10 px-3 rounded-lg bg-surface-container flex items-center justify-center font-mono font-bold text-on-surface-variant text-[13px] tracking-wider select-none">
+                  XXXX - XXXX -
+                </div>
+<div class="col-span-7 relative">
+<input class="w-full h-10 px-3 rounded-lg bg-surface-container-low font-mono font-bold text-on-surface text-center tracking-widest text-[15px] focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none transition-all" maxlength="4" type="text" value="1842"/>
+</div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Cocokkan dengan digit akhir nomor induk mahasiswa pada KTM.</span>
+</div>
+<!-- Field 4: Nomor WhatsApp Aktif -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm font-semibold text-on-surface">Nomor WhatsApp Aktif</label>
+<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                  Terverifikasi OTP
+                </span>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">chat</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary focus:outline-none transition-all" type="text" value="+62 812-9844-8910"/>
+</div>
+</div>
+<!-- Field 5: Hubungan Pemohon -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm font-semibold text-on-surface">Hubungan Pemohon Terhadap Barang:</label>
+<div class="grid grid-cols-2 gap-2">
+<label class="flex items-center gap-2 p-2 rounded-lg bg-secondary-fixed/50 text-on-secondary-fixed font-label-sm text-label-sm font-semibold cursor-pointer shadow-xs">
+<input checked="" class="accent-secondary" name="claimRel" type="radio" value="owner"/>
+<span>Pemilik Asli (Langsung)</span>
+</label>
+<label class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium hover:bg-surface-container cursor-pointer transition-all">
+<input class="accent-secondary" name="claimRel" type="radio" value="proxy"/>
+<span>Kuasa / Perwakilan</span>
+</label>
+</div>
+</div>
+<!-- Verification Sub-panel: Checklist Kehadiran Fisik -->
+<div class="mt-2 p-3 rounded-lg bg-surface-container-low flex flex-col gap-2">
+<span class="font-label-sm text-label-sm font-bold text-on-surface uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[16px]">checklist</span>
+                Checklist Fisik Petugas Satpam:
+              </span>
+<label class="flex items-start gap-2.5 cursor-pointer">
+<input checked="" class="mt-0.5 rounded text-secondary focus:ring-secondary accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Pemohon hadir secara langsung di Pos Jaga Induk GKU</span>
+</label>
+<label class="flex items-start gap-2.5 cursor-pointer">
+<input checked="" class="mt-0.5 rounded text-secondary focus:ring-secondary accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Menunjukkan kartu identitas fisik asli (bukan fotokopi / tangkapan layar)</span>
+</label>
+<label class="flex items-start gap-2.5 cursor-pointer">
+<input checked="" class="mt-0.5 rounded text-secondary focus:ring-secondary accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Bersedia menandatangani Berita Acara Serah Terima (BAST) jika verifikasi cocok</span>
+</label>
+</div>
+</form>
+</div>
+<!-- Security Stamp & Metadata -->
+<div class="pt-3 flex items-center justify-between border-t border-surface-container-high/60 mt-2">
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">shield_person</span>
+<span>Verifikator: Bripka Hendra Kurniawan</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono">IP: 10.12.8.44</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 5: Bottom Operational Action Bar -->
+<div class="mt-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-3">
+<button class="h-11 px-5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg font-semibold transition-all flex items-center gap-2" onclick="resetFormState()" type="button">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+<span>Batal / Reset Pencarian</span>
+</button>
+<button class="h-11 px-4 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-semibold transition-all hidden md:flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span>Lihat Log Tiket</span>
+</button>
+</div>
+<!-- Security footnote & Primary Action -->
+<div class="flex flex-col sm:flex-row items-center gap-4">
+<div class="flex items-center gap-2 text-on-surface-variant text-right hidden lg:flex">
+<span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+<span class="font-body-sm text-body-sm max-w-sm leading-tight text-left">
+          Pemeriksaan tatap muka wajib mematuhi SOP Pengamanan Kampus UII No. 04/SK-BSI/2024. Audit log tercatat otomatis.
+        </span>
+</div>
+<button class="w-full sm:w-auto h-12 px-7 rounded-full bg-primary text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-3 hover:bg-on-surface active:scale-[0.99] transition-all shadow-md" id="btnProceedVerification" type="button">
+<span>Mulai Verifikasi (Lanjut ke Langkah 2: Bandingkan Ciri)</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  function setValidState() {
+    const validCard = document.getElementById('validItemCard');
+    const blockedCard = document.getElementById('blockedItemCard');
+    const anomalyCard = document.getElementById('anomalyWarningCard');
+    const btnValid = document.getElementById('btnStateValid');
+    const btnBlocked = document.getElementById('btnStateBlocked');
+    const proceedBtn = document.getElementById('btnProceedVerification');
+    const searchInput = document.getElementById('itemSearchInput');
+
+    if (searchInput) searchInput.value = 'BRG-2024-0142';
+
+    if (validCard) validCard.classList.remove('hidden');
+    if (blockedCard) blockedCard.classList.add('hidden');
+    if (anomalyCard) anomalyCard.classList.remove('hidden');
+
+    if (btnValid) {
+      btnValid.className = 'px-3 py-1 rounded text-label-sm font-label-sm font-semibold bg-primary text-on-primary shadow-xs transition-all flex items-center gap-1';
+    }
+    if (btnBlocked) {
+      btnBlocked.className = 'px-3 py-1 rounded text-label-sm font-label-sm font-medium text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1';
+    }
+
+    if (proceedBtn) {
+      proceedBtn.disabled = false;
+      proceedBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      proceedBtn.innerHTML = `<span>Mulai Verifikasi (Lanjut ke Langkah 2: Bandingkan Ciri)</span><span class="material-symbols-outlined text-[20px]">arrow_forward</span>`;
+    }
+  }
+
+  function setBlockedState() {
+    const validCard = document.getElementById('validItemCard');
+    const blockedCard = document.getElementById('blockedItemCard');
+    const anomalyCard = document.getElementById('anomalyWarningCard');
+    const btnValid = document.getElementById('btnStateValid');
+    const btnBlocked = document.getElementById('btnStateBlocked');
+    const proceedBtn = document.getElementById('btnProceedVerification');
+    const searchInput = document.getElementById('itemSearchInput');
+
+    if (searchInput) searchInput.value = 'BRG-2024-0115';
+
+    if (validCard) validCard.classList.add('hidden');
+    if (blockedCard) blockedCard.classList.remove('hidden');
+    if (anomalyCard) anomalyCard.classList.add('hidden');
+
+    if (btnBlocked) {
+      btnBlocked.className = 'px-3 py-1 rounded text-label-sm font-label-sm font-semibold bg-error text-on-error shadow-xs transition-all flex items-center gap-1';
+    }
+    if (btnValid) {
+      btnValid.className = 'px-3 py-1 rounded text-label-sm font-label-sm font-medium text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1';
+    }
+
+    if (proceedBtn) {
+      proceedBtn.disabled = true;
+      proceedBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      proceedBtn.innerHTML = `<span>Verifikasi Terkunci (Barang Ditahan BSI)</span><span class="material-symbols-outlined text-[20px]">lock</span>`;
+    }
+  }
+
+  function resetFormState() {
+    const searchInput = document.getElementById('itemSearchInput');
+    if (searchInput) searchInput.value = '';
+    setValidState();
+  }
+</script></main></div></body></html>
