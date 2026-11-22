@@ -111,6 +111,95 @@ export default function DashboardSatpam({ onNavigate }) {
       // =========================================================================
       // 7. SPECIFIC FIX: Penerimaan Barang Temuan (PenerimaanBarang.jsx)
       // =========================================================================
+      // KESESUAIAN FISIK TOGGLE: Sesuai (Cocok) vs Tidak Sesuai / Tolak
+      if (
+        target.id === 'match-card-true' ||
+        target.closest('#match-card-true') ||
+        (target.name === 'kesesuaian' && target.value === 'sesuai') ||
+        lowerText.includes('kembali ke opsi sesuai')
+      ) {
+        e.preventDefault();
+        const cardTrue = el.querySelector('#match-card-true');
+        const cardFalse = el.querySelector('#match-card-false');
+        const secSesuai = el.querySelector('#section-sesuai');
+        const secTidak = el.querySelector('#section-tidak-sesuai');
+
+        if (cardTrue) {
+          cardTrue.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-primary text-on-primary shadow-sm';
+          const inp = cardTrue.querySelector('input');
+          if (inp) inp.checked = true;
+        }
+        if (cardFalse) {
+          cardFalse.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-surface-container-low text-on-surface hover:bg-surface-container-high';
+          const inp = cardFalse.querySelector('input');
+          if (inp) inp.checked = false;
+        }
+        if (secSesuai) secSesuai.classList.remove('hidden');
+        if (secTidak) {
+          secTidak.classList.add('hidden');
+          secTidak.classList.remove('flex');
+        }
+        return;
+      }
+
+      if (
+        target.id === 'match-card-false' ||
+        target.closest('#match-card-false') ||
+        (target.name === 'kesesuaian' && target.value === 'tidak_sesuai') ||
+        lowerText.includes('tidak sesuai / tolak')
+      ) {
+        e.preventDefault();
+        const cardTrue = el.querySelector('#match-card-true');
+        const cardFalse = el.querySelector('#match-card-false');
+        const secSesuai = el.querySelector('#section-sesuai');
+        const secTidak = el.querySelector('#section-tidak-sesuai');
+
+        if (cardFalse) {
+          cardFalse.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-primary text-on-primary shadow-sm';
+          const inp = cardFalse.querySelector('input');
+          if (inp) inp.checked = true;
+        }
+        if (cardTrue) {
+          cardTrue.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-surface-container-low text-on-surface hover:bg-surface-container-high';
+          const inp = cardTrue.querySelector('input');
+          if (inp) inp.checked = false;
+        }
+        if (secSesuai) secSesuai.classList.add('hidden');
+        if (secTidak) {
+          secTidak.classList.remove('hidden');
+          secTidak.classList.add('flex');
+        }
+        return;
+      }
+
+      // Rejection Reason Preset Chips
+      if (
+        lowerText.includes('barang tidak cocok') ||
+        lowerText.includes('barang rusak parah') ||
+        lowerText.includes('pelapor batal secara sukarela')
+      ) {
+        e.preventDefault();
+        const textarea = el.querySelector('#rejection-textarea');
+        if (textarea) {
+          if (lowerText.includes('barang tidak cocok')) {
+            textarea.value = 'Fisik barang yang dibawa penemu berbeda dengan model Sandisk 64GB di laporan TM-7F3P9X.';
+          } else if (lowerText.includes('barang rusak parah')) {
+            textarea.value = 'Barang rusak parah / hancur total sehingga nomor seri dan identitas fisik tidak dapat diidentifikasi sama sekali.';
+          } else {
+            textarea.value = 'Pelapor membatalkan serah terima secara sukarela karena barang ternyata telah diambil langsung.';
+          }
+        }
+        return;
+      }
+
+      // Tolak Laporan & Batalkan Tiket
+      if (lowerText.includes('tolak laporan & batalkan tiket') || lowerText.includes('tolak laporan')) {
+        e.preventDefault();
+        alert('Penyerahan Barang Ditolak!\n\nAlasan: Ketidaksesuaian fisik barang temuan.\nTiket drop-off TM-7F3P9X dibatalkan dan status antrean telah diperbarui.');
+        if (onNavigate) onNavigate('satpam_antrean');
+        return;
+      }
+
       // Simpan & Buat Item ID Inventaris -> kembali ke dashboard awal penerimaan (satpam_antrean)
       if (
         lowerText.includes('simpan & buat item id inventaris') ||
@@ -153,6 +242,13 @@ export default function DashboardSatpam({ onNavigate }) {
       // =========================================================================
       // 8. SPECIFIC FIX: Detail Fisik Barang Inventaris (DetailFisikInventaris.jsx)
       // =========================================================================
+      // Hubungi Pelapor
+      if (lowerText.includes('hubungi pelapor')) {
+        e.preventDefault();
+        alert('Membuka Kontak WhatsApp Pelapor:\n\nNama: M. Alif Fadhlurrahman (FTI - Informatika)\nNomor WhatsApp: +62 812-9844-8910\nNomor Tiket: HL-88219');
+        return;
+      }
+
       // Tab 1: Riwayat Status
       if (target.id === 'tabBtn1' || target.closest('#tabBtn1') || lowerText.includes('riwayat status')) {
         e.preventDefault();
@@ -304,7 +400,6 @@ export default function DashboardSatpam({ onNavigate }) {
         if (vMasked) vMasked.classList.add('hidden');
         if (vRevealed) vRevealed.classList.remove('hidden');
 
-        // Update button styles
         const allToggleBtns = el.querySelectorAll('button');
         allToggleBtns.forEach(b => {
           if (b.textContent.includes('Tampilan Terbuka')) {
@@ -324,7 +419,6 @@ export default function DashboardSatpam({ onNavigate }) {
         if (vMasked) vMasked.classList.remove('hidden');
         if (vRevealed) vRevealed.classList.add('hidden');
 
-        // Update button styles
         const allToggleBtns = el.querySelectorAll('button');
         allToggleBtns.forEach(b => {
           if (b.textContent.includes('Tampilan Terkunci')) {
@@ -361,7 +455,6 @@ export default function DashboardSatpam({ onNavigate }) {
         if (vMasked) vMasked.classList.add('hidden');
         if (vRevealed) vRevealed.classList.remove('hidden');
 
-        // Update toggle buttons
         const allToggleBtns = el.querySelectorAll('button');
         allToggleBtns.forEach(b => {
           if (b.textContent.includes('Tampilan Terbuka')) {
@@ -488,7 +581,6 @@ export default function DashboardSatpam({ onNavigate }) {
         lowerText === 'detail'
       ) {
         e.preventDefault();
-        // If clicking inside table, select row and DO NOT navigate to matching
         const row = target.classList.contains('report-table-row') ? target : target.closest('.report-table-row');
         if (row) {
           const allRows = el.querySelectorAll('.report-table-row');
