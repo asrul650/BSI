@@ -14,32 +14,35 @@ export default function LaporKehilanganStep2OTP({ onNavigate }) {
       const target = e.target.closest('a, button, div[data-path]');
       if (!target) return;
 
-      const path = target.getAttribute('data-path') || target.getAttribute('href');
-      const text = target.textContent || '';
+      const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
+      const text = (target.textContent || '').trim();
 
-      if (text.includes('Kembali ke Detail Barang') || text.includes('Ubah Nomor WhatsApp') || path === 'lapor_1' || path === '#lapor-kehilangan') {
+      // "Kembali ke Detail Barang" or "Ubah Nomor WhatsApp" or Stepper Step 1
+      if (text.includes('Kembali ke Detail Barang') || text.includes('Ubah Nomor WhatsApp') || path === 'lapor_1' || path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
         e.preventDefault();
         if (onNavigate) onNavigate('lapor_1');
         return;
       }
 
-      if (path === 'step_3_notice' || path === '#langkah-3-persetujuan') {
+      // "Beranda" or Logo
+      if (path === '#beranda' || path === 'beranda' || text === 'Beranda' || target.closest('a')?.getAttribute('href') === '#' || text.includes('Lost & Found UII')) {
         e.preventDefault();
-        alert('Langkah 3 (Persetujuan & Selesai) belum dirancang di Stitch AI dan akan diimplementasikan setelah desain tersedia.');
+        if (onNavigate) onNavigate('landing');
         return;
       }
 
-      if (path && onNavigate) {
-        if (path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
-          e.preventDefault();
-          onNavigate('temuan_enhanced');
-        } else if (path === '#beranda' || path === 'beranda') {
-          e.preventDefault();
-          onNavigate('landing');
-        } else if (path.includes('detail') || path.includes('0064cc74')) {
-          e.preventDefault();
-          onNavigate('detail');
-        }
+      // "Barang Temuan"
+      if (text.includes('Barang Temuan') || path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('temuan_enhanced');
+        return;
+      }
+
+      // "Verifikasi & Lanjut ke Langkah 3"
+      if (text.includes('Langkah 3') || path === 'step_3_notice' || path === '#langkah-3-persetujuan') {
+        e.preventDefault();
+        alert('Langkah 3 (Persetujuan & Selesai) sedang dalam tahap perancangan di Stitch AI.');
+        return;
       }
     };
 

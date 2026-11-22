@@ -9,26 +9,33 @@ export default function DetailTemuan({ onNavigate }) {
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Intercept clicks on links or buttons with data-path or href
+    // Intercept clicks on links or buttons with data-path, href, or text
     const handleClick = (e) => {
       const target = e.target.closest('a, button');
       if (!target) return;
 
-      const path = target.getAttribute('data-path') || target.getAttribute('href');
-      if (path && onNavigate) {
-        if (path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
-          e.preventDefault();
-          onNavigate('lapor_1');
-        } else if (path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
-          e.preventDefault();
-          onNavigate('temuan_enhanced');
-        } else if (path === '#beranda' || path === 'beranda') {
-          e.preventDefault();
-          onNavigate('landing');
-        } else if (path.includes('detail') || path.includes('0064cc74')) {
-          e.preventDefault();
-          onNavigate('detail');
-        }
+      const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
+      const text = (target.textContent || '').trim();
+
+      // "Kembali ke Daftar Barang" or "Barang Temuan"
+      if (text.includes('Kembali ke Daftar') || text.includes('Barang Temuan') || path === '#barang-temuan' || path === 'barang-temuan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('temuan_enhanced');
+        return;
+      }
+
+      // "Saya Kehilangan" or "Bukan barangmu? Lapor Kehilangan"
+      if (text.includes('Saya Kehilangan') || text.includes('Lapor Kehilangan') || path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('lapor_1');
+        return;
+      }
+
+      // "Beranda" or Logo
+      if (path === '#beranda' || path === 'beranda' || text === 'Beranda' || target.closest('a')?.getAttribute('href') === '#' || text.includes('Lost & Found UII')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
       }
     };
 

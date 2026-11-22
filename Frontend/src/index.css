@@ -8,6 +8,10 @@ body {
   color: #1E293B;
 }
 
+button, a, [role="button"], .category-chip {
+  cursor: pointer;
+}
+
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined' !important;
   font-weight: normal;

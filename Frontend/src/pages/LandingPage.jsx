@@ -9,26 +9,40 @@ export default function LandingPage({ onNavigate }) {
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Intercept clicks on links or buttons with data-path or href
+    // Intercept clicks on links or buttons with data-path, href, or text
     const handleClick = (e) => {
-      const target = e.target.closest('a, button');
+      const target = e.target.closest('a, button, div.group');
       if (!target) return;
 
-      const path = target.getAttribute('data-path') || target.getAttribute('href');
-      if (path && onNavigate) {
-        if (path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
-          e.preventDefault();
-          onNavigate('lapor_1');
-        } else if (path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
-          e.preventDefault();
-          onNavigate('temuan_enhanced');
-        } else if (path === '#beranda' || path === 'beranda') {
-          e.preventDefault();
-          onNavigate('landing');
-        } else if (path.includes('detail') || path.includes('0064cc74')) {
-          e.preventDefault();
-          onNavigate('detail');
-        }
+      const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
+      const text = (target.textContent || '').trim();
+
+      // "Saya Kehilangan"
+      if (text.includes('Saya Kehilangan') || path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('lapor_1');
+        return;
+      }
+
+      // "Barang Temuan" or "Lihat Semua"
+      if (text.includes('Barang Temuan') || text.includes('Lihat Semua') || path === '#barang-temuan' || path === '#katalog-lengkap') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('temuan_enhanced');
+        return;
+      }
+
+      // Clicking any card in "Barang Terbaru" on landing page -> goes to detail
+      if (target.closest('#barang-temuan .group') || text.includes('Dompet kulit hitam') || text.includes('Kunci motor Honda') || text.includes('Tas ransel abu-abu') || text.includes('Botol minum stainless')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('detail');
+        return;
+      }
+
+      // "Beranda" or logo
+      if (path === '#beranda' || path === 'beranda' || target.closest('a')?.getAttribute('href') === '#' || text.includes('Lost & Found UII')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
       }
     };
 

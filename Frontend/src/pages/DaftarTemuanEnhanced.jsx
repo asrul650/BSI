@@ -9,26 +9,40 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Intercept clicks on links or buttons with data-path or href
+    // Intercept clicks on links or buttons with data-path, href, or text
     const handleClick = (e) => {
-      const target = e.target.closest('a, button');
+      const target = e.target.closest('a, button, div.group');
       if (!target) return;
 
-      const path = target.getAttribute('data-path') || target.getAttribute('href');
-      if (path && onNavigate) {
-        if (path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
-          e.preventDefault();
-          onNavigate('lapor_1');
-        } else if (path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
-          e.preventDefault();
-          onNavigate('temuan_enhanced');
-        } else if (path === '#beranda' || path === 'beranda') {
-          e.preventDefault();
-          onNavigate('landing');
-        } else if (path.includes('detail') || path.includes('0064cc74')) {
-          e.preventDefault();
-          onNavigate('detail');
-        }
+      const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
+      const text = (target.textContent || '').trim();
+
+      // "Saya Kehilangan" or "Lapor Kehilangan Sekarang" or "Buat Laporan Kehilangan Baru"
+      if (text.includes('Saya Kehilangan') || text.includes('Lapor Kehilangan') || path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('lapor_1');
+        return;
+      }
+
+      // "Klaim di Pos Satpam" OR clicking any card in the grid -> goes to detail
+      if (text.includes('Klaim di Pos Satpam') || target.closest('.grid .group') || path.includes('detail') || path.includes('0064cc74')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('detail');
+        return;
+      }
+
+      // "Beranda" or Logo
+      if (path === '#beranda' || path === 'beranda' || target.closest('a')?.getAttribute('href') === '#' || text.includes('Lost & Found UII')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
+      }
+
+      // "Barang Temuan"
+      if (path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('temuan_enhanced');
+        return;
       }
     };
 

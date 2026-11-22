@@ -14,32 +14,42 @@ export default function LaporKehilanganStep1({ onNavigate }) {
       const target = e.target.closest('a, button, div[data-path]');
       if (!target) return;
 
-      const path = target.getAttribute('data-path') || target.getAttribute('href');
-      const text = target.textContent || '';
+      const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
+      const text = (target.textContent || '').trim();
 
+      // Submit / Next Step: Kirim OTP via WhatsApp
       if (text.includes('Kirim OTP') || target.id === 'btn-submit-otp') {
         e.preventDefault();
         if (onNavigate) onNavigate('lapor_2_otp');
         return;
       }
 
-      if (path && onNavigate) {
-        if (path === '#lapor-kehilangan' || path === 'lapor-kehilangan' || path === 'lapor_1') {
-          e.preventDefault();
-          onNavigate('lapor_1');
-        } else if (path === 'lapor_2_otp') {
-          e.preventDefault();
-          onNavigate('lapor_2_otp');
-        } else if (path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
-          e.preventDefault();
-          onNavigate('temuan_enhanced');
-        } else if (path === '#beranda' || path === 'beranda') {
-          e.preventDefault();
-          onNavigate('landing');
-        } else if (path.includes('detail') || path.includes('0064cc74')) {
-          e.preventDefault();
-          onNavigate('detail');
-        }
+      // Stepper Step 2 click
+      if (path === 'lapor_2_otp') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('lapor_2_otp');
+        return;
+      }
+
+      // "Batal / Kembali ke Beranda" or "Beranda" or Logo
+      if (text.includes('Batal') || text.includes('Kembali ke Beranda') || path === '#beranda' || path === 'beranda' || target.closest('a')?.getAttribute('href') === '#' || text.includes('Lost & Found UII')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
+      }
+
+      // "Barang Temuan"
+      if (text.includes('Barang Temuan') || path === '#barang-temuan' || path === 'barang-temuan' || path === '#katalog-lengkap') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('temuan_enhanced');
+        return;
+      }
+
+      // "Saya Kehilangan"
+      if (text.includes('Saya Kehilangan') || path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('lapor_1');
+        return;
       }
     };
 
