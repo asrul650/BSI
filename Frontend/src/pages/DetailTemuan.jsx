@@ -41,7 +41,7 @@ export default function DetailTemuan({ onNavigate }) {
       // "Cara Kerja" or "FAQ"
       if (text.includes('Cara Kerja') || text.includes('FAQ') || path === '#cara-kerja' || path === '#faq') {
         e.preventDefault();
-        if (onNavigate) onNavigate('cara_kerja_faq');
+        if (onNavigate) { if (text.includes('FAQ') || path.includes('faq')) onNavigate('faq'); else onNavigate('cara_kerja'); }
         return;
       }
 

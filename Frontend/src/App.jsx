@@ -9,7 +9,8 @@ import LaporKehilanganSukses from './pages/LaporKehilanganSukses';
 import PilihanPenyerahanTemuan from './pages/PilihanPenyerahanTemuan';
 import LaporTemuanStep1 from './pages/LaporTemuanStep1';
 import LaporTemuanSukses from './pages/LaporTemuanSukses';
-import CaraKerjaFAQ from './pages/CaraKerjaFAQ';
+import CaraKerja from './pages/CaraKerja';
+import FAQ from './pages/FAQ';
 import KebijakanPrivasi from './pages/KebijakanPrivasi';
 
 const screens = {
@@ -29,8 +30,10 @@ const screens = {
   lapor_temuan_1: LaporTemuanStep1,
   lapor_temuan_sukses: LaporTemuanSukses,
 
-  // 4. Informasi & Kebijakan
-  cara_kerja_faq: CaraKerjaFAQ,
+  // 4. Informasi & Kebijakan (Terpisah sesuai revisi)
+  cara_kerja: CaraKerja,
+  faq: FAQ,
+  cara_kerja_faq: CaraKerja, // alias fallback
   kebijakan_privasi: KebijakanPrivasi,
 };
 
