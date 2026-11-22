@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #F8FAFC;
+  color: #1E293B;
+}
+
+.custom-pill-active {
+  background-color: #131F37;
+  color: #FFFFFF;
+}
+
+.custom-pill-idle {
+  background-color: #F1F5F9;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.custom-pill-idle:hover {
+  background-color: #E2E8F0;
+  color: #0F172A;
+}
+
