@@ -10,21 +10,27 @@ export default function PenandaAnomali({ onNavigate }) {
     if (!containerRef.current) return;
     const el = containerRef.current;
 
-    // Attach global helper functions on window for inline handlers
-    window.openModal = (id) => {
-      const modal = el.querySelector('#' + id);
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+    // Helper functions for showing / hiding modals cleanly
+    const showModal = (modalId) => {
+      const m = el.querySelector('#' + modalId);
+      if (m) {
+        m.classList.remove('hidden');
+        m.classList.add('flex');
       }
     };
-    window.closeModal = (id) => {
-      const modal = el.querySelector('#' + id);
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+
+    const hideModal = (modalId) => {
+      const m = el.querySelector('#' + modalId);
+      if (m) {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
       }
     };
+
+    // Expose helpers on window for any inline scripts or onclick attributes
+    window.openModal = (id) => showModal(id);
+    window.closeModal = (id) => hideModal(id);
+
     window.filterTable = () => {
       const search = (el.querySelector('#searchInput')?.value || '').toLowerCase();
       const status = el.querySelector('#statusFilter')?.value || 'all';
@@ -48,6 +54,7 @@ export default function PenandaAnomali({ onNavigate }) {
       const badge = el.querySelector('#counterBadge');
       if (badge) badge.innerText = `${visibleCount} Petugas Ditampilkan`;
     };
+
     window.resetFilters = () => {
       const sInp = el.querySelector('#searchInput');
       const stF = el.querySelector('#statusFilter');
@@ -57,29 +64,35 @@ export default function PenandaAnomali({ onNavigate }) {
       if (posF) posF.value = 'all';
       window.filterTable();
     };
+
     window.openResetPasswordModal = (name, nrp) => {
       if (confirm(`Apakah Anda yakin ingin me-reset kata sandi untuk ${name} (${nrp})? Tautan aktivasi baru akan di-generate dengan masa kedaluwarsa 15 menit.`)) {
         alert(`Tautan reset sandi darurat berhasil dikirim ke email dinas ${name}. Catatan audit tercatat.`);
       }
     };
+
     window.promptReactivate = (nrp, name) => {
       if (confirm(`Konfirmasi pencabutan penangguhan untuk ${name} (${nrp})? Memerlukan verifikasi status penutupan tiket investigasi.`)) {
         alert(`Status akun ${name} telah dipulihkan menjadi Aktif. Log pembukaan blokir tercatat.`);
       }
     };
+
     window.downloadCSVLog = () => {
       alert('Membuat ekspor CSV Log Autentikasi Satpam UII (30 Hari Terakhir). File otomatis terenkripsi PGP BSI.');
     };
+
     window.handleNonaktifSubmit = (e) => {
       if (e) e.preventDefault();
       alert('SUKSES: Akun petugas berhasil dinonaktifkan dari terminal pos jaga. Rantai audit hash telah dicatat ke Ledger BSI.');
-      window.closeModal('modalNonaktifkan');
+      hideModal('modalNonaktifkan');
     };
+
     window.handleTambahSubmit = (e) => {
       if (e) e.preventDefault();
       alert('SUKSES: Akun petugas baru berhasil didaftarkan. Kredensial sementara telah dikirimkan via jalur resmi.');
-      window.closeModal('modalTambahAkun');
+      hideModal('modalTambahAkun');
     };
+
     window.updateSliders = (source, val) => {
       let numVal = parseInt(val) || 0;
       if (numVal < 0) numVal = 0;
@@ -107,6 +120,7 @@ export default function PenandaAnomali({ onNavigate }) {
         }
       }
     };
+
     window.handleJustificationInput = (inputEl) => {
       const len = inputEl.value.trim().length;
       const counter = el.querySelector('#char-counter');
@@ -119,6 +133,7 @@ export default function PenandaAnomali({ onNavigate }) {
         }
       }
     };
+
     window.submitConfiguration = () => {
       const justifikasi = (el.querySelector('#input-justifikasi')?.value || '').trim();
       if (justifikasi.length < 30) {
@@ -129,14 +144,11 @@ export default function PenandaAnomali({ onNavigate }) {
       if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Menandatangani ke Ledger...</span>';
       setTimeout(() => {
         alert("Tanda tangan FIDO2 berhasil divalidasi! Blok konfigurasi #00142897 telah ditambahkan ke Append-Only Ledger BSI.");
-        const modal = el.querySelector('#modal-konfirmasi');
-        if (modal) {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-        }
+        hideModal('modal-konfirmasi');
         if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">fingerprint</span><span>Terapkan & Tanda Tangani Perubahan (MFA)</span>';
       }, 1000);
     };
+
     window.checkClosureReadiness = () => {
       const chk3 = el.querySelector('#chk-eval-3');
       const chk4 = el.querySelector('#chk-eval-4');
@@ -206,7 +218,127 @@ export default function PenandaAnomali({ onNavigate }) {
       };
     }
 
+    // =========================================================================
+    // EVENT LISTENER: CLICK
+    // =========================================================================
     const handleClick = (e) => {
+      // 1. Backdrop click to close modals
+      if (e.target.id === 'modal-pelimpahan') {
+        hideModal('modal-pelimpahan');
+        return;
+      }
+      if (e.target.id === 'modal-tahan-baru') {
+        hideModal('modal-tahan-baru');
+        return;
+      }
+      if (e.target.id === 'modal-tahan-barang') {
+        hideModal('modal-tahan-barang');
+        return;
+      }
+      if (e.target.id === 'modal-tangguhkan-akun') {
+        hideModal('modal-tangguhkan-akun');
+        return;
+      }
+      if (e.target.id === 'modal-konfirmasi') {
+        hideModal('modal-konfirmasi');
+        return;
+      }
+      if (e.target.id === 'modalNonaktifkan') {
+        hideModal('modalNonaktifkan');
+        return;
+      }
+      if (e.target.id === 'modalTambahAkun') {
+        hideModal('modalTambahAkun');
+        return;
+      }
+
+      // 2. Radio card selection inside modal-pelimpahan (EFEK HITAM PINDAH)
+      const transferActionLabel = e.target.closest('#modal-pelimpahan label');
+      if (transferActionLabel && transferActionLabel.querySelector('input[name="transfer_action"]')) {
+        e.preventDefault();
+        const modalP = el.querySelector('#modal-pelimpahan');
+        if (modalP) {
+          const allActionLabels = modalP.querySelectorAll('label');
+          allActionLabels.forEach(lbl => {
+            const inp = lbl.querySelector('input[name="transfer_action"]');
+            if (!inp) return;
+            const tSpan = lbl.querySelector('.font-label-md');
+            const sSpan = lbl.querySelector('.text-\[11px\]');
+            if (lbl === transferActionLabel) {
+              inp.checked = true;
+              lbl.className = 'flex items-center gap-2 p-3 rounded-xl bg-primary-container text-on-primary cursor-pointer shadow-sm';
+              if (tSpan) tSpan.className = 'font-label-md text-label-md font-semibold text-on-primary';
+              if (sSpan) sSpan.className = 'text-[11px] text-primary-fixed-dim';
+            } else {
+              inp.checked = false;
+              lbl.className = 'flex items-center gap-2 p-3 rounded-xl bg-surface-container-high hover:bg-surface-container-highest cursor-pointer transition-colors text-on-surface';
+              if (tSpan) tSpan.className = 'font-label-md text-label-md font-semibold text-on-surface';
+              if (sSpan) sSpan.className = 'text-[11px] text-on-surface-variant';
+            }
+          });
+
+          // Sync dropdown
+          const destSelect = modalP.querySelector('select');
+          if (destSelect) {
+            const textChosen = (transferActionLabel.textContent || '').toLowerCase();
+            if (textChosen.includes('lepas')) {
+              destSelect.innerHTML = `
+                <option selected>Pemilik Sah (Penyerahan Langsung via BAST Resmi di Posko)</option>
+                <option>Brankas Pusat BSI (Gedung GBPH Prabuningrat Lt. 3)</option>
+                <option>Polsek Ngaglik Sleman (Pelaporan Kepolisian)</option>
+              `;
+            } else if (textChosen.includes('pihak luar') || textChosen.includes('rektorat')) {
+              destSelect.innerHTML = `
+                <option selected>Biro Kemahasiswaan & Alumni (BKA UII)</option>
+                <option>Polsek Ngaglik Sleman (Pelaporan Kepolisian)</option>
+                <option>Divisi Hukum & Organisasi (DHO UII)</option>
+                <option>Brankas Pusat BSI (Gedung GBPH Prabuningrat Lt. 3)</option>
+              `;
+            } else {
+              destSelect.innerHTML = `
+                <option selected>Brankas Pusat BSI (Gedung GBPH Prabuningrat Lt. 3)</option>
+                <option>Polsek Ngaglik Sleman (Pelaporan Kepolisian)</option>
+                <option>Biro Kemahasiswaan & Alumni (BKA UII)</option>
+                <option>Divisi Hukum & Organisasi (DHO UII)</option>
+              `;
+            }
+          }
+        }
+        return;
+      }
+
+      // 3. Radio card selection in DetailInsiden (keputusan_satpam & keputusan_barang)
+      const satpamRadioLabel = e.target.closest('#modal-tangguhkan-akun label, .satpam-decision-card');
+      if (satpamRadioLabel && satpamRadioLabel.querySelector('input[name="keputusan_satpam"]')) {
+        const allLabels = el.querySelectorAll('label:has(input[name="keputusan_satpam"])');
+        allLabels.forEach(lbl => {
+          const inp = lbl.querySelector('input[name="keputusan_satpam"]');
+          if (lbl === satpamRadioLabel) {
+            if (inp) inp.checked = true;
+            lbl.className = 'flex items-start gap-3 p-3 rounded-xl bg-error-container/30 ring-1 ring-error cursor-pointer';
+          } else {
+            if (inp) inp.checked = false;
+            lbl.className = 'flex items-start gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors';
+          }
+        });
+      }
+
+      const barangRadioLabel = e.target.closest('#modal-tahan-barang label, .barang-decision-card');
+      if (barangRadioLabel && barangRadioLabel.querySelector('input[name="keputusan_barang"]')) {
+        const allLabels = el.querySelectorAll('label:has(input[name="keputusan_barang"])');
+        allLabels.forEach(lbl => {
+          const inp = lbl.querySelector('input[name="keputusan_barang"]');
+          if (lbl === barangRadioLabel) {
+            if (inp) inp.checked = true;
+            lbl.className = 'flex items-start gap-3 p-3 rounded-xl bg-surface-container-high cursor-pointer ring-1 ring-primary';
+          } else {
+            if (inp) inp.checked = false;
+            lbl.className = 'flex items-start gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container cursor-pointer transition-colors';
+          }
+        });
+      }
+
+      // Find closest interactive element
       const target = e.target.closest('a, button, [data-path], [data-action], tr, [role="button"]');
       if (!target) return;
 
@@ -405,25 +537,13 @@ export default function PenandaAnomali({ onNavigate }) {
 
       if (lowerText.includes('tahan barang terkait')) {
         e.preventDefault();
-        const modal = el.querySelector('#modal-tahan-barang');
-        if (modal) {
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-        } else {
-          if (onNavigate) onNavigate('admin_barang_ditahan');
-        }
+        showModal('modal-tahan-barang');
         return;
       }
 
       if (lowerText.includes('buka suspensi') || lowerText.includes('suspend lain')) {
         e.preventDefault();
-        const modal = el.querySelector('#modal-tangguhkan-akun');
-        if (modal) {
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-        } else {
-          alert('Status Suspensi Diperbarui!\n\nAkses akun satpam telah ditangguhkan sementara.');
-        }
+        showModal('modal-tangguhkan-akun');
         return;
       }
 
@@ -433,10 +553,8 @@ export default function PenandaAnomali({ onNavigate }) {
         (target.closest('#modal-tahan-barang') || target.closest('#modal-tangguhkan-akun'))
       ) {
         e.preventDefault();
-        const m1 = el.querySelector('#modal-tahan-barang');
-        const m2 = el.querySelector('#modal-tangguhkan-akun');
-        if (m1) { m1.classList.add('hidden'); m1.classList.remove('flex'); }
-        if (m2) { m2.classList.add('hidden'); m2.classList.remove('flex'); }
+        hideModal('modal-tahan-barang');
+        hideModal('modal-tangguhkan-akun');
         return;
       }
 
@@ -473,7 +591,13 @@ export default function PenandaAnomali({ onNavigate }) {
       // =========================================================================
       if (lowerText.includes('tambah akun satpam') || target.closest('[onclick*="modalTambahAkun"]')) {
         e.preventDefault();
-        window.openModal('modalTambahAkun');
+        showModal('modalTambahAkun');
+        return;
+      }
+
+      if (lowerText.includes('nonaktifkan akses') || target.closest('[onclick*="modalNonaktifkan"]')) {
+        e.preventDefault();
+        showModal('modalNonaktifkan');
         return;
       }
 
@@ -489,56 +613,96 @@ export default function PenandaAnomali({ onNavigate }) {
         (target.closest('#modalTambahAkun') || target.closest('#modalNonaktifkan'))
       ) {
         e.preventDefault();
-        window.closeModal('modalTambahAkun');
-        window.closeModal('modalNonaktifkan');
+        hideModal('modalTambahAkun');
+        hideModal('modalNonaktifkan');
         return;
       }
 
       // =========================================================================
       // 7. SPECIFIC FIX: Barang Ditahan (BarangDitahan.jsx)
       // =========================================================================
+      // Open modal-pelimpahan
+      if (lowerText.includes('limpahkan') || target.closest('[onclick*="modal-pelimpahan"]')) {
+        e.preventDefault();
+        showModal('modal-pelimpahan');
+        return;
+      }
+
+      // Close modal-pelimpahan on 'X' or 'Batal'
+      if (
+        (lowerText === 'batal' || lowerText === 'close') &&
+        target.closest('#modal-pelimpahan')
+      ) {
+        e.preventDefault();
+        hideModal('modal-pelimpahan');
+        return;
+      }
+
+      // Confirm modal-pelimpahan
+      if (
+        lowerText.includes('konfirmasi pelimpahan') ||
+        target.closest('[onclick*="BAST"]') ||
+        target.closest('[onclick*="modal-pelimpahan"]')
+      ) {
+        if (target.closest('#modal-pelimpahan') && (lowerText.includes('konfirmasi pelimpahan') || lowerText.includes('cetak bast'))) {
+          e.preventDefault();
+          hideModal('modal-pelimpahan');
+          alert('Otorisasi MFA Hardware Berhasil!\n\nBerita Acara Serah Terima (BAST) #BAST-2024-0089 telah diterbitkan ke printer dan dicatat pada Append-Only Audit Log Blok #00142895.');
+          
+          // Visual feedback on row badge
+          const badge = el.querySelector('#modal-pelimpahan')?.closest('body')?.querySelector('.bg-error-container') || el.querySelector('.bg-error-container');
+          if (badge) {
+            badge.className = 'px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 font-label-sm text-label-sm font-semibold flex items-center gap-1';
+            badge.innerHTML = '<span class="material-symbols-outlined text-[14px]">check_circle</span> Dilimpahkan ke Brankas BSI';
+          }
+          return;
+        }
+      }
+
+      // Open modal-tahan-baru
       if (lowerText.includes('tahan barang baru') || target.id === 'btn-open-tahan-modal') {
         e.preventDefault();
-        const modal = el.querySelector('#modal-tahan-baru');
-        if (modal) modal.classList.remove('hidden');
+        showModal('modal-tahan-baru');
         return;
       }
 
-      if (action === 'close-modal-tahan-baru') {
+      // Close modal-tahan-baru
+      if (
+        (lowerText === 'batal' || lowerText === 'close' || action === 'close-modal-tahan-baru') &&
+        target.closest('#modal-tahan-baru')
+      ) {
         e.preventDefault();
-        const modal = el.querySelector('#modal-tahan-baru');
-        if (modal) modal.classList.add('hidden');
+        hideModal('modal-tahan-baru');
         return;
       }
 
-      if (action === 'submit-tahan-baru') {
+      // Confirm modal-tahan-baru
+      if (action === 'submit-tahan-baru' || lowerText.includes('kunci & terbitkan perintah')) {
         e.preventDefault();
-        const modal = el.querySelector('#modal-tahan-baru');
-        if (modal) modal.classList.add('hidden');
+        hideModal('modal-tahan-baru');
         alert('Perintah Penahanan Barang Diterbitkan!\n\nNomor Segel: SG-092\nBarang dipindahkan ke Brankas Pengamanan Khusus BSI.');
         return;
       }
 
-      if (lowerText.includes('limpahkan') || target.closest('[onclick*="modal-pelimpahan"]')) {
+      // Filter tabs in Barang Ditahan
+      if (
+        lowerText.includes('semua ditahan') ||
+        lowerText.includes('sengketa identitas') ||
+        lowerText.includes('pelanggaran etik') ||
+        lowerText.includes('barang bukti polisi')
+      ) {
         e.preventDefault();
-        const modal = el.querySelector('#modal-pelimpahan');
-        if (modal) {
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-        } else {
-          alert('Proses Pelimpahan Barang ke Komisi Disiplin Kampus Dijalankan.');
-        }
-        return;
-      }
-
-      if (lowerText.includes('konfirmasi pelimpahan')) {
-        e.preventDefault();
-        const modal = el.querySelector('#modal-pelimpahan');
-        if (modal) {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-        }
-        alert('Barang Berhasil Dilimpahkan!\n\nBerita Acara Pelimpahan Barang ke Komisi Disiplin Kampus telah diterbitkan.');
+        const tabBtns = el.querySelectorAll('button');
+        tabBtns.forEach(btn => {
+          const t = btn.textContent.trim().toLowerCase();
+          if (t.includes('semua ditahan') || t.includes('sengketa identitas') || t.includes('pelanggaran etik') || t.includes('barang bukti polisi')) {
+            if (btn === target || btn.contains(target)) {
+              btn.className = 'px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-semibold shadow-xs transition-all';
+            } else {
+              btn.className = 'px-3.5 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-md text-label-md transition-all';
+            }
+          }
+        });
         return;
       }
 
@@ -547,11 +711,7 @@ export default function PenandaAnomali({ onNavigate }) {
       // =========================================================================
       if (lowerText.includes('simpan perubahan parameter')) {
         e.preventDefault();
-        const modal = el.querySelector('#modal-konfirmasi');
-        if (modal) {
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-        }
+        showModal('modal-konfirmasi');
         return;
       }
 
@@ -578,18 +738,73 @@ export default function PenandaAnomali({ onNavigate }) {
         target.closest('#modal-konfirmasi')
       ) {
         e.preventDefault();
-        const modal = el.querySelector('#modal-konfirmasi');
-        if (modal) {
-          modal.classList.add('hidden');
-          modal.classList.remove('flex');
-        }
+        hideModal('modal-konfirmasi');
+        return;
+      }
+    };
+
+    // =========================================================================
+    // EVENT LISTENER: INPUT (Sliders, Search, Counters)
+    // =========================================================================
+    const handleInput = (e) => {
+      const target = e.target;
+      if (!target) return;
+
+      // Sliders in Konfigurasi Sentinel
+      if (target.type === 'range' && target.id && target.id.startsWith('slider-')) {
+        const source = target.id.replace('slider-', '');
+        window.updateSliders(source, target.value);
+        return;
+      }
+
+      // Number inputs for sliders in Konfigurasi Sentinel
+      if (target.type === 'number' && target.id && target.id.startsWith('num-')) {
+        const source = target.id.replace('num-', '');
+        window.updateSliders(source, target.value);
+        return;
+      }
+
+      // Justifikasi input in Konfigurasi Sentinel
+      if (target.id === 'input-justifikasi') {
+        window.handleJustificationInput(target);
+        return;
+      }
+
+      // Search input in Manajemen Satpam
+      if (target.id === 'searchInput') {
+        window.filterTable();
+        return;
+      }
+    };
+
+    // =========================================================================
+    // EVENT LISTENER: CHANGE (Select Filters, Checkboxes)
+    // =========================================================================
+    const handleChange = (e) => {
+      const target = e.target;
+      if (!target) return;
+
+      // Status/Pos filter in Manajemen Satpam
+      if (target.id === 'statusFilter' || target.id === 'posFilter') {
+        window.filterTable();
+        return;
+      }
+
+      // Checkboxes in Detail Insiden
+      if (target.id === 'chk-eval-3' || target.id === 'chk-eval-4') {
+        window.checkClosureReadiness();
         return;
       }
     };
 
     el.addEventListener('click', handleClick);
+    el.addEventListener('input', handleInput);
+    el.addEventListener('change', handleChange);
+
     return () => {
       el.removeEventListener('click', handleClick);
+      el.removeEventListener('input', handleInput);
+      el.removeEventListener('change', handleChange);
       delete window.openModal;
       delete window.closeModal;
       delete window.filterTable;
