@@ -1,102 +1,69 @@
 import React, { useState } from 'react';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import Home from './pages/public/Home';
-import KatalogTemuan from './pages/public/KatalogTemuan';
-import DetailTemuan from './pages/public/DetailTemuan';
-import LaporKehilangan from './pages/public/LaporKehilangan';
-import LaporPenemuan from './pages/public/LaporPenemuan';
-import PosSatpam from './pages/public/PosSatpam';
-import CaraKerja from './pages/public/CaraKerja';
-import DashboardSatpam from './pages/admin/DashboardSatpam';
-import { initialFoundItems, initialLostReports } from './data/mockData';
+import LandingPage from './pages/LandingPage';
+import DaftarTemuanEnhanced from './pages/DaftarTemuanEnhanced';
+import DetailTemuan from './pages/DetailTemuan';
+import LaporKehilanganStep1 from './pages/LaporKehilanganStep1';
+import LaporKehilanganStep2OTP from './pages/LaporKehilanganStep2OTP';
+
+const screens = [
+  { id: 'landing', label: '2. Landing Page', component: LandingPage },
+  { id: 'temuan_enhanced', label: '1. Daftar Barang Temuan (Enhanced)', component: DaftarTemuanEnhanced },
+  { id: 'detail', label: '4. Detail Barang Temuan', component: DetailTemuan },
+  { id: 'lapor_1', label: '5. Lapor Kehilangan (Langkah 1)', component: LaporKehilanganStep1 },
+  { id: 'lapor_2_otp', label: '6. Lapor Kehilangan (Langkah 2: OTP)', component: LaporKehilanganStep2OTP },
+];
 
 export default function App() {
-  const [activePage, setActivePage] = useState('home');
-  const [items, setItems] = useState(initialFoundItems);
-  const [lostReports, setLostReports] = useState(initialLostReports);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [activeScreen, setActiveScreen] = useState('landing');
+  const [showSwitcher, setShowSwitcher] = useState(true);
 
-  const handleNewReport = (newReport) => {
-    setLostReports([newReport, ...lostReports]);
-  };
-
-  const handleNewFoundItem = (newItem) => {
-    setItems([newItem, ...items]);
-  };
-
-  const handleUpdateItemStatus = (itemId, newStatus) => {
-    setItems(items.map(item => item.id === itemId ? { ...item, status: newStatus } : item));
-  };
+  const CurrentScreenComponent = screens.find(s => s.id === activeScreen)?.component || LandingPage;
 
   return (
-    <div className="min-h-screen flex flex-col bg-canvasBg text-slate-800 font-sans">
-      {/* Top Navigation */}
-      <Navbar activePage={activePage} setActivePage={setActivePage} />
+    <div className="relative min-h-screen">
+      {/* Quick Screen Switcher Bar (Directly matching the 5 Active Stitch Screens) */}
+      <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${showSwitcher ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
+        <div className="bg-slate-900/90 backdrop-blur-md text-white px-4 py-2.5 rounded-full shadow-2xl border border-slate-700/80 flex items-center gap-2 max-w-[95vw] overflow-x-auto">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400 pl-1 shrink-0">
+            LAYAR STITCH:
+          </span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {screens.map((screen) => (
+              <button
+                key={screen.id}
+                onClick={() => setActiveScreen(screen.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer whitespace-nowrap ${
+                  activeScreen === screen.id
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'
+                }`}
+              >
+                {screen.label}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setShowSwitcher(false)}
+            className="ml-2 text-slate-400 hover:text-white text-xs px-2 py-1 rounded-full hover:bg-slate-800 cursor-pointer"
+            title="Sembunyikan bilah navigasi layar"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
 
-      {/* Main Page Content */}
-      <main className="flex-1 flex flex-col">
-        {activePage === 'home' && (
-          <Home
-            items={items}
-            setActivePage={setActivePage}
-            setSelectedItem={setSelectedItem}
-          />
-        )}
+      {/* Button to reopen switcher if closed */}
+      {!showSwitcher && (
+        <button
+          onClick={() => setShowSwitcher(true)}
+          className="fixed bottom-4 right-4 z-50 bg-slate-900 text-white text-xs font-bold px-3 py-2 rounded-full shadow-lg border border-slate-700 cursor-pointer hover:bg-slate-800 transition"
+        >
+          📱 Pilih Layar Stitch (5 Layar)
+        </button>
+      )}
 
-        {activePage === 'katalog' && (
-          <KatalogTemuan
-            items={items}
-            setActivePage={setActivePage}
-            setSelectedItem={setSelectedItem}
-          />
-        )}
-
-        {activePage === 'detail' && (
-          <DetailTemuan
-            item={selectedItem}
-            setActivePage={setActivePage}
-          />
-        )}
-
-        {activePage === 'lapor-kehilangan' && (
-          <LaporKehilangan
-            setActivePage={setActivePage}
-            onNewReport={handleNewReport}
-          />
-        )}
-
-        {activePage === 'lapor-penemuan' && (
-          <LaporPenemuan
-            setActivePage={setActivePage}
-            onNewFoundItem={handleNewFoundItem}
-          />
-        )}
-
-        {activePage === 'pos-satpam' && (
-          <PosSatpam
-            setActivePage={setActivePage}
-          />
-        )}
-
-        {activePage === 'cara-kerja' && (
-          <CaraKerja
-            setActivePage={setActivePage}
-          />
-        )}
-
-        {activePage === 'admin-dashboard' && (
-          <DashboardSatpam
-            items={items}
-            lostReports={lostReports}
-            onUpdateItemStatus={handleUpdateItemStatus}
-          />
-        )}
-      </main>
-
-      {/* Footer */}
-      <Footer setActivePage={setActivePage} />
+      {/* Render the Exact Screen Component */}
+      <CurrentScreenComponent onNavigate={(target) => setActiveScreen(target)} />
     </div>
   );
 }
-
