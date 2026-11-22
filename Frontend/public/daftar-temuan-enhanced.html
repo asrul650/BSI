@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lost &amp; Found Kampus UII — Temukan Kembali Barangmu</title>
+<!-- Tailwind CSS v3 CDN with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.preconnect.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#F0F6FF',
+              100: '#E0EDFE',
+              200: '#BAdafD',
+              500: '#1D63ED',
+              600: '#154DC0',
+              800: '#1E293B',
+              900: '#0F172A',
+            },
+            uiiNavy: '#0F264A',
+            uiiDark: '#131F37',
+            uiiBlue: '#2563EB',
+            canvasBg: '#F8FAFC',
+          },
+          boxShadow: {
+            'soft-card': '0 2px 14px -2px rgba(15, 23, 42, 0.05), 0 1px 3px -1px rgba(15, 23, 42, 0.03)',
+            'elevated': '0 12px 30px -4px rgba(15, 38, 74, 0.09), 0 4px 10px -2px rgba(15, 38, 74, 0.03)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles for fine-tuned details -->
+<style data-purpose="custom-typography-and-decorations">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F8FAFC;
+      color: #0F172A;
+    }
+    .custom-pill-active {
+      background-color: #0F264A;
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px -1px rgba(15, 38, 74, 0.25);
+    }
+    .custom-pill-idle {
+      background-color: #F1F5F9;
+      color: #475569;
+      border: 1px solid #E2E8F0;
+      transition: all 0.2s ease;
+    }
+    .custom-pill-idle:hover {
+      background-color: #E2E8F0;
+      color: #0F172A;
+      border-color: #CBD5E1;
+    }
+  </style>
+<meta content="web_standard" name="shell-type"/></head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900 bg-[#F8FAFC]">
+<!-- BEGIN: MainHeader -->
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all duration-200 shadow-sm">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<!-- Brand Logo & Identity -->
+<a class="flex items-center space-x-3.5 group" href="#">
+<div class="w-11 h-11 rounded-xl bg-uiiNavy text-white flex items-center justify-center shadow-md group-hover:bg-blue-700 transition">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div>
+<span class="block text-lg font-bold text-slate-900 tracking-tight leading-tight">Lost &amp; Found UII</span>
+<span class="block text-xs font-medium text-slate-500">Kampus Terpadu • Temukan kembali barangmu</span>
+</div>
+</a>
+<!-- Desktop Navigation Links -->
+<nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+<a class="hover:text-uiiNavy transition" href="#beranda">Beranda</a>
+<a class="text-uiiNavy font-bold relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-0.5 after:bg-uiiNavy" href="#barang-temuan">Barang Temuan</a>
+<a class="hover:text-uiiNavy transition" href="#cara-kerja">Cara Kerja</a>
+<a class="hover:text-uiiNavy transition" href="#pos-satpam">Pos Satpam</a>
+<a class="hover:text-uiiNavy transition" href="#faq">FAQ</a>
+</nav>
+<!-- Action Buttons (No Login Required) -->
+<div class="flex items-center space-x-3">
+<button class="hidden sm:inline-flex items-center justify-center px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-full hover:bg-slate-50 hover:border-slate-400 shadow-sm transition" type="button">
+          Saya Kehilangan
+        </button>
+<button class="inline-flex items-center justify-center px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-uiiNavy hover:bg-slate-800 rounded-full shadow-sm hover:shadow transition" type="button">
+          Saya Menemukan
+        </button>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<main class="flex-grow">
+<div class="flex flex-col w-full">
+<div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
+<!-- Breadcrumb & Top Intro Section -->
+<div class="space-y-4">
+<nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-xs font-semibold text-slate-500">
+<a class="hover:text-uiiNavy transition flex items-center gap-1.5" href="#beranda">
+<span class="material-symbols-outlined text-[15px]">home</span>
+  Beranda
+</a>
+<span class="text-slate-300">/</span>
+<span class="text-slate-900 font-bold">Barang Temuan</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-5 bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 shadow-sm">
+<div class="space-y-2.5 max-w-3xl">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-900 text-xs font-semibold">
+<span class="material-symbols-outlined text-sm text-blue-700">verified_user</span>
+<span>Pusat Data Resmi Satuan Pengamanan (Satpam) UII</span>
+</div>
+<h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Daftar Barang Temuan Kampus</h1>
+<p class="text-sm text-slate-600 leading-relaxed max-w-2xl">
+    Barang yang diamankan dan diverifikasi oleh Satpam Kampus Terpadu UII. Seluruh data pelapor dan penemu dirahasiakan untuk privasi serta keamanan bersama.
+  </p>
+</div>
+<div class="flex items-center self-start md:self-auto shrink-0">
+<div class="px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-sm flex items-center gap-2.5">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+<span>Menampilkan <strong class="text-white font-bold text-sm ml-0.5">16</strong> barang aktif</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Search & Multi-Filter Elevated Card -->
+<div class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-soft-card space-y-5">
+<!-- Search Input Floating Pill -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4.5 top-1/2 -translate-y-1/2 text-slate-400 text-xl pl-1">search</span>
+<input class="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 hover:border-slate-300 text-slate-900 placeholder:text-slate-400 rounded-xl text-sm font-medium focus:bg-white focus:border-uiiNavy focus:ring-4 focus:ring-uiiNavy/10 focus:outline-none transition shadow-inner" id="searchInput" placeholder="Cari nama barang, ciri khusus, gedung / lokasi penemuan..." type="text"/>
+<button aria-label="Reset search" class="absolute right-3.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-slate-200/70 text-slate-600 flex items-center justify-center hover:bg-slate-300 transition" type="button">
+<span class="material-symbols-outlined text-base">tune</span>
+</button>
+</div>
+<!-- Quick Category Pills -->
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Kategori Populer:</span>
+<span class="text-xs text-slate-400 font-medium">Klik untuk menyaring</span>
+</div>
+<div class="flex flex-wrap items-center gap-2" id="categoryChips">
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-active text-xs font-semibold transition" type="button">Semua</button>
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-idle text-xs font-semibold transition" type="button">Dompet &amp; Kartu</button>
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-idle text-xs font-semibold transition" type="button">Kunci &amp; Kendaraan</button>
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-idle text-xs font-semibold transition" type="button">Tas &amp; Ransel</button>
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-idle text-xs font-semibold transition" type="button">Ponsel &amp; Gadget</button>
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-idle text-xs font-semibold transition" type="button">Botol Minum / Tumbler</button>
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-idle text-xs font-semibold transition" type="button">Helm &amp; Aksesoris</button>
+<button class="category-chip px-3.5 py-1.5 rounded-full custom-pill-idle text-xs font-semibold transition" type="button">Elektronik</button>
+</div>
+</div>
+<!-- Filter Controls Strip (Dropdowns) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
+<!-- Filter Lokasi -->
+<div class="relative">
+<label class="block text-xs font-bold text-slate-700 mb-1.5 ml-0.5">Lokasi Kampus</label>
+<div class="relative">
+<select class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-800 py-2.5 pl-3.5 pr-8 rounded-xl text-xs font-medium focus:bg-white focus:border-uiiNavy focus:ring-2 focus:ring-uiiNavy/10 focus:outline-none transition">
+<option selected="">Semua Lokasi Kampus</option>
+<option>Perpustakaan Pusat</option>
+<option>Gedung Kuliah Umum (GKU)</option>
+<option>FTSP (Teknik Sipil &amp; Perencanaan)</option>
+<option>FBE (Bisnis &amp; Ekonomika)</option>
+<option>FPSB (Psikologi &amp; Sosbud)</option>
+<option>FIAI (Ilmu Agama Islam)</option>
+<option>FMIPA (MIPA)</option>
+<option>FTI (Teknologi Industri)</option>
+<option>Masjid Ulil Albab</option>
+<option>Parkiran Gedung Rektorat</option>
+<option>Kantin Boulevard</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">expand_more</span>
+</div>
+</div>
+<!-- Filter Warna -->
+<div class="relative">
+<label class="block text-xs font-bold text-slate-700 mb-1.5 ml-0.5">Warna Dominan</label>
+<div class="relative">
+<select class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-800 py-2.5 pl-3.5 pr-8 rounded-xl text-xs font-medium focus:bg-white focus:border-uiiNavy focus:ring-2 focus:ring-uiiNavy/10 focus:outline-none transition">
+<option selected="">Semua Warna</option>
+<option>Hitam</option>
+<option>Biru</option>
+<option>Cokelat</option>
+<option>Abu-abu</option>
+<option>Silver / Putih</option>
+<option>Merah</option>
+<option>Lainnya</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">expand_more</span>
+</div>
+</div>
+<!-- Filter Tanggal -->
+<div class="relative">
+<label class="block text-xs font-bold text-slate-700 mb-1.5 ml-0.5">Rentang Waktu</label>
+<div class="relative">
+<select class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-800 py-2.5 pl-3.5 pr-8 rounded-xl text-xs font-medium focus:bg-white focus:border-uiiNavy focus:ring-2 focus:ring-uiiNavy/10 focus:outline-none transition">
+<option selected="">Semua Waktu</option>
+<option>Hari Ini</option>
+<option>3 Hari Terakhir</option>
+<option>Minggu Ini</option>
+<option>Bulan Ini</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">expand_more</span>
+</div>
+</div>
+<!-- Sort By -->
+<div class="relative">
+<label class="block text-xs font-bold text-slate-700 mb-1.5 ml-0.5">Urutan Tampilan</label>
+<div class="relative">
+<select class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-800 py-2.5 pl-3.5 pr-8 rounded-xl text-xs font-medium focus:bg-white focus:border-uiiNavy focus:ring-2 focus:ring-uiiNavy/10 focus:outline-none transition">
+<option selected="">Terbaru Ditemukan</option>
+<option>Terlama Ditemukan</option>
+<option>ID Barang (A - Z)</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">sort</span>
+</div>
+</div>
+</div>
+<!-- Active Filters Tag Bar -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+<div class="flex flex-wrap items-center gap-2">
+<span class="text-xs font-semibold text-slate-500">Filter Aktif:</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium">
+  Status: Semua Aktif
+  <button aria-label="Hapus filter" class="hover:text-red-600 transition" type="button"><span class="material-symbols-outlined text-xs">close</span></button>
+</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-xs font-medium">
+  Area: Kampus Terpadu
+  <button aria-label="Hapus filter" class="hover:text-red-600 transition" type="button"><span class="material-symbols-outlined text-xs">close</span></button>
+</span>
+</div>
+<button class="text-xs font-bold text-blue-700 hover:text-blue-900 transition flex items-center gap-1 hover:underline" type="button">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+<span>Reset Semua Filter</span>
+</button>
+</div>
+</div>
+<!-- Inline Banner CTA for Missing Items -->
+<div class="relative overflow-hidden bg-gradient-to-r from-uiiNavy via-slate-900 to-[#132A52] text-white rounded-2xl p-6 sm:p-7 shadow-elevated border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="absolute -right-10 -top-10 w-56 h-56 rounded-full bg-blue-500/10 pointer-events-none blur-3xl"></div>
+<div class="flex items-start sm:items-center gap-4 relative z-10">
+<div class="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-blue-300 flex items-center justify-center shrink-0 shadow-inner">
+<span class="material-symbols-outlined text-2xl">help_center</span>
+</div>
+<div class="space-y-1">
+<h2 class="text-lg font-bold text-white tracking-tight">Barangmu belum tercatat di daftar ini?</h2>
+<p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+    Jangan khawatir, buat laporan kehilangan mandiri tanpa login agar tim Satpam kampus dapat segera mencocokkan fisik barang saat diserahkan oleh penemu.
+  </p>
+</div>
+</div>
+<div class="relative z-10 shrink-0 w-full md:w-auto">
+<button class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-100 text-uiiNavy text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition active:scale-[0.98]" type="button">
+<span>Lapor Kehilangan Sekarang</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Main Item Cards Grid (4 Columns Desktop) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1: Dompet Kulit Pria -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="A classic black leather men's wallet sitting on a clean, bright slate minimalist university study desk. Soft cinematic daylight, realistic textures of genuine stitched leather, subtle deep navy and slate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEWKa4TLhFC3YYpSMbKjvJhy2Wxr3QgPOv62VURlmG-YWofe5QQZ4td9uvA1u9IsAB-HSYhhC1hV6F8Q7MQbyXO4rCG1ltQpUYCGDiYxJboIifPyYru3w9QcA9rRu9XH6PCLgupIKUUikWP1yYAv_4pr8PPV9KmX90FBY4H1KqcfDrSVlzv-Sq4-F-rt-e9NFXAYYHRK1dput87BO8KAj5ZOZwf0DZGr_djBk1mqc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<!-- Top Left Badges: Kategori & Status Baru -->
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Dompet</span>
+<span class="px-2 py-1 rounded-md bg-amber-500 text-white text-[10px] font-bold uppercase shadow-sm">Baru</span>
+</div>
+<!-- Top Right Badge: Status Penemuan -->
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+Barang Ditemukan
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0248</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-300"></span>
+<span>Hitam</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    Dompet Kulit Pria Lipat
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Meja Baca Perpustakaan Lt. 2</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>Hari ini, 09:30 WIB</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2: Kunci Motor Honda Vario -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="Modern motorcycle smart ignition key with a blue woven lanyard fabric keychain featuring subtle university branding, resting on smooth pale limestone. Clean studio lighting, sharp focus, serene slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOdf_oyBrJHOYh7zFkLDhy317iGObcKcKWSB6Ra7hF5H3lzIchyfJgnZf7HjxH7bWiuswsg1ictWhGhErXJNnd5_qntP2vUznwJ1Udes1rsRBCr6GJLrmqj8ZoA_gZn-rbszeBJA4MhXLHMvEhZ_hFYr93jQgESwkBIK-NAoLj_O9RiEW-g85Z4vBiMzAb_FdLIHNBGWraS2wykUF2PfW_v1pevhscDOi8ITLwkc0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Kunci</span>
+<span class="px-2 py-1 rounded-md bg-amber-500 text-white text-[10px] font-bold uppercase shadow-sm">Baru</span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+Proses Verifikasi
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0247</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-blue-600 border border-slate-300"></span>
+<span>Biru UII</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    Kunci Motor Vario + Gantungan Biru
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Parkiran Sayap Timur FTSP</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>Hari ini, 08:15 WIB</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3: Tas Ransel Laptop Abu-abu -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="Durable heather gray urban laptop backpack standing upright on a polished concrete university foyer floor. Natural daylight through large glass windows, clean institutional setting, high detail fabric texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQmHFkAM_bCOrpVCQKfTP5i3Z9M_vu5ZX1WkWzuORJilQzVQ2l5V9O8YrhfnR7t5tyeAlODs6GH403lCKYxANaPJ5G4Fe_x9TCjdsMjnYePbIV9mGbP_CbKFPtjqsCtkjHrjus9UQlx_US0Hu3zvm1RhM833w6Igo6wNNqi_GB9gnKbv9fJPBXgiuir6f8EXQw6ySIAcdQzDjzbYklEHgB7XdoKBKosAhs0IpZGvA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Tas</span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+Barang Ditemukan
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0245</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-400 border border-slate-300"></span>
+<span>Abu-abu</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    Tas Ransel Laptop Abu-abu
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Lobby Gedung Kuliah Umum (GKU)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>Kemarin, 16:45 WIB</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 4: Tumbler Stainless Silver -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="Sleek insulated brushed stainless steel silver water bottle standing on light colored marble floor in a mosque veranda. Calm peaceful soft morning lighting, clean reflections, minimalist composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuCLcUG7ZJu49_7vxFvpWSRjr689o5HiEhgxFA7biqNkghJ6qJ9S-yAhkiWzH2Ratn1OcxfH_JhNVl59-Lvbj4qFZsjY8AEtsL6GqjnH4cXe2zoqrt0S0fNudGFLdPGj735rDO-4GDsDk0nrzrh6cI0su-wqiZ64mIWQGqkR52AaFwqECWjiKKShNeCYOFX52UAXBKS5ByPGrtQKhMcVwKik4NR9VUuQFN9CaIJxE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Tumbler</span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+Barang Ditemukan
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0242</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-300 border border-slate-400"></span>
+<span>Silver</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    Tumbler / Botol Stainless Silver
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Serambi Masjid Ulil Albab</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>Kemarin, 13:20 WIB</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 5: Smartwatch Hitam -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="Digital black sports fitness band smartwatch on a high tech wooden laboratory computer desk with soft reflection. Clean studio macro shot, deep black silicone strap, subtle ambient office light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwed8BpSmmcbx_wvnnugIw8jcBVyNuB7m67Uwri15jf8JhZHE97EzXzPk1Jy2s3GOS2qkDm8SCTmrsQdKpWVfrNfACbeUEpUkBQhUL-CX9_iqt4lfCZ1IqS2YLsr08mO3Zi2MVId_lb_QreWP1VbAUIxieGE5xj5JohFmYxEz_EX0safn40M0C3BrUArsN3sncL4_VDC18prTrJneNlx0COxGKT8umm5U_WkSpHy0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Gadget</span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+Proses Verifikasi
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0240</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-slate-950 border border-slate-300"></span>
+<span>Hitam Matte</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    Smartwatch Gelang Hitam
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Laboratorium FTI Lt. 3</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>18 Nov 2024</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 6: Helm Bogo Cokelat Vintage -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="Retro brown leather motorcycle helmet with bubble visor placed neatly on outdoor stone bench under shade of university campus trees. Warm afternoon lighting, rich leather and caramel tones, sharp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPr8K33PS5BtUcN1DK96PjbI6ealyFpSpAYjTJF0dIQ4H9zIC9K2mU66j8ldPam1zlZVDGLBx7DVGDl_klIW0rpBwL7jvWejqYO1k8u2Me-RCCt02_fpznA1-t0eXnbRGSRyjlzZt4CAM-FX1dZqgIgInqNbZe8EHOJGehTypKon148iYqTTTssGEtncHiLfQLML3NILjVqXqXe761F9vcxQUxcn7SoIH63fByiI8"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Helm</span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+Barang Ditemukan
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0238</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-900 border border-slate-300"></span>
+<span>Cokelat</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    Helm Bogo Cokelat Vintage
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Parkiran Gedung Rektorat</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>18 Nov 2024</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 7: Kartu Mahasiswa (KTM) & Flazz -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="Campus student ID smartcard and contactless blue transit payment card placed inside an acrylic protective card holder on a modern dining table. Bright clean cafeteria setting, privacy masked surface, realistic depth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbYiulLPeC9U7RZH7Coxm3ekM5Hx9SvGnRtJwn8CSa0oL5_gLVbBQe28WxzB7xllzOphw8LVV3XA8O-BwJLoA5LjiGMzToFby22wlvv-P8BfizZJTU18wjPR2JDBtdqbB608SOWjrYy0dyU3Ki55rcR4ttDJ57bgK3VxVPUitNZwKdC7LsAr8KsHcadf_pCMb8lPQ3gM-Ok9eGoGTNQ-DDMsd1UvByjcOR2Tx_NJw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Kartu</span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+Barang Ditemukan
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0235</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-sky-500 border border-slate-300"></span>
+<span>Biru Muda</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    KTM UII &amp; Kartu Flazz (Dalam Holder)
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Kantin Boulevard UII</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>17 Nov 2024</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 8: Powerbank Anker Putih -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 shadow-soft-card hover:shadow-elevated transition-all duration-300 flex flex-col hover:-translate-y-1">
+<div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition duration-500" data-alt="Compact white matte portable power bank charger with a coiled short USB cable resting on a university classroom lecture desk. Bright airy setting, minimal composition, clean soft white shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDv5vcuc1xMMH1rnMd5VNjssR0_lirJ_cvO8MaVuTFF0M7xuCMZV4QiWk6-jApqm7CP_1giiuXl0qA9rHh6i9lDqC2M6AL4vTRyHSUOdvhNV54W24awajqd3kXmRptO19tHm9MiWK1qVn14CQ_tALo6tQy0ihS4hAtz3-joD0gjNIZvmcmSlRaGsyq1NOAExQQVgwcbp5s_eQCdkpO_SrCRZ9CVIpzziprq3BYYKzU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25 pointer-events-none"></div>
+<div class="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+<span class="px-2.5 py-1 rounded-md bg-uiiNavy text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">Elektronik</span>
+</div>
+<div class="absolute top-3 right-3 z-10">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/75 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+Barang Ditemukan
+</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs text-slate-500">
+<span class="font-mono bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded border border-slate-200">ID: LF-0231</span>
+<div class="flex items-center gap-1.5 text-slate-600 font-medium">
+<span class="w-2.5 h-2.5 rounded-full bg-white border border-slate-300"></span>
+<span>Putih</span>
+</div>
+</div>
+<h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition line-clamp-1">
+    Powerbank Anker 10000mAh Putih
+  </h3>
+<div class="space-y-1.5 text-xs text-slate-600">
+<div class="flex items-center gap-2 truncate">
+<span class="material-symbols-outlined text-sm text-blue-600 shrink-0">location_on</span>
+<span class="truncate">Ruang Kuliah FBE 2.4</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-slate-400 shrink-0">schedule</span>
+<span>16 Nov 2024</span>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-slate-100">
+<button class="w-full py-2.5 px-4 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold group-hover:bg-uiiNavy group-hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs" type="button">
+<span>Klaim di Pos Satpam</span>
+<span class="material-symbols-outlined text-sm">verified_user</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination & Overview Bar -->
+<div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-soft-card flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="text-xs sm:text-sm text-slate-600">
+  Menampilkan <span class="font-bold text-slate-900">1 - 8</span> dari <span class="font-bold text-slate-900">24</span> total barang temuan
+</div>
+<nav aria-label="Pagination Navigation" class="flex items-center space-x-1.5">
+<button class="w-9 h-9 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center cursor-not-allowed border border-slate-200" disabled="" type="button">
+<span class="material-symbols-outlined text-base">chevron_left</span>
+</button>
+<button class="w-9 h-9 rounded-xl bg-uiiNavy text-white text-xs font-bold shadow-sm" type="button">1</button>
+<button class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition" type="button">2</button>
+<button class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 text-xs font-semibold transition" type="button">3</button>
+<button class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 flex items-center justify-center transition" type="button">
+<span class="material-symbols-outlined text-base">chevron_right</span>
+</button>
+</nav>
+</div>
+<!-- Trust & Verification Procedure Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+<div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft-card flex items-start gap-4 hover:border-slate-300 transition">
+<div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-xl">badge</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-slate-900 mb-1">Verifikasi Identitas</h4>
+<p class="text-xs text-slate-600 leading-relaxed">Tunjukkan KTM/KTP serta bukti kepemilikan (foto, nomor serial, atau kecocokan isi) kepada petugas Satpam di pos.</p>
+</div>
+</div>
+<div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft-card flex items-start gap-4 hover:border-slate-300 transition">
+<div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-xl">local_police</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-slate-900 mb-1">Pengambilan di Pos</h4>
+<p class="text-xs text-slate-600 leading-relaxed">Fisik barang disimpan aman di Pos Satpam Gedung Kuliah Umum (GKU) &amp; Pos Rektorat 24 Jam.</p>
+</div>
+</div>
+<div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft-card flex items-start gap-4 hover:border-slate-300 transition">
+<div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-xl">lock_clock</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-slate-900 mb-1">Masa Penyimpanan</h4>
+<p class="text-xs text-slate-600 leading-relaxed">Barang diamankan selama 90 hari kalender sebelum dialihkan sesuai SOP keamanan universitas.</p>
+</div>
+</div>
+</div>
+<!-- Empty State Preview / Helper Box -->
+<div class="bg-gradient-to-b from-white to-slate-50 border border-slate-200/90 rounded-2xl p-7 sm:p-9 text-center space-y-3.5 shadow-soft-card">
+<div class="inline-flex w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 text-blue-700 items-center justify-center shadow-inner mb-0.5">
+<span class="material-symbols-outlined text-2xl">search_off</span>
+</div>
+<h3 class="text-base sm:text-lg font-bold text-slate-900">Belum menemukan barang yang cocok?</h3>
+<p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+  Barang temuan diperbarui berkala setiap ada penyerahan baru oleh civitas akademika atau petugas patroli keamanan UII.
+</p>
+<div class="pt-3 flex flex-wrap items-center justify-center gap-3">
+<button class="px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-700 text-xs font-bold shadow-sm hover:bg-slate-50 transition" type="button">
+  Muat Ulang Halaman
+</button>
+<button class="px-5 py-2.5 rounded-xl bg-uiiNavy text-white text-xs font-bold shadow-sm hover:bg-slate-800 transition" type="button">
+  Buat Laporan Kehilangan Baru
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Dynamic Chip Toggle Interactive Micro-interaction
+  document.querySelectorAll('.category-chip').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.category-chip').forEach(btn => {
+        btn.classList.remove('custom-pill-active');
+        btn.classList.add('custom-pill-idle');
+      });
+      button.classList.remove('custom-pill-idle');
+      button.classList.add('custom-pill-active');
+    });
+  });
+</script>
+</main>
+<!-- BEGIN: MainFooter -->
+<footer class="bg-white border-t border-slate-200 pt-12 pb-8" id="pos-satpam">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-slate-100">
+<!-- Brand & Description (Col 1) -->
+<div class="md:col-span-5">
+<div class="flex items-center space-x-3 mb-4">
+<div class="w-9 h-9 rounded-lg bg-uiiNavy text-white flex items-center justify-center font-bold">
+              UII
+            </div>
+<span class="font-bold text-slate-900 text-lg">Lost &amp; Found Kampus UII</span>
+</div>
+<p class="text-sm text-slate-600 leading-relaxed pr-0 md:pr-8">
+            Layanan resmi pelaporan barang hilang dan temuan untuk mahasiswa, staf, dan pengunjung Universitas Islam Indonesia bekerja sama dengan Satuan Pengamanan Kampus.
+          </p>
+<div class="mt-4 flex items-center space-x-3 text-xs text-slate-400">
+<span class="inline-flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              Sistem Aktif 24 Jam
+            </span>
+<span>•</span>
+<span>Kampus Terpadu Yogyakarta</span>
+</div>
+</div>
+<!-- Quick Links (Col 2) -->
+<div class="md:col-span-3">
+<h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Tautan Cepat</h4>
+<ul class="space-y-2.5 text-sm text-slate-600">
+<li><a class="hover:text-uiiNavy transition" href="#beranda">Beranda</a></li>
+<li><a class="hover:text-uiiNavy transition" href="#barang-temuan">Barang Temuan</a></li>
+<li><a class="hover:text-uiiNavy transition" href="#cara-kerja">Cara Kerja &amp; Panduan</a></li>
+<li><a class="hover:text-uiiNavy transition" href="#pos-satpam">Pos Satpam &amp; Lokasi</a></li>
+<li><a class="hover:text-uiiNavy transition" href="#kebijakan-privasi">Kebijakan Privasi</a></li>
+</ul>
+</div>
+<!-- Pos Satpam Contact Info (Col 3) -->
+<div class="md:col-span-4">
+<h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Kontak Pos Satpam</h4>
+<div class="text-sm text-slate-600 space-y-3">
+<p class="leading-relaxed">
+<strong>Pos Utama Satpam:</strong> Gedung Kuliah Umum (GKU) &amp; Gerbang Utama, Kampus Terpadu UII, Jl. Kaliurang Km 14,5, Sleman, D.I. Yogyakarta 55584.
+            </p>
+<div class="p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+<span class="block text-xs font-semibold text-slate-500">Hotline 24 Jam Satpam:</span>
+<a class="text-base font-bold text-uiiNavy hover:underline" href="tel:0274898444">
+                (0274) 898444 ext. Satpam
+              </a>
+<span class="block text-xs text-slate-500 mt-0.5">WhatsApp Tanggap Darurat: +62 812-3456-7890</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Copyright Bottom Bar -->
+<div class="mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+<p>© 2024 Universitas Islam Indonesia. Dilindungi hak cipta.</p>
+<div class="flex items-center space-x-6">
+<a class="hover:text-slate-800 transition" href="#">Syarat &amp; Ketentuan</a>
+<a class="hover:text-slate-800 transition" href="#">Kebijakan Privasi</a>
+<a class="hover:text-slate-800 transition" href="#">Bantuan Satpam</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>

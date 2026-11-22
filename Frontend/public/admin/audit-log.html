@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-tertiary-container":"#008ebf","on-secondary-fixed-variant":"#004b73","inverse-primary":"#bec6e0","surface-container-high":"#e6e8ea","error":"#ba1a1a","secondary":"#006398","on-primary-fixed":"#131b2e","tertiary-container":"#001e2c","on-secondary-container":"#00476e","secondary-container":"#5bb8fe","tertiary-fixed-dim":"#7bd0ff","surface-tint":"#565e74","tertiary":"#000000","secondary-fixed-dim":"#93ccff","on-background":"#191c1e","surface-bright":"#f7f9fb","surface-container-low":"#f2f4f6","surface-dim":"#d8dadc","outline":"#76777d","on-tertiary":"#ffffff","on-error":"#ffffff","surface":"#f7f9fb","secondary-fixed":"#cce5ff","background":"#f7f9fb","surface-container-lowest":"#ffffff","on-surface-variant":"#45464d","on-tertiary-fixed":"#001e2c","on-surface":"#191c1e","on-tertiary-fixed-variant":"#004c69","on-secondary":"#ffffff","primary-container":"#131b2e","primary":"#000000","on-error-container":"#93000a","surface-container-highest":"#e0e3e5","primary-fixed-dim":"#bec6e0","on-primary-container":"#7c839b","tertiary-fixed":"#c4e7ff","inverse-surface":"#2d3133","error-container":"#ffdad6","on-secondary-fixed":"#001d31","primary-fixed":"#dae2fd","surface-variant":"#e0e3e5","surface-container":"#eceef0","inverse-on-surface":"#eff1f3","on-primary":"#ffffff","outline-variant":"#c6c6cd","on-primary-fixed-variant":"#3f465c"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-lg":"2rem","gutter-mobile":"1rem","margin":"2rem","margin-mobile":"1rem","space-xs":"0.375rem","space-md":"1.25rem","gutter":"1.5rem","space-xl":"3rem","space-sm":"0.75rem"},"fontFamily":{"body-sm":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"display":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"display-mobile":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"]},"fontSize":{"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"display":["40px",{"lineHeight":"52px","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"600"}],"headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],"display-mobile":["28px",{"lineHeight":"36px","fontWeight":"700"}],"headline-lg":["30px",{"lineHeight":"38px","fontWeight":"700"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg-mobile":["22px",{"lineHeight":"30px","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="px-space-md py-space-md flex items-center gap-3 bg-surface-container-low"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-secondary-fixed text-[24px]">verified_user</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">BSI • UII</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mt-1">Portal Administrator BSI</span></div></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Menu Navigasi Audit</span></div><nav class="flex flex-col px-space-sm gap-1" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-xl shadow-[0_4px_12px_rgba(19,27,46,0.15)]"><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="beranda" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Beranda</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="penanda-anomali" href="#"><span class="material-symbols-outlined text-[20px]">warning</span><span>Penanda Anomali</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="insiden" href="#"><span class="material-symbols-outlined text-[20px]">security_update_warning</span><span>Insiden</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history_edu</span><span>Audit Log</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="akun-satpam" href="#"><span class="material-symbols-outlined text-[20px]">badge</span><span>Akun Satpam</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="barang-ditahan" href="#"><span class="material-symbols-outlined text-[20px]">lock_clock</span><span>Barang Ditahan</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="parameter" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span>Parameter</span></a></nav></div><div class="p-space-md m-space-sm rounded-xl bg-surface-container-low flex flex-col gap-2"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Keamanan Sesi</span><span class="flex h-2 w-2 rounded-full bg-secondary"></span></div><div class="font-label-md text-label-md text-on-surface font-semibold">Sesi Aktif: 07:42:15 tersisa</div><div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">vpn_lock</span>10.12.0.4 - VPN Terpadu</div><div class="flex items-center justify-between pt-1"><div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">speed</span>Latensi: 14ms</div><a class="font-label-sm text-label-sm text-secondary hover:underline flex items-center gap-1" data-path="kontak-siaga" href="#"><span class="material-symbols-outlined text-[14px]">emergency</span>Kontak Siaga</a></div></div></aside><div class="pl-72 flex flex-col min-h-screen"><header class="fixed top-0 left-72 right-0 h-20 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight">BSI Admin Portal - Lost &amp; Found Kampus UII</span><div class="flex items-center gap-2 mt-1"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface"><span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>Sistem Operasional Normal - Gateway BSI Terhubung</span><span class="px-2 py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">Production v2.4-sec</span><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[13px]">key</span>MFA Aktif - Hardware Token</span></div></div></div><div class="flex items-center gap-space-md"><div class="relative w-72"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-full bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Cari log / item / ID insiden..." type="text"/></div><div class="relative flex items-center justify-center"><button class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><span class="absolute top-1 right-1 h-2 w-2 rounded-full bg-error"></span></div><div class="flex items-center gap-3 pl-2"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface">Ir. Ahmad Fauzi, M.T.</span><span class="font-label-sm text-label-sm text-on-surface-variant">Super Admin / Audit Officer</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><a class="ml-2 w-9 h-9 rounded-full hover:bg-error-container hover:text-on-error-container text-on-surface-variant flex items-center justify-center transition-colors" data-path="login" href="#" title="Keluar dari Portal"><span class="material-symbols-outlined text-[18px]">logout</span></a></div></div></header><main class="w-full pt-20 px-space-lg flex-1 bg-surface max-w-[1440px] mx-auto pb-space-lg"><div class="flex flex-col w-full">
+<!-- Top Section: Header, Cryptographic Badge, Verification Card -->
+<div class="flex flex-col gap-space-md mb-space-lg">
+<!-- Breadcrumb & Immutable Status Row -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<span>Beranda Admin</span>
+<span class="material-symbols-outlined text-[16px] text-outline">chevron_right</span>
+<span>Keamanan &amp; Kepatuhan</span>
+<span class="material-symbols-outlined text-[16px] text-outline">chevron_right</span>
+<span class="font-semibold text-on-surface">Log Audit Kriptografis</span>
+</div>
+<!-- Immutable & Security Compliance Badges -->
+<div class="flex items-center gap-space-sm">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-on-primary shadow-sm font-label-sm text-label-sm tracking-wide uppercase">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">lock</span>
+<span>Append-Only Ledger</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary">verified</span>
+<span>SHA-256 Chained Hash</span>
+</div>
+<div class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">
+<span>ISO/IEC 27001 Terverifikasi</span>
+</div>
+</div>
+</div>
+<!-- Integrity Dashboard Panel (Cryptographic Proof) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col lg:flex-row items-stretch justify-between gap-space-md">
+<!-- Left: State & Merkle Tree Stats -->
+<div class="flex items-start gap-space-md flex-1">
+<div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-secondary-fixed text-[28px]">hub</span>
+</div>
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm text-on-surface">Status Rantai Kriptografis:</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold" id="chain-status-badge">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+              Rantai Log Utuh (100% Valid)
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-1">
+            Total <strong class="text-on-surface">142,891 blok</strong> terverifikasi tanpa anomali Merkle Tree. Rentang: <code class="px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface">#00000000</code> hingga <code class="px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-on-surface">#00142891</code>.
+          </p>
+<div class="flex items-center gap-space-md text-on-surface-variant font-label-sm text-label-sm mt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+              Diverifikasi: 24 Okt 2024, 11:58:12 WIB
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">device_hub</span>
+              Replikasi: 3 Simpul Dingin (BSI-DC1, BSI-DC2, UII-Vault)
+            </span>
+<span class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[14px]">format_image_left</span>
+              Root CA UII Tersemat
+            </span>
+</div>
+</div>
+</div>
+<!-- Right: Action Buttons (Verification & Immutable Export) -->
+<div class="flex items-center gap-space-sm shrink-0 self-center lg:self-auto">
+<button class="px-3 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm transition-all flex items-center gap-1.5" id="btn-toggle-demo-tamper" title="Simulasi validasi ulang integritas Merkle Tree">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span>
+<span>Simulasi Status</span>
+</button>
+<button class="px-space-md py-2.5 rounded-full bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md shadow-sm transition-all flex items-center gap-2" id="btn-run-verify">
+<span class="material-symbols-outlined text-[18px]">fact_check</span>
+<span>Cek Integritas Rantai Log</span>
+</button>
+<div class="relative group">
+<button class="px-space-md py-2.5 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface font-label-md text-label-md shadow-sm transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+<span>Ekspor Log (.CSV / JSON-LD)</span>
+<span class="material-symbols-outlined text-[16px] text-outline">expand_more</span>
+</button>
+<div class="hidden group-hover:flex flex-col absolute right-0 top-full mt-1.5 w-56 bg-surface-container-lowest rounded-xl shadow-xl p-1.5 z-20">
+<button class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-container font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span>Unduh CSV Lengkap</span>
+<span class="material-symbols-outlined text-[14px] text-outline">table_view</span>
+</button>
+<button class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-container font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span>JSON-LD Kriptografis</span>
+<span class="material-symbols-outlined text-[14px] text-outline">data_object</span>
+</button>
+<button class="w-full text-left px-3 py-2 rounded-lg hover:bg-surface-container font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span>Bukti Merkle (Proof File)</span>
+<span class="material-symbols-outlined text-[14px] text-outline">fingerprint</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Multi-Parameter Dense Filter Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm mb-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">tune</span>
+<span class="font-label-lg text-label-lg text-on-surface">Parameter Penelusuran Audit</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">Read-only Stream</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-body-sm text-body-sm text-outline">Menampilkan rekaman log tersaring</span>
+<button class="px-3 py-1 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-colors" id="btn-reset-filter">
+<span class="material-symbols-outlined text-[14px]">refresh</span>
+<span>Reset Filter</span>
+</button>
+</div>
+</div>
+<!-- Filter Inputs Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-sm items-center">
+<!-- Aktor -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Aktor / Pegawai</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface appearance-none focus:outline-none focus:bg-surface-container-high">
+<option selected="">Semua Aktor</option>
+<option>Ir. Ahmad Fauzi, M.T. [BSI-001]</option>
+<option>Bripka Hendra Kurniawan [SEC-042]</option>
+<option>Aiptu Bambang Sutrisno [SEC-019]</option>
+<option>Sentinel-AI [BOT-CRON-UII]</option>
+<option>Gateway SSO UII [AUTH-GW]</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2 text-outline text-[16px]">expand_more</span>
+</div>
+</div>
+<!-- Peran -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Peran Pengguna</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface appearance-none focus:outline-none focus:bg-surface-container-high">
+<option selected="">Semua Peran</option>
+<option>Super Admin BSI</option>
+<option>Petugas Satpam Posko</option>
+<option>Sistem Otomatis (Cron)</option>
+<option>Civitas SSO Mahasiswa</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2 text-outline text-[16px]">expand_more</span>
+</div>
+</div>
+<!-- Aksi Semantik -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Aksi Kriptografis</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface appearance-none focus:outline-none focus:bg-surface-container-high">
+<option selected="">Semua Aksi</option>
+<option>AUTH_MFA_SUCCESS</option>
+<option>ITEM_ATTR_CORRECTION</option>
+<option>CLAIM_VERIFY_APPROVED</option>
+<option>CLAIM_VERIFY_REJECTED</option>
+<option>GUARD_SUSPENDED</option>
+<option>ANOMALY_RESOLVED</option>
+<option>EXPORT_DISPATCH</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2 text-outline text-[16px]">expand_more</span>
+</div>
+</div>
+<!-- Subjek / ID Target -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Subjek / ID Target</label>
+<div class="relative">
+<input class="w-full h-9 pl-3 pr-7 rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-high" placeholder="BRG-, SEC-, HL-, FLAG-, IP..." type="text"/>
+<span class="material-symbols-outlined absolute right-2 top-2 text-outline text-[16px]">search</span>
+</div>
+</div>
+<!-- Rentang Tanggal -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Rentang Waktu</label>
+<div class="relative">
+<select class="w-full h-9 pl-3 pr-8 rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface appearance-none focus:outline-none focus:bg-surface-container-high">
+<option selected="">24 Jam Terakhir</option>
+<option>7 Hari Terakhir</option>
+<option>30 Hari Terakhir</option>
+<option>Kuartal Berjalan</option>
+<option>Kustom Rentang Tanggal...</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-2 text-outline text-[16px]">calendar_today</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Immutable Audit Log Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col mb-space-md">
+<!-- Table Header Info Bar -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-md text-label-md text-on-surface font-bold uppercase tracking-wider">Buku Besar Audit (Ledger Immutable)</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">Mode: Read-Only Ketat</span>
+</div>
+<div class="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Streaming Sinkron: 14ms Latensi Node</span>
+</div>
+</div>
+<!-- Dense Data Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md whitespace-nowrap">Waktu &amp; Blok</th>
+<th class="py-space-sm px-space-md whitespace-nowrap">Aktor &amp; ID</th>
+<th class="py-space-sm px-space-md whitespace-nowrap">Peran</th>
+<th class="py-space-sm px-space-md whitespace-nowrap">Aksi Kripto</th>
+<th class="py-space-sm px-space-md whitespace-nowrap">Subjek</th>
+<th class="py-space-sm px-space-md min-w-[280px]">Ringkasan Peristiwa</th>
+<th class="py-space-sm px-space-md whitespace-nowrap">IP &amp; Terminal</th>
+<th class="py-space-sm px-space-md text-right whitespace-nowrap">Detail Payload</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm divide-y-0 text-on-surface">
+<!-- Row 1 (Expanded State Demonstration for BRG-2024-0142) -->
+<tr class="bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group">
+<td class="py-space-sm px-space-md whitespace-nowrap align-top">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">24 Okt 2024 11:52:14</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span>Blok #00142891</span>
+<span class="text-secondary font-mono">●</span>
+</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap align-top">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Ir. Ahmad Fauzi, M.T.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">ID: BSI-001 (Audit Officer)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap align-top">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm">
+                Super Admin BSI
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap align-top">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container font-mono text-label-sm text-on-surface font-semibold">
+                ITEM_ATTR_CORRECTION
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap align-top">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant font-mono font-semibold text-label-sm">
+                BRG-2024-0142
+              </span>
+</td>
+<td class="py-space-sm px-space-md align-top">
+<p class="text-on-surface font-medium leading-relaxed">
+                Koreksi data fisik versi 1.1 pada warna &amp; nomor rak flashdisk USB SanDisk 64GB
+              </p>
+<span class="font-label-sm text-label-sm text-outline">Alasan: Kesalahan input serial awal oleh petugas jaga GKU</span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap align-top">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface">10.12.0.4</span>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]">vpn_key</span> VPN Terpadu BSI
+                </span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-right whitespace-nowrap align-top">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-primary-container hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Payload</span>
+<span class="material-symbols-outlined text-[16px]">expand_less</span>
+</button>
+</td>
+</tr>
+<!-- Expandable Payload Detail Section for Row 1 -->
+<tr class="bg-surface-container-lowest">
+<td class="p-space-md bg-surface-container-lowest" colspan="8">
+<div class="rounded-xl bg-surface-container-low p-space-md shadow-inner flex flex-col gap-space-md">
+<!-- Chained Hash Verification Strip -->
+<div class="flex flex-col lg:flex-row items-center justify-between p-space-sm rounded-lg bg-surface-container-lowest gap-space-sm">
+<div class="flex items-center gap-2 text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-secondary text-[20px]">link</span>
+<span>Tautan Kriptografis Blok #00142891</span>
+</div>
+<div class="flex flex-wrap items-center gap-2 font-mono font-label-sm text-label-sm">
+<span class="px-2 py-1 rounded bg-surface-container text-on-surface-variant flex items-center gap-1">
+<span class="text-outline">Prev Hash:</span>
+<strong class="text-on-surface">8f4b52c0...43a1c90</strong>
+</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">arrow_forward</span>
+<span class="px-2 py-1 rounded bg-secondary-fixed text-on-secondary-fixed-variant flex items-center gap-1">
+<span>Current Hash:</span>
+<strong>e3b0c442...9f28d71</strong>
+</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary text-on-secondary text-label-sm">Valid</span>
+</div>
+</div>
+<!-- Structured JSON Diff Payload -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<!-- Payload JSON -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">Struktur Data Perubahan (Delta JSON)</span>
+<span class="font-label-sm text-label-sm text-outline">Skema: uii-audit-v2.1</span>
+</div>
+<pre class="bg-primary-container text-secondary-fixed p-space-md rounded-xl font-mono text-label-sm overflow-x-auto leading-relaxed shadow-sm">
+{
+  <span class="text-on-primary-container">"block_id"</span>: <span class="text-secondary-container">"00142891"</span>,
+  <span class="text-on-primary-container">"entity_id"</span>: <span class="text-secondary-container">"BRG-2024-0142"</span>,
+  <span class="text-on-primary-container">"event_type"</span>: <span class="text-secondary-container">"ITEM_ATTR_CORRECTION"</span>,
+  <span class="text-on-primary-container">"author"</span>: {
+    <span class="text-on-primary-container">"id"</span>: <span class="text-secondary-container">"BSI-001"</span>,
+    <span class="text-on-primary-container">"name"</span>: <span class="text-secondary-container">"Ir. Ahmad Fauzi, M.T."</span>,
+    <span class="text-on-primary-container">"mfa_method"</span>: <span class="text-secondary-container">"FIDO2_HARDWARE_KEY_YUBIKEY"</span>
+  },
+  <span class="text-on-primary-container">"diff_payload"</span>: {
+    <span class="text-on-primary-container">"rak_penyimpanan"</span>: { <span class="text-error-container text-error">"old"</span>: <span class="text-on-primary">"RAK-B-02"</span>, <span class="text-secondary">"new"</span>: <span class="text-secondary-fixed">"RAK-A-14"</span> },
+    <span class="text-on-primary-container">"warna_casing"</span>: { <span class="text-error-container text-error">"old"</span>: <span class="text-on-primary">"Hitam Polos"</span>, <span class="text-secondary">"new"</span>: <span class="text-secondary-fixed">"Merah-Hitam SanDisk"</span> },
+    <span class="text-on-primary-container">"verifikasi_fisik_ulang"</span>: <span class="text-secondary-container">true</span>
+  },
+  <span class="text-on-primary-container">"audit_timestamp_utc"</span>: <span class="text-secondary-container">"2024-10-24T04:52:14.208Z"</span>
+}</pre>
+</div>
+<!-- Cryptographic Signature & Attestation -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-bold">Tanda Tangan Digital &amp; Telemetri</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Tervalidasi Root CA UII</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-space-md flex flex-col gap-space-sm h-full justify-between">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between text-on-surface font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Algoritma Asimetris:</span>
+<span class="font-mono font-semibold">RSA-4096 / SHA-256 PKCS#1 v1.5</span>
+</div>
+<div class="flex items-center justify-between text-on-surface font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Sertifikat Penandatangan:</span>
+<span class="font-mono">CN=UII-BSI-CA-PRODUCTION-2024</span>
+</div>
+<div class="flex items-center justify-between text-on-surface font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Signature Hash:</span>
+<span class="font-mono text-outline text-[11px] truncate max-w-[260px]">9b4f69c8a2b5e3f1...e04ca9813d4</span>
+</div>
+<div class="flex items-center justify-between text-on-surface font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Terminal User-Agent:</span>
+<span class="text-on-surface truncate max-w-[260px]">Mozilla/5.0 (Admin Workstation 10.12.0.4)</span>
+</div>
+<div class="flex items-center justify-between text-on-surface font-label-sm text-label-sm">
+<span class="text-on-surface-variant">Nonce Kriptografis:</span>
+<span class="font-mono text-on-surface">0x7F4A8810E24D9</span>
+</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Integritas Entri Log</span>
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Tidak Dapat Dimanipulasi / Append-Only</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2: Emergency Guard Suspension -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">24 Okt 2024 10:41:09</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Blok #00142890</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Sentinel-AI [BOT-CRON]</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">ID: BOT-AUTOSECURITY</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+                Sistem Otomatis
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-error-container text-on-error-container font-mono text-label-sm font-semibold">
+                GUARD_SUSPENDED
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container-high font-mono font-semibold text-label-sm text-on-surface">
+                SEC-035
+              </span>
+</td>
+<td class="py-space-sm px-space-md">
+<p class="text-on-surface font-medium leading-relaxed">
+                Pembekuan darurat akses portal satpam karena terdeteksi percobaan bypass verifikasi biometrik
+              </p>
+<span class="font-label-sm text-label-sm text-error">Anomali Terpicu: ANOMALY-7719 (High Risk Violation)</span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface">127.0.0.1</span>
+<span class="font-label-sm text-label-sm text-outline">Internal Gateway Trigger</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Payload</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Claim Verification Approved -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">24 Okt 2024 09:15:33</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Blok #00142889</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Bripka Hendra Kurniawan</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">ID: SEC-042 (Pos Induk)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm">
+                Petugas Satpam
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant font-mono text-label-sm font-semibold">
+                CLAIM_VERIFY_APPROVED
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant font-mono font-semibold text-label-sm">
+                HL-88219
+              </span>
+</td>
+<td class="py-space-sm px-space-md">
+<p class="text-on-surface font-medium leading-relaxed">
+                Penyerahan klaim laptop ASUS Zenbook kepada mahasiswa (NIM 21523... ) dengan verifikasi KTM NFC
+              </p>
+<span class="font-label-sm text-label-sm text-outline">Nomor Berkas Serah Terima: BST-2024-X-994</span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface">10.12.8.44</span>
+<span class="font-label-sm text-label-sm text-outline">Terminal Pos Induk GKU</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Payload</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: MFA Success Login -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">24 Okt 2024 08:00:02</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Blok #00142888</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Ir. Ahmad Fauzi, M.T.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">ID: BSI-001 (Audit Officer)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm">
+                Super Admin BSI
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container font-mono text-label-sm text-on-surface font-semibold">
+                AUTH_MFA_SUCCESS
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container-high font-mono font-semibold text-label-sm text-on-surface">
+                SESI-MFA-940
+              </span>
+</td>
+<td class="py-space-sm px-space-md">
+<p class="text-on-surface font-medium leading-relaxed">
+                Autentikasi dua faktor berhasil menggunakan Kunci Perangkat Keras FIDO2 (YubiKey 5C NFC)
+              </p>
+<span class="font-label-sm text-label-sm text-secondary">Token RSA: Valid (Kedaluwarsa dlm 8 jam)</span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface">10.12.0.4</span>
+<span class="font-label-sm text-label-sm text-secondary">VPN Terpadu BSI</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Payload</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Anomaly Resolved -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">23 Okt 2024 16:45:10</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Blok #00142887</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Ir. Ahmad Fauzi, M.T.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">ID: BSI-001 (Audit Officer)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm">
+                Super Admin BSI
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container font-mono text-label-sm text-on-surface font-semibold">
+                ANOMALY_RESOLVED
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container-high font-mono font-semibold text-label-sm text-on-surface">
+                FLAG-2024-0988
+              </span>
+</td>
+<td class="py-space-sm px-space-md">
+<p class="text-on-surface font-medium leading-relaxed">
+                Penyelesaian anomali: Koreksi entri ganda pada dompet kulit cokelat Posko Perpustakaan Pusat
+              </p>
+<span class="font-label-sm text-label-sm text-outline">Terkait insiden duplicate entry tiket HL-88204</span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface">10.12.0.4</span>
+<span class="font-label-sm text-label-sm text-secondary">VPN Terpadu BSI</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Payload</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</td>
+</tr>
+<!-- Row 6: Export Data Audit Event -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">23 Okt 2024 14:12:00</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">Blok #00142886</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-semibold text-on-surface">Ir. Ahmad Fauzi, M.T.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">ID: BSI-001 (Audit Officer)</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm">
+                Super Admin BSI
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container font-mono text-label-sm text-on-surface font-semibold">
+                EXPORT_DISPATCH
+              </span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-container-high font-mono font-semibold text-label-sm text-on-surface">
+                EXP-Q3-2024
+              </span>
+</td>
+<td class="py-space-sm px-space-md">
+<p class="text-on-surface font-medium leading-relaxed">
+                Ekspor berkas terenkripsi GPG laporan kepatuhan ISO kuartal 3 untuk Komite Etik &amp; Audit UII
+              </p>
+<span class="font-label-sm text-label-sm text-outline">Hash Berkas Hasil: d5f14e...881a</span>
+</td>
+<td class="py-space-sm px-space-md whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono text-on-surface">10.12.0.4</span>
+<span class="font-label-sm text-label-sm text-secondary">VPN Terpadu BSI</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-right whitespace-nowrap">
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Payload</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Metadata -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-md text-on-surface-variant font-label-sm text-label-sm">
+<span>Menampilkan <strong>1 - 6</strong> dari <strong>142,891</strong> peristiwa tercatat</span>
+<div class="flex items-center gap-1">
+<span>Baris per halaman:</span>
+<select class="h-7 px-2 rounded bg-surface-container text-on-surface font-label-sm text-label-sm focus:outline-none">
+<option>10</option>
+<option selected="">25</option>
+<option>50</option>
+<option>100</option>
+</select>
+</div>
+</div>
+<!-- Pagination Buttons -->
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-outline cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">first_page</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-outline cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm font-bold">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm">3</button>
+<span class="px-1 text-outline font-label-sm text-label-sm">...</span>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm">5716</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">last_page</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Formal Statutory & Security Guarantee Footer Box -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex items-start gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[22px]">gavel</span>
+</div>
+<div class="flex flex-col gap-1 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Ketentuan Kepatuhan Hukum &amp; Kriptografi BSI UII</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm">Immutable by Architecture</span>
+</div>
+<p class="leading-relaxed">
+        Setiap entri log bersifat <strong class="text-on-surface">append-only</strong>, ditandatangani secara kriptografis menggunakan sertifikat Root CA Kampus UII, dan direplikasi secara waktu-nyata ke 3 node penyimpanan dingin terdistribusi. <strong class="text-on-surface">Tidak ada fasilitas atau antarmuka pembaruan (edit) atau penghapusan (delete) log</strong> pada tingkatan aplikasi, API, maupun basis data untuk menjamin keabsahan barang bukti forensik digital sesuai standar ISO/IEC 27001 dan UU ITE.
+      </p>
+</div>
+</div>
+</div>
+<script>
+  // Interactive Verification Simulator
+  const verifyBtn = document.getElementById('btn-run-verify');
+  const tamperToggleBtn = document.getElementById('btn-toggle-demo-tamper');
+  const statusBadge = document.getElementById('chain-status-badge');
+  let isTampered = false;
+
+  if (verifyBtn && statusBadge) {
+    verifyBtn.addEventListener('click', () => {
+      const originalText = verifyBtn.innerHTML;
+      verifyBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>Memverifikasi 142,891 Hash...</span>';
+      verifyBtn.classList.add('opacity-80', 'pointer-events-none');
+
+      setTimeout(() => {
+        verifyBtn.innerHTML = originalText;
+        verifyBtn.classList.remove('opacity-80', 'pointer-events-none');
+        if (!isTampered) {
+          statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold';
+          statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>Rantai Log Utuh (100% Valid)';
+        } else {
+          statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold';
+          statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>Ditemukan Ketidaksesuaian Hash';
+        }
+      }, 700);
+    });
+  }
+
+  if (tamperToggleBtn && statusBadge) {
+    tamperToggleBtn.addEventListener('click', () => {
+      isTampered = !isTampered;
+      if (isTampered) {
+        statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold';
+        statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-error"></span>Simulasi: Hash Discrepancy Detected';
+        tamperToggleBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">restart_alt</span><span>Pulihkan Status Utuh</span>';
+      } else {
+        statusBadge.className = 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold';
+        statusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>Rantai Log Utuh (100% Valid)';
+        tamperToggleBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">sync_alt</span><span>Simulasi Status</span>';
+      }
+    });
+  }
+
+  // Reset Filters feedback
+  const resetBtn = document.getElementById('btn-reset-filter');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      const inputs = document.querySelectorAll('select, input[type="text"]');
+      inputs.forEach(el => {
+        if (el.tagName === 'SELECT') el.selectedIndex = 0;
+        if (el.tagName === 'INPUT') el.value = '';
+      });
+    });
+  }
+</script></main><footer class="w-full bg-surface-container-lowest py-space-sm shadow-[0_-1px_8px_rgba(0,0,0,0.02)] mt-auto"><div class="max-w-[1440px] mx-auto px-space-lg flex items-center justify-between text-on-surface-variant"><div class="flex items-center gap-2 font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px] text-secondary">shield</span><span>Badan Sistem Informasi (BSI) Universitas Islam Indonesia • Kepatuhan ISO/IEC 27001 &amp; Audit Trail Terdistribusi</span></div><div class="font-label-sm text-label-sm text-outline">Setiap tindakan dipertanggungjawabkan dalam rantai audit.</div></div></footer></div></body></html>

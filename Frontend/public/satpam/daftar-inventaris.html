@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-background": "#191c1e", "surface": "#f7f9fb", "tertiary-fixed": "#c4e7ff", "error-container": "#ffdad6", "primary-fixed": "#dae2fd", "on-error": "#ffffff", "on-tertiary-fixed": "#001e2c", "on-secondary": "#ffffff", "surface-container": "#eceef0", "surface-container-low": "#f2f4f6", "on-primary-container": "#7c839b", "tertiary": "#000000", "on-tertiary-fixed-variant": "#004c69", "primary": "#000000", "inverse-surface": "#2d3133", "tertiary-container": "#001e2c", "on-primary-fixed": "#131b2e", "tertiary-fixed-dim": "#7bd0ff", "surface-tint": "#565e74", "on-primary": "#ffffff", "on-secondary-fixed": "#001d31", "secondary-fixed": "#cce5ff", "surface-bright": "#f7f9fb", "primary-container": "#131b2e", "on-primary-fixed-variant": "#3f465c", "secondary-fixed-dim": "#93ccff", "outline": "#76777d", "inverse-on-surface": "#eff1f3", "on-secondary-fixed-variant": "#004b73", "surface-dim": "#d8dadc", "on-error-container": "#93000a", "surface-container-lowest": "#ffffff", "surface-container-highest": "#e0e3e5", "on-tertiary": "#ffffff", "inverse-primary": "#bec6e0", "on-surface-variant": "#45464d", "secondary-container": "#5bb8fe", "outline-variant": "#c6c6cd", "on-tertiary-container": "#008ebf", "on-secondary-container": "#00476e", "primary-fixed-dim": "#bec6e0", "surface-variant": "#e0e3e5", "background": "#f7f9fb", "error": "#ba1a1a", "on-surface": "#191c1e", "secondary": "#006398", "surface-container-high": "#e6e8ea" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2rem", "space-lg": "2rem", "gutter-mobile": "1rem", "gutter": "1.5rem", "space-md": "1.25rem", "space-xs": "0.375rem", "space-xl": "3rem", "space-sm": "0.75rem", "margin-mobile": "1rem" }, "fontFamily": { "label-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"] }, "fontSize": { "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }], "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }], "display": ["40px", { "lineHeight": "52px", "fontWeight": "700" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "700" }], "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "display-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="p-gutter pb-space-sm flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm"><span class="material-symbols-outlined text-secondary-fixed">verified_user</span></div><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate tracking-tight">Lost &amp; Found UII</span><span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Portal Satpam Kampus</span></div></div><div class="px-gutter py-space-xs"><div class="h-px bg-surface-container-high w-full"></div></div><div class="px-space-sm py-space-xs"><span class="px-space-sm py-space-xs font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block">Navigasi Utama</span></div><nav class="flex flex-col gap-1 px-space-sm" data-active-classes="bg-primary text-on-primary font-label-lg shadow-sm"><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="beranda" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Beranda</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="penerimaan" href="#"><span class="material-symbols-outlined text-[20px]">move_to_inbox</span><span>Penerimaan</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="barang" href="#"><span class="material-symbols-outlined text-[20px]">inventory_2</span><span>Barang</span></a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="hasil-matching" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">auto_awesome</span><span>Hasil Matching</span></div><span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">AI</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="verifikasi" href="#"><span class="material-symbols-outlined text-[20px]">badge</span><span>Verifikasi</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="laporan-kehilangan" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Laporan Kehilangan</span></a></nav></div><div class="p-space-sm flex flex-col gap-space-sm"><div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col gap-1"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm font-semibold text-on-surface uppercase tracking-wider">Pos Jaga Aktif</span></div><p class="font-headline-sm text-headline-sm text-on-surface font-semibold">Posko Induk GKU</p><span class="font-body-sm text-body-sm text-on-surface-variant">Shift Siang (07:00 - 15:30 WIB)</span></div><div class="px-space-sm py-1 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">contact_support</span> BSI Helpdesk: x102</span><span>v2.4.0</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter"><div class="flex items-center gap-gutter flex-1 max-w-xl"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span><input class="w-full h-10 pl-10 pr-4 rounded-full bg-surface-container-lowest font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-sm transition-all" placeholder="Cari nomor tiket TM- / HL- / nama barang..." type="text"/></div></div><div class="flex items-center gap-space-md shrink-0"><div class="hidden xl:flex flex-col text-right"><span class="font-label-lg text-label-lg text-on-surface">Kamis, 24 Oktober 2024</span><span class="font-body-sm text-body-sm text-on-surface-variant">Pukul 11:42 WIB</span></div><div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[16px]">shield</span><span>Status Siaga 1</span></div><div class="h-8 w-px bg-surface-container-high hidden sm:block"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right hidden md:block"><span class="font-label-lg text-label-lg text-on-surface truncate font-semibold">Bripka Hendra Kurniawan</span><span class="font-body-sm text-body-sm text-on-surface-variant">Petugas Pos Jaga Induk GKU (SEC-042)</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><a class="p-1.5 rounded-lg text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-colors ml-1" data-path="login" href="#" title="Keluar Portal"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></header><main class="w-full pt-16 bg-surface min-h-screen px-gutter py-space-lg"><div class="flex flex-col w-full">
+<!-- Breadcrumb & Top Title Area -->
+<div class="flex flex-col gap-2 mb-6">
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md text-label-md">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">home</span>
+<span>Beranda</span>
+</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Inventaris Barang</span>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<div class="flex flex-col">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Inventaris Barang Temuan</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+          Kelola seluruh fisik barang inventaris Lost &amp; Found yang tersimpan di brankas dan locker pos jaga kampus UII.
+        </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Cetak Rekap Inventaris</span>
+</button>
+<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>+ Penerimaan Baru</span>
+</a>
+</div>
+</div>
+</div>
+<!-- KPI Quick Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+<!-- Stat 1: Total Inventaris -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total Inventaris</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg text-on-surface">43</span>
+<span class="font-label-md text-label-md text-secondary font-semibold">Barang Aktif</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1">Tercatat di sistem posko</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface text-[24px]">inventory_2</span>
+</div>
+</div>
+<!-- Stat 2: Dalam Brankas Posko Induk -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Brankas Posko GKU</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg text-on-surface">38</span>
+<span class="font-label-md text-label-md text-secondary font-semibold">Fisik Aman</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1">Kapasitas rak 76% terisi</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-fixed text-[24px]">lock</span>
+</div>
+</div>
+<!-- Stat 3: Dalam Verifikasi Klaim -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Proses Verifikasi</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg text-on-surface">5</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-semibold">Klaim Berjalan</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1">2 terjadwal hari ini</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface text-[24px]">schedule</span>
+</div>
+</div>
+<!-- Stat 4: Kedaluwarsa / Siap Dilimpahkan -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Kedaluwarsa (&gt;90 Hari)</span>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline-lg text-headline-lg text-error">2</span>
+<span class="font-label-md text-label-md text-error font-semibold">Siap Dilimpahkan</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-1">Rekomendasi BSI &amp; DKM</span>
+</div>
+<div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-error-container text-[24px]">notification_important</span>
+</div>
+</div>
+</div>
+<!-- Search & Filter Controls Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm mb-4 flex flex-col gap-3">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+<!-- Search Input -->
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full h-11 pl-11 pr-24 rounded-lg bg-surface font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-low transition-all" id="inventorySearchInput" placeholder="Cari berdasarkan Item ID (contoh: BRG-2024-0142), nama barang, atau ciri fisik..." type="text"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-mono pointer-events-none">
+          Ctrl + F
+        </span>
+</div>
+<!-- State Toggle Simulation Button (Requested in prompt) -->
+<div class="flex items-center gap-2 shrink-0">
+<div class="bg-surface-container p-1 rounded-lg flex items-center text-label-sm font-label-sm">
+<button class="px-3 py-1.5 rounded-md font-semibold bg-surface-container-lowest text-on-surface shadow-sm transition-all flex items-center gap-1.5" id="btnStatePopulated" onclick="switchState('populated')">
+<span class="material-symbols-outlined text-[16px]">view_list</span>
+<span>Data Terisi (43)</span>
+</button>
+<button class="px-3 py-1.5 rounded-md font-semibold text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5" id="btnStateEmpty" onclick="switchState('empty')">
+<span class="material-symbols-outlined text-[16px]">search_off</span>
+<span>Simulasi Kosong</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dropdowns Filter Strip -->
+<div class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-2.5 pt-1">
+<!-- Status Filter -->
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer">
+<option value="">Status: Semua Status</option>
+<option value="ditemukan">Barang Ditemukan (Brankas)</option>
+<option value="verifikasi">Proses Verifikasi</option>
+<option value="diambil">Telah Diambil</option>
+<option value="ditahan">Ditahan (Penyelidikan)</option>
+<option value="dilepas">Dilepas / Dilimpahkan</option>
+<option value="kedaluwarsa">Kedaluwarsa (&gt;90 hari)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Kategori Filter -->
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer">
+<option value="">Kategori: Semua Kategori</option>
+<option value="elektronik">Elektronik &amp; Gadget</option>
+<option value="dompet">Dompet &amp; Dokumen</option>
+<option value="kunci">Kunci &amp; Kendaraan</option>
+<option value="tas">Tas, Ransel &amp; Koper</option>
+<option value="aksesoris">Aksesoris &amp; Jam Tangan</option>
+<option value="lainnya">Lain-lain</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Rak/Locker Filter -->
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer">
+<option value="">Locker: Semua Lokasi Rak</option>
+<option value="gku-a">Locker GKU-A01 s/d A08</option>
+<option value="gku-b">Rak Brankas GKU-B01 s/d B04</option>
+<option value="posko-utama">Posko Gerbang Utama</option>
+<option value="posko-fakultas">Pos Jaga FTI/FPSI</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+</div>
+<!-- Tanggal Diterima -->
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-lg bg-surface font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer">
+<option value="">Waktu: Semua Rentang</option>
+<option value="today">Hari Ini</option>
+<option value="7days">7 Hari Terakhir</option>
+<option value="30days">30 Hari Terakhir</option>
+<option value="custom">Pilih Tanggal Kustom...</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant text-[18px]">calendar_today</span>
+</div>
+<!-- Filter Buttons Actions -->
+<div class="col-span-2 md:col-span-4 xl:col-span-1 flex items-center gap-2">
+<button class="flex-1 h-10 rounded-lg bg-surface-container-high hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-1 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">filter_alt</span>
+<span>Terapkan</span>
+</button>
+<button class="h-10 w-10 rounded-lg bg-surface text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" title="Reset Filter" type="button">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Populated Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col" id="populatedStateContainer">
+<!-- Active Table Header Bar -->
+<div class="px-5 py-3.5 bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Daftar Fisik Inventaris</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-mono">7 Baris Ditampilkan</span>
+</div>
+<div class="flex items-center gap-3 text-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></span>
+<span>Pembaruan Realtime: Sinkron dengan CCTV &amp; RFID Scanner</span>
+</span>
+</div>
+</div>
+<!-- Dense Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-4 font-semibold">Item ID</th>
+<th class="py-3 px-4 font-semibold">Foto &amp; Nama Barang</th>
+<th class="py-3 px-4 font-semibold">Warna / Spek</th>
+<th class="py-3 px-4 font-semibold">Lokasi Rak</th>
+<th class="py-3 px-4 font-semibold">Penerimaan</th>
+<th class="py-3 px-4 font-semibold">Status Inventaris</th>
+<th class="py-3 px-4 font-semibold">Kandidat Matching AI</th>
+<th class="py-3 px-4 font-semibold text-right">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high font-body-md text-body-md text-on-surface">
+<!-- Row 1: BRG-2024-0142 (Barang Ditemukan, 2 Kandidat Matching) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3.5 px-4 font-mono font-semibold text-secondary text-body-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary" title="Cetak Kode QR">qr_code_2</span>
+<span class="hover:underline cursor-pointer">BRG-2024-0142</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-surface-container-high relative">
+<img class="w-full h-full object-cover" data-alt="SanDisk Cruzer Blade red and black USB flash drive 64GB resting on an institutional slate desktop under soft diffuse daylight photography lost property inventory" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhlvgF4Nc9TtipywQIuYUVOaQoKi5oJU1itPfWFq_x949k1gstDFjcRuzLhXaSLnr0foEFdrHHZlELTXhU4QGCGGCOkEOr1YpGXXyh1E0R19_FXvHCDcgyoF2lWcgl_-p2Ych0lS_BYVZAGo8jnp0C99HkNiNTAV9xaN4wEC_XsNJbECHqisxmaOJhzaQBIdqg1arE2x8PQgI72ImJ2Z6hbdmaWKnFnELri9qt9Kc"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Flashdisk Sandisk Ultra 64GB</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Elektronik &amp; Aksesoris Komputer</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-error shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Merah - Hitam</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Gantungan Tali Abu</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">lock</span>
+<span>Locker GKU-A04 (Brankas)</span>
+</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">24 Okt 2024 • 09:15</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bripka Hendra (SEC-042)</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Barang Ditemukan</span>
+</span>
+<span class="block text-[11px] text-on-surface-variant mt-0.5 font-medium">Tersimpan di Brankas</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<a class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim font-label-sm text-label-sm font-semibold transition-all shadow-sm" href="#">
+<span class="material-symbols-outlined text-[16px] text-secondary">auto_awesome</span>
+<span>2 Kandidat (94%)</span>
+</a>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Lihat Detail Barang" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Cetak Label QR &amp; Barcode" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Opsi Lainnya" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: BRG-2024-0139 (Proses Verifikasi, 1 Kandidat) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3.5 px-4 font-mono font-semibold text-secondary text-body-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">qr_code_2</span>
+<span class="hover:underline cursor-pointer">BRG-2024-0139</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-surface-container-high relative">
+<img class="w-full h-full object-cover" data-alt="Matte black tumblr thermos water bottle with stainless steel lid sitting on university lost and found wooden inspection desk soft indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATXIi_ht3Mjx5mDAuY18g6JSyC0yHD-Gl6-kfQh1utnXtKqcSaRmI9Awy_eUgYjh40cQPlzV7DP8oBm9YxRzM-FEWeerzZr78ZJkSggHlZQbevxWWGC7a40Ds4hNKuvkP-V2SlyT_RI-xiqWQGN_aXAVKTvryj10Lmatjn6wE7WxxB-omOmi--OU8pNbHozz3b1KjZLD93n0awspnjNRZBZBgsXeDtu3yA2dF7atQ"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Tumbler Corkcicle Sport Canteen</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Perlengkapan Pribadi</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-primary shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Hitam Doff</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Stiker Typography BEM UII</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">inventory</span>
+<span>Locker GKU-B02</span>
+</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">23 Okt 2024 • 14:20</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Aiptu Slamet (SEC-019)</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Proses Verifikasi</span>
+</span>
+<span class="block text-[11px] text-on-surface-variant mt-0.5 font-medium">Jadwal Klaim: 14:00 WIB</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<a class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-high text-on-surface hover:bg-secondary-fixed font-label-sm text-label-sm font-semibold transition-all" href="#">
+<span class="material-symbols-outlined text-[16px] text-secondary">auto_awesome</span>
+<span>1 Kandidat (88%)</span>
+</a>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Lihat Detail Barang" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Cetak Label QR" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Opsi Lainnya" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: BRG-2024-0131 (Barang Ditemukan) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3.5 px-4 font-mono font-semibold text-secondary text-body-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">qr_code_2</span>
+<span class="hover:underline cursor-pointer">BRG-2024-0131</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-surface-container-high relative">
+<img class="w-full h-full object-cover" data-alt="Brown textured genuine leather bifold wallet with visible plastic card slot and metallic embossed edge on a clean institutional security table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3xlHzOkavBayVBSpNVJfJrQFPEvLNJIVcYQ_qpiW6iHJtiF57T8tJz7JV3Jt96Yyz8-0THtkuBUK3xvixruI-iIP3Eyu4V6or6VqR4GLfAxDUF2Eru7jP8srUac8RqKzvosTSdYNqhxa6N54AMZpyigkERJzTR0gHj4lGYIkqxjyC1kLPDhTzpSqLYyvWLdWRi_p9X-pLPiu4diiQFlelES2uQuLC-iB_0gXtwlE"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Dompet Lipat Kulit Fossil</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Dompet &amp; Identitas</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-on-surface-variant shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Cokelat Tua</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Ada KTP an. Farhan M.</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">lock</span>
+<span>Locker GKU-A01 (Brankas)</span>
+</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">22 Okt 2024 • 11:05</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bripka Hendra (SEC-042)</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Barang Ditemukan</span>
+</span>
+<span class="block text-[11px] text-on-surface-variant mt-0.5 font-medium">Dokumen Tersimpan Rapi</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface-variant px-2.5">-</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Lihat Detail Barang" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Cetak Label QR" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Opsi Lainnya" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: BRG-2024-0128 (Telah Diambil) -->
+<tr class="hover:bg-surface-container-low transition-colors group opacity-85">
+<td class="py-3.5 px-4 font-mono font-semibold text-on-surface-variant text-body-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">qr_code_2</span>
+<span class="hover:underline cursor-pointer">BRG-2024-0128</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-surface-container-high relative">
+<div class="w-full h-full flex items-center justify-center bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">key</span>
+</div>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Kunci Motor Honda Vario 160</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kunci &amp; Kendaraan</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-outline-variant shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Silver Metal</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Remote Smartkey + Akrilik UII</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-medium">
+                Selesai / Kosong
+              </span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">20 Okt 2024 • 08:30</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Brigadir Wahyu (SEC-055)</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>Telah Diambil</span>
+</span>
+<span class="block text-[11px] text-on-surface-variant mt-0.5 font-medium">BAST Terbit #089</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface-variant px-2.5">-</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Lihat BAST &amp; Bukti Penyerahan" type="button">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Opsi Lainnya" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: BRG-2024-0115 (Ditahan) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3.5 px-4 font-mono font-semibold text-secondary text-body-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">qr_code_2</span>
+<span class="hover:underline cursor-pointer">BRG-2024-0115</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-surface-container-high relative">
+<img class="w-full h-full object-cover" data-alt="Modern silver Apple iPad with cracked corner screen on forensic inspection table university lost property security investigation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6K8YRN4iKE596egWIaLavWBnWDa4rKXa1lqgy4MpotXmczWAQv3b08LApYGd0rWbZgA8FXz72Je_Pw8TxOkHbzjNxhxqUM181fjhm1s6PlevnlJCFJcPvk6B3AjcEFg-q2qAEqPhMIR0vku1tRy_3iWL41PB8XcObed6vVv3mHU-6vsxtMT7l7xQDk9DrXvOUdTUQgU79NfPnsanMMKwWenxZq5qG0nblcHMc4YU"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">iPad Air Generasi 5 (Locked)</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Elektronik &amp; Tablet</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-outline-variant shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Space Grey</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Case Transparan Retak Sudut</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-error">gavel</span>
+<span>Locker Khusus BSI</span>
+</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">16 Okt 2024 • 17:45</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bripka Hendra (SEC-042)</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span>Ditahan</span>
+</span>
+<span class="block text-[11px] text-on-surface-variant mt-0.5 font-medium">Penyelidikan Internal BSI</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface-variant px-2.5">-</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Lihat Dokumen Penahanan BSI" type="button">
+<span class="material-symbols-outlined text-[18px]">policy</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Opsi Lainnya" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: BRG-2024-0098 (Dilepas / Dilimpahkan) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3.5 px-4 font-mono font-semibold text-secondary text-body-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">qr_code_2</span>
+<span class="hover:underline cursor-pointer">BRG-2024-0098</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-surface-container-high relative">
+<div class="w-full h-full flex items-center justify-center bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">umbrella</span>
+</div>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Payung Lipat Motif Kotak</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Aksesoris &amp; Pakaian</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-secondary shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Biru Navy</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Gagang Kayu Alami</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">mosque</span>
+<span>Infaq Masjid Kampus</span>
+</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">04 Okt 2024 • 10:12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Bripka Hendra (SEC-042)</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span>Dilepas / Dilimpahkan</span>
+</span>
+<span class="block text-[11px] text-on-surface-variant mt-0.5 font-medium">BA Pelimpahan DKM UII</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface-variant px-2.5">-</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<div class="inline-flex items-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Lihat BA Pelimpahan" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Opsi Lainnya" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 7: BRG-2024-0084 (Kedaluwarsa >90 Hari) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3.5 px-4 font-mono font-semibold text-secondary text-body-sm whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer hover:text-primary">qr_code_2</span>
+<span class="hover:underline cursor-pointer">BRG-2024-0084</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-lg overflow-hidden shrink-0 bg-surface-container-high relative">
+<div class="w-full h-full flex items-center justify-center bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">headphones</span>
+</div>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface truncate">Headphone Wireless Sony WH-CH520</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Elektronik &amp; Audio</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-outline-variant shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Krem / Beige</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Earcup Busa Bersih</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-md bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+<span>Rak Kedaluwarsa #01</span>
+</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface font-medium block">22 Juli 2024 • 16:00</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Aiptu Slamet (SEC-019)</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span>Kedaluwarsa</span>
+</span>
+<span class="block text-[11px] text-error font-medium mt-0.5">&gt;94 Hari Tak Diambil</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="font-body-sm text-body-sm text-on-surface-variant px-2.5">-</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<div class="inline-flex items-center gap-1">
+<button class="px-2.5 py-1 rounded-md bg-surface-container-high hover:bg-error-container hover:text-on-error-container text-on-surface font-label-sm text-label-sm font-semibold transition-colors flex items-center gap-1" type="button">
+<span>Proses Limbah</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Opsi Lainnya" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Controls -->
+<div class="px-5 py-3.5 bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+          Menampilkan <span class="font-semibold text-on-surface">1 - 7</span> dari <span class="font-semibold text-on-surface">43</span> barang inventaris
+        </span>
+<div class="h-4 w-px bg-surface-container-high hidden sm:block"></div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span>Tampilkan:</span>
+<select class="h-7 px-2 rounded bg-surface font-body-sm text-body-sm text-on-surface focus:outline-none cursor-pointer">
+<option>10 per halaman</option>
+<option>25 per halaman</option>
+<option>50 per halaman</option>
+<option>Semua (43)</option>
+</select>
+</div>
+</div>
+<!-- Page Nav Buttons -->
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface text-outline-variant flex items-center justify-center cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center shadow-sm" type="button">
+          1
+        </button>
+<button class="w-8 h-8 rounded-lg bg-surface hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center justify-center transition-colors" type="button">
+          2
+        </button>
+<button class="w-8 h-8 rounded-lg bg-surface hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center justify-center transition-colors" type="button">
+          3
+        </button>
+<button class="w-8 h-8 rounded-lg bg-surface hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-medium flex items-center justify-center transition-colors" type="button">
+          4
+        </button>
+<button class="w-8 h-8 rounded-lg bg-surface hover:bg-surface-container-high text-on-surface flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dedicated Empty State Container (Toggleable Simulation) -->
+<div class="hidden bg-surface-container-lowest rounded-xl shadow-sm p-12 flex-col items-center justify-center text-center" id="emptyStateContainer">
+<div class="w-20 h-20 rounded-2xl bg-surface-container flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-[44px] text-on-surface-variant">inventory_2</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">
+      Tidak ada barang inventaris yang sesuai kriteria pencarian
+    </h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg mb-6">
+      Periksa kembali kata kunci Item ID, ejaan nama barang, filter status aktif, atau rentang tanggal yang Anda masukkan dalam formulir pencarian.
+    </p>
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg shadow-sm hover:opacity-95 transition-all" onclick="resetAndShowPopulated()" type="button">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+<span>Reset Semua Filter</span>
+</button>
+<button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-container text-on-surface font-label-lg text-label-lg hover:bg-surface-container-high transition-colors" onclick="switchState('populated')" type="button">
+<span>Kembali ke Data Inventaris</span>
+</button>
+</div>
+</div>
+<!-- Audit Log & Security Status Footer Bar -->
+<div class="mt-6 p-4 rounded-xl bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-3 text-body-sm text-body-sm text-on-surface-variant">
+<div class="flex items-center gap-2 text-center md:text-left">
+<span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span>
+<span>
+<strong class="font-semibold text-on-surface">Sistem Inventarisasi Barang Terpadu UII-SEC</strong> • Enkripsi Data AES-256 • Lokasi Aktif: Posko Induk Keamanan GKU
+      </span>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Semua aksi tercatat di audit log.</span>
+</span>
+<a class="font-label-sm text-label-sm text-secondary font-semibold hover:underline" href="#">Lihat Log Aktivitas</a>
+</div>
+</div>
+</div>
+<!-- Inline JavaScript for View State Simulation Toggle -->
+<script>
+  function switchState(state) {
+    const popContainer = document.getElementById('populatedStateContainer');
+    const emptyContainer = document.getElementById('emptyStateContainer');
+    const btnPop = document.getElementById('btnStatePopulated');
+    const btnEmp = document.getElementById('btnStateEmpty');
+
+    if (state === 'empty') {
+      popContainer.classList.add('hidden');
+      emptyContainer.classList.remove('hidden');
+      emptyContainer.classList.add('flex');
+
+      btnEmp.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm');
+      btnEmp.classList.remove('text-on-surface-variant');
+
+      btnPop.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm');
+      btnPop.classList.add('text-on-surface-variant');
+    } else {
+      emptyContainer.classList.add('hidden');
+      emptyContainer.classList.remove('flex');
+      popContainer.classList.remove('hidden');
+
+      btnPop.classList.add('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm');
+      btnPop.classList.remove('text-on-surface-variant');
+
+      btnEmp.classList.remove('bg-surface-container-lowest', 'text-on-surface', 'shadow-sm');
+      btnEmp.classList.add('text-on-surface-variant');
+    }
+  }
+
+  function resetAndShowPopulated() {
+    const input = document.getElementById('inventorySearchInput');
+    if (input) input.value = '';
+    switchState('populated');
+  }
+
+  // Keyboard shortcut Ctrl + F trigger to focus search
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'f' || e.key === 'F')) {
+      e.preventDefault();
+      const input = document.getElementById('inventorySearchInput');
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }
+  });
+</script></main></div></body></html>

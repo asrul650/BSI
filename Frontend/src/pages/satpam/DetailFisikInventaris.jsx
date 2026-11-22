@@ -1,0 +1,715 @@
+import React, { useEffect, useRef } from 'react';
+
+// Layar Stitch Portal Satpam: Detail Fisik Barang Inventaris (Item Detail) - Portal Satpam UII
+const rawHTML = "<aside class=\"fixed left-0 top-0 h-screen w-72 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto\"><div class=\"flex flex-col\"><div class=\"p-gutter pb-space-sm flex items-center gap-space-sm\"><div class=\"w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm\"><span class=\"material-symbols-outlined text-secondary-fixed\">verified_user</span></div><div class=\"flex flex-col min-w-0\"><span class=\"font-headline-sm text-headline-sm text-on-surface truncate tracking-tight\">Lost &amp; Found UII</span><span class=\"font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider\">Portal Satpam Kampus</span></div></div><div class=\"px-gutter py-space-xs\"><div class=\"h-px bg-surface-container-high w-full\"></div></div><div class=\"px-space-sm py-space-xs\"><span class=\"px-space-sm py-space-xs font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block\">Navigasi Utama</span></div><nav class=\"flex flex-col gap-1 px-space-sm\" data-active-classes=\"bg-primary text-on-primary font-label-lg shadow-sm\">\n  <a class=\"flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg cursor-pointer\" data-path=\"beranda\" href=\"#\">\n    <span class=\"material-symbols-outlined text-[20px]\">dashboard</span>\n    <span>Beranda</span>\n  </a>\n  <a class=\"flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg cursor-pointer\" data-path=\"penerimaan\" href=\"#\">\n    <span class=\"material-symbols-outlined text-[20px]\">move_to_inbox</span>\n    <span>Penerimaan</span>\n  </a>\n  <a class=\"flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg transition-colors bg-primary text-on-primary font-label-lg shadow-sm font-semibold cursor-pointer\" data-path=\"barang\" href=\"#\">\n    <span class=\"material-symbols-outlined text-[20px]\">inventory_2</span>\n    <span>Barang</span>\n  </a>\n  <a class=\"flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg cursor-pointer\" data-path=\"hasil-matching\" href=\"#\">\n    <div class=\"flex items-center gap-space-sm\">\n      <span class=\"material-symbols-outlined text-[20px]\">auto_awesome</span>\n      <span>Hasil Matching</span>\n    </div>\n    <span class=\"px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm\">AI</span>\n  </a>\n  <a class=\"flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg cursor-pointer\" data-path=\"verifikasi\" href=\"#\">\n    <span class=\"material-symbols-outlined text-[20px]\">badge</span>\n    <span>Verifikasi</span>\n  </a>\n  <a class=\"flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-lg text-label-lg cursor-pointer\" data-path=\"laporan-kehilangan\" href=\"#\">\n    <span class=\"material-symbols-outlined text-[20px]\">receipt_long</span>\n    <span>Laporan Kehilangan</span>\n  </a>\n</nav></div><div class=\"p-space-sm flex flex-col gap-space-sm\"><div class=\"bg-surface-container-lowest p-space-sm rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col gap-1\"><div class=\"flex items-center gap-2\"><span class=\"w-2.5 h-2.5 rounded-full bg-secondary animate-pulse\"></span><span class=\"font-label-sm text-label-sm font-semibold text-on-surface uppercase tracking-wider\">Pos Jaga Aktif</span></div><p class=\"font-headline-sm text-headline-sm text-on-surface font-semibold\">Posko Induk GKU</p><span class=\"font-body-sm text-body-sm text-on-surface-variant\">Shift Siang (07:00 - 15:30 WIB)</span></div><div class=\"px-space-sm py-1 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm\"><span class=\"flex items-center gap-1\"><span class=\"material-symbols-outlined text-[16px]\">contact_support</span> BSI Helpdesk: x102</span><span>v2.4.0</span></div></div><!-- Portal Publik Shortcut Button -->\n<div class=\"px-space-sm pt-2\">\n  <button data-path=\"portal-publik\" class=\"w-full py-2 px-3 rounded-lg border border-outline-variant text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer\">\n    <span class=\"material-symbols-outlined text-[16px]\">logout</span>\n    <span>Kembali ke Portal Publik</span>\n  </button>\n</div>\n</aside><div class=\"pl-72\"><header class=\"fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter\"><div class=\"flex items-center gap-gutter flex-1 max-w-xl\"><div class=\"relative w-full\"><span class=\"material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]\">search</span><input class=\"w-full h-10 pl-10 pr-4 rounded-full bg-surface-container-lowest font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-sm transition-all\" placeholder=\"Cari nomor tiket TM- / HL- / nama barang...\" type=\"text\"/></div></div><div class=\"flex items-center gap-space-md shrink-0\"><div class=\"hidden xl:flex flex-col text-right\"><span class=\"font-label-lg text-label-lg text-on-surface\">Kamis, 24 Oktober 2024</span><span class=\"font-body-sm text-body-sm text-on-surface-variant\">Pukul 11:42 WIB</span></div><div class=\"hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold\"><span class=\"material-symbols-outlined text-[16px]\">shield</span><span>Status Siaga 1</span></div><div class=\"h-8 w-px bg-surface-container-high hidden sm:block\"></div><div class=\"flex items-center gap-space-sm\"><div class=\"flex flex-col text-right hidden md:block\"><span class=\"font-label-lg text-label-lg text-on-surface truncate font-semibold\">Bripka Hendra Kurniawan</span><span class=\"font-body-sm text-body-sm text-on-surface-variant\">Petugas Pos Jaga Induk GKU (SEC-042)</span></div><div class=\"w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0\"><span class=\"material-symbols-outlined text-on-primary text-[18px]\">person</span></div><a class=\"p-1.5 rounded-lg text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-colors ml-1\" data-path=\"login\" href=\"#\" title=\"Keluar Portal\"><span class=\"material-symbols-outlined text-[20px]\">logout</span></a></div></div></header><main class=\"w-full pt-16 bg-surface min-h-screen px-gutter py-space-lg\"><div class=\"flex flex-col w-full gap-space-lg\">\n<!-- BREADCRUMBS -->\n<nav class=\"flex items-center gap-2 text-on-surface-variant font-label-md text-label-md\">\n<a class=\"hover:text-secondary flex items-center gap-1 transition-colors\" href=\"#\">\n<span class=\"material-symbols-outlined text-[16px]\">home</span>\n<span>Beranda</span>\n</a>\n<span class=\"text-outline-variant\">/</span>\n<a class=\"hover:text-secondary transition-colors\" href=\"#\">Inventaris Barang</a>\n<span class=\"text-outline-variant\">/</span>\n<span class=\"text-on-surface font-semibold\">Detail Item BRG-2024-0142</span>\n</nav>\n<!-- SCREEN HEADER -->\n<header class=\"bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-space-md\">\n<div class=\"flex flex-col gap-2\">\n<div class=\"flex flex-wrap items-center gap-space-sm\">\n<h1 class=\"font-headline-lg text-headline-lg text-on-surface tracking-tight\">Detail Barang: BRG-2024-0142</h1>\n<span class=\"px-2.5 py-1 rounded bg-surface-container font-mono text-label-md text-on-surface-variant flex items-center gap-1\">\n<span class=\"material-symbols-outlined text-[16px]\">qr_code_2</span>\n          BRG-2024-0142\n        </span>\n<span class=\"px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md flex items-center gap-1.5 font-semibold\">\n<span class=\"w-2 h-2 rounded-full bg-secondary\"></span>\n          Barang Ditemukan (Di Brankas)\n        </span>\n</div>\n<p class=\"font-body-md text-body-md text-on-surface-variant flex flex-wrap items-center gap-2\">\n<span>Terdaftar dari Laporan <strong class=\"text-on-surface font-semibold\">TM-7F3P9X</strong></span>\n<span class=\"text-outline-variant\">\u2022</span>\n<span class=\"inline-flex items-center gap-1\">\n<span class=\"material-symbols-outlined text-[16px] text-secondary\">lock</span>\n          Disimpan di Locker GKU-A04\n        </span>\n<span class=\"text-outline-variant\">\u2022</span>\n<span class=\"text-secondary font-medium\">Sisa Waktu SOP: 82 Hari</span>\n</p>\n</div>\n<!-- ACTION BUTTONS -->\n<div class=\"flex flex-wrap items-center gap-space-sm shrink-0\">\n<button class=\"px-space-md py-2.5 rounded-full bg-primary text-on-primary hover:bg-inverse-surface font-label-lg text-label-lg flex items-center gap-2 shadow-sm transition-all\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px]\">verified</span>\n<span>Mulai Verifikasi Klaim</span>\n</button>\n<button class=\"px-space-md py-2.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-lg text-label-lg flex items-center gap-2 transition-all\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px] text-on-surface-variant\">edit</span>\n<span>Koreksi Data</span>\n</button>\n<div class=\"relative\">\n<button class=\"p-2.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface flex items-center justify-center transition-all\" id=\"actionDropdownBtn\" title=\"Opsi Tindakan Lain\" type=\"button\">\n<span class=\"material-symbols-outlined text-[20px]\">more_vert</span>\n</button>\n<div class=\"hidden absolute right-0 mt-2 w-56 bg-surface-container-lowest rounded-xl shadow-xl z-20 py-1\" id=\"actionDropdownMenu\">\n<button class=\"w-full text-left px-4 py-2.5 font-body-md text-body-md text-on-surface hover:bg-surface-container flex items-center gap-2\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px] text-secondary\">print</span>\n            Cetak Label Barcode\n          </button>\n<button class=\"w-full text-left px-4 py-2.5 font-body-md text-body-md text-on-surface hover:bg-surface-container flex items-center gap-2\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px] text-on-surface-variant\">history</span>\n            Riwayat Log Audit Lengkap\n          </button>\n<button class=\"w-full text-left px-4 py-2.5 font-body-md text-body-md text-error hover:bg-error-container flex items-center gap-2\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px]\">flag</span>\n            Laporkan Kendala Fisik\n          </button>\n</div>\n</div>\n</div>\n</header>\n<!-- ANOMALY BANNER -->\n<section class=\"bg-error-container/40 p-space-md rounded-xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md\">\n<div class=\"flex items-start gap-space-sm\">\n<div class=\"w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center shrink-0\">\n<span class=\"material-symbols-outlined text-[24px]\">warning</span>\n</div>\n<div class=\"flex flex-col gap-0.5\">\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface font-semibold\">\n          Indikasi Anomali: Terdapat 2 Laporan Kehilangan (HL-) dengan Ciri Identik Mengklaim Barang Ini\n        </h2>\n<p class=\"font-body-md text-body-md text-on-surface-variant\">\n          Sistem AI Matching mendeteksi klaim ganda potensial untuk flashdisk ini (HL-88219 vs HL-88241). Wajib verifikasi fisik langsung di Posko Induk GKU dengan mencocokkan ciri rahasia dan kepemilikan file di hadapan petugas.\n        </p>\n</div>\n</div>\n<button class=\"px-space-md py-2 rounded-full bg-surface-container-lowest text-secondary font-label-md text-label-md font-semibold hover:bg-secondary-fixed shrink-0 shadow-sm transition-all flex items-center gap-1.5\" onclick=\"document.getElementById('tabBtn3').click()\" type=\"button\">\n<span>Lihat Perbandingan Klaim</span>\n<span class=\"material-symbols-outlined text-[16px]\">arrow_forward</span>\n</button>\n</section>\n<!-- MAIN SPLIT CONTENT GRID (38% Left, 62% Right) -->\n<div class=\"grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start\">\n<!-- LEFT COLUMN (38% -> col-span-5) -->\n<div class=\"lg:col-span-5 flex flex-col gap-space-md\">\n<!-- PHOTO CARD POS JAGA -->\n<section class=\"bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm\">\n<div class=\"relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-surface-container-high flex items-center justify-center\">\n<img class=\"w-full h-full object-cover\" data-alt=\"A clean top-down overhead documentation photograph of a red and black SanDisk Cruzer Blade 64GB USB flash drive resting on a university campus security blue cutting grid mat. An official round red security rubber stamp imprint reads POS JAGA INDUK UII. Crisp natural studio lighting, sharp macroscopic focus on USB metal connector and plastic casing texture, official inventory evidence catalog style.\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuCCmyLXZ5kikc3dSyp7vVEfG0twhjqB3V4wCCRtojBjw7R9y3eytJ75tbp1QWzo4uBPUdYNaudYgDe_M64PlQn55lMThviGmng9v77N9KXWZ229urBtJLWD2XdMqFGljFFLjt6GHl2Jtt8dP0uirWAzM5qiZt30OuyFldlAjfOo0qqLE0Tl6NyMn20V4bB5VAqdVAMoTYPXqJZJLBzsZ69_OvOvK5jXyneMYpDLXU0\"/>\n<!-- STAMP WATERMARK BADGES -->\n<div class=\"absolute top-3 left-3 flex flex-col gap-1.5\">\n<span class=\"px-2.5 py-1 rounded bg-primary/85 backdrop-blur-md text-on-primary font-label-sm text-label-sm flex items-center gap-1\">\n<span class=\"material-symbols-outlined text-[14px]\">videocam</span>\n              Foto Resmi Pos (Webcam HD)\n            </span>\n<span class=\"px-2.5 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm flex items-center gap-1 font-semibold\">\n<span class=\"material-symbols-outlined text-[14px]\">check_circle</span>\n              Verifikasi Visual Sesuai\n            </span>\n</div>\n<div class=\"absolute bottom-3 right-3 px-2 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface font-mono text-label-sm\">\n            2024-11-20 15:08:22 WIB\n          </div>\n</div>\n<!-- PHOTO ACTIONS -->\n<div class=\"grid grid-cols-2 gap-space-sm\">\n<button class=\"py-2 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors\" type=\"button\">\n<span class=\"material-symbols-outlined text-[16px] text-on-surface-variant\">zoom_in</span>\n<span>Perbesar Grid</span>\n</button>\n<button class=\"py-2 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors\" type=\"button\">\n<span class=\"material-symbols-outlined text-[16px] text-on-surface-variant\">download</span>\n<span>Unduh Berita Acara</span>\n</button>\n</div>\n</section>\n<!-- DATA RINCIAN FISIK -->\n<section class=\"bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm\">\n<div class=\"flex items-center justify-between\">\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface\">Spesifikasi Fisik Barang</h2>\n<span class=\"px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm\">\n            Audit Level 1\n          </span>\n</div>\n<dl class=\"flex flex-col gap-2.5 text-body-md\">\n<div class=\"flex items-center justify-between p-2 rounded-lg bg-surface-container-low\">\n<dt class=\"text-on-surface-variant font-label-md\">Kategori Barang</dt>\n<dd class=\"px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold\">\n              Elektronik &amp; Aksesoris Komputer\n            </dd>\n</div>\n<div class=\"flex items-center justify-between p-2 rounded-lg bg-surface-container-low\">\n<dt class=\"text-on-surface-variant font-label-md\">Nama / Model</dt>\n<dd class=\"font-semibold text-on-surface text-right\">SanDisk Cruzer Blade 64GB</dd>\n</div>\n<div class=\"flex items-center justify-between p-2 rounded-lg bg-surface-container-low\">\n<dt class=\"text-on-surface-variant font-label-md\">Warna Dominan</dt>\n<dd class=\"flex items-center gap-1.5 font-medium text-on-surface\">\n<span class=\"w-3.5 h-3.5 rounded-full bg-red-600 shadow-inner\"></span>\n<span class=\"w-3.5 h-3.5 rounded-full bg-neutral-900 shadow-inner\"></span>\n<span>Merah kombinasi Hitam Doff</span>\n</dd>\n</div>\n<div class=\"flex items-center justify-between p-2 rounded-lg bg-surface-container-low\">\n<dt class=\"text-on-surface-variant font-label-md\">Kondisi Fisik</dt>\n<dd class=\"inline-flex items-center gap-1 text-on-surface font-medium\">\n<span class=\"material-symbols-outlined text-[16px] text-secondary\">check_circle</span>\n<span>Baik / Berfungsi Normal</span>\n</dd>\n</div>\n<div class=\"flex flex-col gap-1 p-2 rounded-lg bg-surface-container-low\">\n<dt class=\"text-on-surface-variant font-label-md\">Kelengkapan</dt>\n<dd class=\"text-on-surface\">Tutup flashdisk ada, gantungan tali abu-abu terpasang rapi.</dd>\n</div>\n<div class=\"flex items-center justify-between p-2.5 rounded-lg bg-secondary-fixed text-on-secondary-fixed\">\n<div class=\"flex items-center gap-2\">\n<span class=\"material-symbols-outlined text-[20px] text-secondary\">inventory_2</span>\n<dt class=\"font-label-md text-label-md\">Lokasi Brankas / Rak</dt>\n</div>\n<dd class=\"font-semibold\">Locker GKU-A04 (Posko Induk)</dd>\n</div>\n</dl>\n<!-- CIRI RAHASIA KHUSUS -->\n<div class=\"p-space-sm rounded-lg bg-error-container/30 flex flex-col gap-1.5 mt-1\">\n<div class=\"flex items-center justify-between\">\n<span class=\"flex items-center gap-1.5 font-label-sm text-label-sm font-semibold text-on-surface uppercase tracking-wider\">\n<span class=\"material-symbols-outlined text-[16px] text-error\">visibility_off</span>\n              Ciri Rahasia Khusus\n            </span>\n<span class=\"px-2 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm\">\n              Rahasia Pos &amp; AI\n            </span>\n</div>\n<p class=\"font-body-md text-body-md text-on-surface\">\n            \"Terdapat goresan inisial huruf 'R' kecil di bodi belakang dekat konektor USB, isi partisi 'TUGAS_AKHIR_FTI'.\"\n          </p>\n<span class=\"font-label-sm text-label-sm text-on-surface-variant italic\">\n            *Petugas wajib memvalidasi detail ini tanpa memberitahu pelapor terlebih dahulu.\n          </span>\n</div>\n</section>\n<!-- RANTAI PENGAWASAN (CHAIN OF CUSTODY) -->\n<section class=\"bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm\">\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface\">Rantai Pengawasan Fisik</h2>\n<dl class=\"flex flex-col gap-2 font-body-md text-body-md\">\n<div class=\"flex justify-between items-center py-1\">\n<dt class=\"text-on-surface-variant font-label-md\">Petugas Penerima</dt>\n<dd class=\"font-semibold text-on-surface text-right\">Bripka Hendra Kurniawan (SEC-042)</dd>\n</div>\n<div class=\"flex justify-between items-center py-1\">\n<dt class=\"text-on-surface-variant font-label-md\">Waktu Terima Fisik</dt>\n<dd class=\"text-on-surface text-right\">20 Nov 2024 \u2022 15:10 WIB</dd>\n</div>\n<div class=\"flex justify-between items-center py-1\">\n<dt class=\"text-on-surface-variant font-label-md\">Jalur Penyerahan</dt>\n<dd class=\"text-on-surface text-right\">Laporan Online TM-7F3P9X</dd>\n</div>\n<div class=\"flex justify-between items-center py-1\">\n<dt class=\"text-on-surface-variant font-label-md\">Identitas Penemu</dt>\n<dd class=\"text-on-surface text-right font-medium\">Civitas Peduli (NIM: 21523***)</dd>\n</div>\n<div class=\"flex flex-col gap-1 p-2 rounded-lg bg-surface-container-low mt-1\">\n<dt class=\"text-on-surface-variant font-label-md\">Pilihan Hak Barang Penemu</dt>\n<dd class=\"text-on-surface font-body-sm text-body-sm\">\n              Infaq / Diserahkan ke kegiatan sosial masjid kampus UII bila 90 hari tidak diambil pemilik sah.\n            </dd>\n</div>\n</dl>\n</section>\n</div>\n<!-- RIGHT COLUMN (62% -> col-span-7) -->\n<div class=\"lg:col-span-7 flex flex-col gap-space-md\">\n<!-- TABS CONTAINER -->\n<div class=\"bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col\">\n<!-- TABS HEADER -->\n<div class=\"flex items-center bg-surface-container-low px-space-sm pt-space-xs gap-1\">\n<button class=\"tab-button active px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 bg-surface-container-lowest text-on-surface transition-all\" id=\"tabBtn1\" onclick=\"switchTab(1)\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px]\">history</span>\n<span>Riwayat Status</span>\n<span class=\"px-2 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant\">4</span>\n</button>\n<button class=\"tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all\" id=\"tabBtn2\" onclick=\"switchTab(2)\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px]\">verified_user</span>\n<span>Riwayat Klaim</span>\n<span class=\"px-2 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant\">2</span>\n</button>\n<button class=\"tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all\" id=\"tabBtn3\" onclick=\"switchTab(3)\" type=\"button\">\n<span class=\"material-symbols-outlined text-[18px]\">auto_awesome</span>\n<span>Kandidat Laporan (AI)</span>\n<span class=\"px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold\">3 Cocok</span>\n</button>\n</div>\n<!-- TAB CONTENT 1: RIWAYAT STATUS -->\n<div class=\"p-space-lg flex flex-col gap-space-md\" id=\"tabContent1\">\n<div class=\"flex items-center justify-between\">\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface\">Audit Trail &amp; Kronologi Barang</h2>\n<span class=\"px-2.5 py-1 rounded-full bg-surface-container font-mono text-label-sm text-on-surface-variant\">\n              SHA256: 8f4c...3e1a\n            </span>\n</div>\n<!-- TIMELINE -->\n<div class=\"relative pl-6 flex flex-col gap-6 before:content-[''] before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-surface-container-high\">\n<!-- EVENT 4 -->\n<div class=\"relative flex flex-col gap-1\">\n<span class=\"absolute -left-[27px] top-1 w-3.5 h-3.5 rounded-full bg-secondary shadow-sm\"></span>\n<div class=\"flex flex-wrap items-center justify-between gap-1\">\n<span class=\"font-headline-sm text-headline-sm text-on-surface\">Pencocokan Otomatis Algoritma</span>\n<span class=\"font-mono text-label-sm text-on-surface-variant\">20 Nov 2024, 15:15 WIB</span>\n</div>\n<p class=\"font-body-md text-body-md text-on-surface\">\n                Sistem AI Lost &amp; Found mendeteksi 3 kandidat laporan kehilangan dengan skor tertinggi 94% (HL-88219).\n              </p>\n<div class=\"flex items-center gap-2 mt-1\">\n<span class=\"px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold\">Automated Engine v2.4</span>\n<span class=\"text-on-surface-variant font-label-sm text-label-sm\">Status: Notifikasi Terkirim ke 2 Pelapor</span>\n</div>\n</div>\n<!-- EVENT 3 -->\n<div class=\"relative flex flex-col gap-1\">\n<span class=\"absolute -left-[27px] top-1 w-3.5 h-3.5 rounded-full bg-surface-container-high\"></span>\n<div class=\"flex flex-wrap items-center justify-between gap-1\">\n<span class=\"font-headline-sm text-headline-sm text-on-surface\">Penerimaan Fisik &amp; Masuk Locker</span>\n<span class=\"font-mono text-label-sm text-on-surface-variant\">20 Nov 2024, 15:10 WIB</span>\n</div>\n<p class=\"font-body-md text-body-md text-on-surface\">\n                Fisik diverifikasi sesuai, foto pos diambil via webcam HD, barang disimpan di Locker GKU-A04. BAST #089 otomatis terbit dan ditandatangani digital.\n              </p>\n<div class=\"flex items-center gap-2 mt-1 text-on-surface-variant font-body-sm text-body-sm\">\n<span class=\"material-symbols-outlined text-[16px]\">person</span>\n<span>Bripka Hendra Kurniawan (SEC-042)</span>\n</div>\n</div>\n<!-- EVENT 2 -->\n<div class=\"relative flex flex-col gap-1\">\n<span class=\"absolute -left-[27px] top-1 w-3.5 h-3.5 rounded-full bg-surface-container-high\"></span>\n<div class=\"flex flex-wrap items-center justify-between gap-1\">\n<span class=\"font-headline-sm text-headline-sm text-on-surface\">Verifikasi Kedatangan Penemu</span>\n<span class=\"font-mono text-label-sm text-on-surface-variant\">20 Nov 2024, 14:55 WIB</span>\n</div>\n<p class=\"font-body-md text-body-md text-on-surface\">\n                Penemu tiba di Pos Jaga Induk GKU membawa tiket TM-7F3P9X. Petugas memeriksa kartu mahasiswa dan mencocokkan barang temuan.\n              </p>\n<div class=\"flex items-center gap-2 mt-1 text-on-surface-variant font-body-sm text-body-sm\">\n<span class=\"material-symbols-outlined text-[16px]\">person</span>\n<span>Aipda Sugeng (SEC-019)</span>\n</div>\n</div>\n<!-- EVENT 1 -->\n<div class=\"relative flex flex-col gap-1\">\n<span class=\"absolute -left-[27px] top-1 w-3.5 h-3.5 rounded-full bg-surface-container-high\"></span>\n<div class=\"flex flex-wrap items-center justify-between gap-1\">\n<span class=\"font-headline-sm text-headline-sm text-on-surface\">Laporan Daring Dibuat (TM-7F3P9X)</span>\n<span class=\"font-mono text-label-sm text-on-surface-variant\">20 Nov 2024, 14:30 WIB</span>\n</div>\n<p class=\"font-body-md text-body-md text-on-surface\">\n                Pelaporan mandiri daring oleh Civitas Peduli (NIM: 21523*** - Mahasiswa FTI) dari smartphone di sekitar Gedung FTI UII.\n              </p>\n<span class=\"text-on-surface-variant font-label-sm text-label-sm\">IP Client: 10.12.84.112 \u2022 Kampus Terpadu UII</span>\n</div>\n</div>\n<!-- AUDIT INTEGRITY NOTE -->\n<div class=\"p-space-sm rounded-lg bg-surface-container-low flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm mt-2\">\n<span class=\"material-symbols-outlined text-[18px] text-secondary\">security</span>\n<span>Semua riwayat bersifat append-only dan diamankan dengan cryptographic checksum AES-256.</span>\n</div>\n</div>\n<!-- TAB CONTENT 2: RIWAYAT KLAIM -->\n<div class=\"hidden p-space-lg flex flex-col gap-space-md\" id=\"tabContent2\">\n<div class=\"flex flex-wrap items-center justify-between gap-space-sm\">\n<div>\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface\">Daftar Pemohon Verifikasi Klaim</h2>\n<p class=\"font-body-sm text-body-sm text-on-surface-variant\">Pencatatan resmi setiap pemohon yang mengajukan pembuktian kepemilikan.</p>\n</div>\n<button class=\"px-space-md py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-inverse-surface flex items-center gap-1.5 transition-all shadow-sm\" type=\"button\">\n<span class=\"material-symbols-outlined text-[16px]\">add</span>\n<span>Jadwalkan Verifikasi Baru</span>\n</button>\n</div>\n<!-- TABLE -->\n<div class=\"overflow-x-auto\">\n<table class=\"w-full text-left font-body-md text-body-md\">\n<thead>\n<tr class=\"bg-surface-container-low text-on-surface-variant font-label-md text-label-md\">\n<th class=\"p-3 rounded-l-lg\">Pemohon</th>\n<th class=\"p-3\">Waktu Klaim</th>\n<th class=\"p-3\">Hasil Verifikasi</th>\n<th class=\"p-3\">Alasan / Catatan Petugas</th>\n<th class=\"p-3 rounded-r-lg\">Pemeriksa</th>\n</tr>\n</thead>\n<tbody class=\"divide-y divide-surface-container-high/60\">\n<tr class=\"hover:bg-surface-container-low/50 transition-colors\">\n<td class=\"p-3\">\n<div class=\"flex flex-col\">\n<span class=\"font-semibold text-on-surface\">M. Alif Fadhlurrahman</span>\n<span class=\"font-label-sm text-label-sm text-on-surface-variant\">NIM 21523091 \u2022 FTI</span>\n</div>\n</td>\n<td class=\"p-3 text-on-surface-variant whitespace-nowrap\">21 Nov 2024<br/>09:30 WIB</td>\n<td class=\"p-3\">\n<span class=\"px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold inline-flex items-center gap-1\">\n<span class=\"material-symbols-outlined text-[14px]\">event</span>\n                      Dijadwalkan Hadir\n                    </span>\n</td>\n<td class=\"p-3 text-on-surface max-w-xs\">\n                    Membawa kartu identitas mahasiswa dan bukti kepemilikan file tugas akhir sesuai deskripsi laporan.\n                  </td>\n<td class=\"p-3 text-on-surface-variant text-body-sm whitespace-nowrap\">Bripka Hendra (SEC-042)</td>\n</tr>\n<tr class=\"hover:bg-surface-container-low/50 transition-colors\">\n<td class=\"p-3\">\n<div class=\"flex flex-col\">\n<span class=\"font-semibold text-on-surface\">Rian Pratama</span>\n<span class=\"font-label-sm text-label-sm text-on-surface-variant\">NIM 20522104 \u2022 FEB</span>\n</div>\n</td>\n<td class=\"p-3 text-on-surface-variant whitespace-nowrap\">20 Nov 2024<br/>16:40 WIB</td>\n<td class=\"p-3\">\n<span class=\"px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold inline-flex items-center gap-1\">\n<span class=\"material-symbols-outlined text-[14px]\">cancel</span>\n                      Gugur / Ditolak\n                    </span>\n</td>\n<td class=\"p-3 text-on-surface max-w-xs\">\n                    Tidak dapat menyebutkan isi folder partisi dan tidak mengetahui adanya ciri rahasia inisial huruf di bodi.\n                  </td>\n<td class=\"p-3 text-on-surface-variant text-body-sm whitespace-nowrap\">Aipda Sugeng (SEC-019)</td>\n</tr>\n</tbody>\n</table>\n</div>\n</div>\n<!-- TAB CONTENT 3: KANDIDAT AI MATCHING -->\n<div class=\"hidden p-space-lg flex flex-col gap-space-md\" id=\"tabContent3\">\n<div class=\"flex flex-wrap items-center justify-between gap-space-sm\">\n<div>\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface\">Kandidat Laporan Kehilangan (AI Matching)</h2>\n<p class=\"font-body-sm text-body-sm text-on-surface-variant\">Sistem membandingkan parameter deskripsi laporan pelapor dengan data fisik di pos.</p>\n</div>\n<span class=\"px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md font-semibold\">\n              Model: CampusBERT v1.9\n            </span>\n</div>\n<!-- CANDIDATE LIST -->\n<div class=\"flex flex-col gap-space-sm\">\n<!-- CANDIDATE 1 (94%) -->\n<div class=\"p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm\">\n<div class=\"flex flex-wrap items-center justify-between gap-2\">\n<div class=\"flex items-center gap-2\">\n<span class=\"px-2.5 py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-semibold\">\n                    94% Sangat Cocok\n                  </span>\n<span class=\"font-mono text-label-md text-on-surface-variant\">Tiket: HL-88219</span>\n</div>\n<span class=\"font-body-sm text-body-sm text-on-surface-variant\">Dilaporkan 20 Nov 2024 \u2022 14:10 WIB</span>\n</div>\n<div>\n<h3 class=\"font-headline-sm text-headline-sm text-on-surface\">Flashdisk Merah Hitam Hilang di Lab Komputer GKU Lantai 2</h3>\n<p class=\"font-body-md text-body-md text-on-surface-variant\">\n                  Pelapor: <strong class=\"text-on-surface\">M. Alif Fadhlurrahman</strong> (FTI - Informatika). Catatan: Berisi dokumen skripsi FTI bab 1-4.\n                </p>\n</div>\n<!-- PARAMETER MATCHING BARS -->\n<div class=\"grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 font-label-sm text-label-sm\">\n<div class=\"p-2 rounded bg-surface-container-lowest flex flex-col gap-1\">\n<span class=\"text-on-surface-variant\">Kategori: 100%</span>\n<div class=\"h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden\">\n<div class=\"h-full bg-secondary w-full\"></div>\n</div>\n</div>\n<div class=\"p-2 rounded bg-surface-container-lowest flex flex-col gap-1\">\n<span class=\"text-on-surface-variant\">Warna &amp; Model: 100%</span>\n<div class=\"h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden\">\n<div class=\"h-full bg-secondary w-full\"></div>\n</div>\n</div>\n<div class=\"p-2 rounded bg-surface-container-lowest flex flex-col gap-1\">\n<span class=\"text-on-surface-variant\">Lokasi GKU: 95%</span>\n<div class=\"h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden\">\n<div class=\"h-full bg-secondary w-[95%]\"></div>\n</div>\n</div>\n<div class=\"p-2 rounded bg-surface-container-lowest flex flex-col gap-1\">\n<span class=\"text-on-surface-variant\">Rentang Waktu: 90%</span>\n<div class=\"h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden\">\n<div class=\"h-full bg-secondary w-[90%]\"></div>\n</div>\n</div>\n</div>\n<div class=\"flex items-center justify-end gap-space-sm pt-1\">\n<button class=\"px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1\" type=\"button\">\n<span class=\"material-symbols-outlined text-[16px]\">call</span>\n<span>Hubungi Pelapor</span>\n</button>\n\n</div>\n</div>\n<!-- CANDIDATE 2 (78%) -->\n<div class=\"p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm\">\n<div class=\"flex flex-wrap items-center justify-between gap-2\">\n<div class=\"flex items-center gap-2\">\n<span class=\"px-2.5 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold\">\n                    78% Cukup Cocok\n                  </span>\n<span class=\"font-mono text-label-md text-on-surface-variant\">Tiket: HL-88241</span>\n</div>\n<span class=\"font-body-sm text-body-sm text-on-surface-variant\">Dilaporkan 19 Nov 2024 \u2022 11:20 WIB</span>\n</div>\n<div>\n<h3 class=\"font-headline-sm text-headline-sm text-on-surface\">Flashdisk SanDisk Hitam Ada Gantungan Kunci</h3>\n<p class=\"font-body-md text-body-md text-on-surface-variant\">\n                  Pelapor: <strong class=\"text-on-surface\">Farah Diba</strong> (FEB - Manajemen). Catatan: Terakhir dipakai saat presentasi mata kuliah. Selisih waktu 2 hari.\n                </p>\n</div>\n<div class=\"flex items-center justify-end gap-space-sm pt-1\">\n<button class=\"px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors\" type=\"button\">\n                  Periksa Rincian Laporan\n                </button>\n</div>\n</div>\n<!-- CANDIDATE 3 (62%) -->\n<div class=\"p-space-md rounded-xl bg-surface-container-low flex flex-col gap-2\">\n<div class=\"flex flex-wrap items-center justify-between gap-2\">\n<div class=\"flex items-center gap-2\">\n<span class=\"px-2.5 py-1 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold\">\n                    62% Potensial\n                  </span>\n<span class=\"font-mono text-label-md text-on-surface-variant\">Tiket: HL-88190</span>\n</div>\n<span class=\"font-body-sm text-body-sm text-on-surface-variant\">Dilaporkan 18 Nov 2024</span>\n</div>\n<h3 class=\"font-headline-sm text-headline-sm text-on-surface\">USB Drive 32GB Merah di Perpustakaan Pusat</h3>\n<p class=\"font-body-sm text-body-sm text-on-surface-variant\">\n                Pelapor: Danang K. (FIAI). Kapasitas tercatat 32GB (tidak cocok dengan fisik 64GB).\n              </p>\n</div>\n</div>\n</div>\n</div>\n<!-- AUDIT QUICK STATUS SUMMARY CARD -->\n<section class=\"bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm\">\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface\">Status Penyimpanan Fisik Pos Jaga</h2>\n<div class=\"grid grid-cols-1 sm:grid-cols-3 gap-space-sm\">\n<div class=\"p-3 rounded-lg bg-surface-container-low flex flex-col gap-1\">\n<span class=\"font-label-sm text-label-sm text-on-surface-variant uppercase\">Suhu Ruang Brankas</span>\n<span class=\"font-headline-md text-headline-md text-on-surface font-semibold\">22.4\u00b0C</span>\n<span class=\"font-body-sm text-body-sm text-secondary\">Optimal (Sensor BSI-04)</span>\n</div>\n<div class=\"p-3 rounded-lg bg-surface-container-low flex flex-col gap-1\">\n<span class=\"font-label-sm text-label-sm text-on-surface-variant uppercase\">Segel Keamanan</span>\n<span class=\"font-headline-md text-headline-md text-on-surface font-semibold\">SEAL-9941</span>\n<span class=\"font-body-sm text-body-sm text-secondary\">Terpasang Utuh</span>\n</div>\n<div class=\"p-3 rounded-lg bg-surface-container-low flex flex-col gap-1\">\n<span class=\"font-label-sm text-label-sm text-on-surface-variant uppercase\">Jadwal Audit Fisik</span>\n<span class=\"font-headline-md text-headline-md text-on-surface font-semibold\">Minggu ke-4</span>\n<span class=\"font-body-sm text-body-sm text-on-surface-variant\">27 Nov 2024</span>\n</div>\n</div>\n</section>\n</div>\n</div>\n<!-- AUTHORITY / PERMISSION CALLOUT FOOTER -->\n<footer class=\"p-space-md rounded-xl bg-surface-container-low flex items-start gap-space-sm text-on-surface-variant\">\n<div class=\"p-2 rounded-lg bg-surface-container text-on-surface shrink-0\">\n<span class=\"material-symbols-outlined text-[20px]\">admin_panel_settings</span>\n</div>\n<div class=\"flex flex-col gap-0.5\">\n<span class=\"font-label-lg text-label-lg text-on-surface font-semibold\">\n        Perhatian Otoritas Hak Akses Sistem Keamanan Kampus UII\n      </span>\n<p class=\"font-body-sm text-body-sm\">\n        Tindakan Mengubah Status Menjadi \"Ditahan\" (Holding), \"Dilepas / Dilimpahkan\" (Releasing), dan \"Penyerahan Final Kepemilikan\" hanya dapat disahkan oleh akun Tingkat Administrator (Komandan Regu / Kepala Keamanan Kampus &amp; BSI). Petugas Pos Jaga berwenang memvalidasi fisik, memperbarui log pemeriksaan, dan memproses verifikasi klaim tatap muka.\n      </p>\n</div>\n</footer>\n<!-- SCRIPT FOR TABS & DROPDOWN -->\n<script>\n    function switchTab(tabIndex) {\n      for (let i = 1; i <= 3; i++) {\n        const btn = document.getElementById('tabBtn' + i);\n        const content = document.getElementById('tabContent' + i);\n        if (i === tabIndex) {\n          btn.classList.add('bg-surface-container-lowest', 'text-on-surface');\n          btn.classList.remove('text-on-surface-variant');\n          content.classList.remove('hidden');\n        } else {\n          btn.classList.remove('bg-surface-container-lowest', 'text-on-surface');\n          btn.classList.add('text-on-surface-variant');\n          content.classList.add('hidden');\n        }\n      }\n    }\n\n    const actionDropdownBtn = document.getElementById('actionDropdownBtn');\n    const actionDropdownMenu = document.getElementById('actionDropdownMenu');\n    if (actionDropdownBtn && actionDropdownMenu) {\n      actionDropdownBtn.addEventListener('click', (e) => {\n        e.stopPropagation();\n        actionDropdownMenu.classList.toggle('hidden');\n      });\n      document.addEventListener('click', () => {\n        if (!actionDropdownMenu.classList.contains('hidden')) {\n          actionDropdownMenu.classList.add('hidden');\n        }\n      });\n    }\n  </script>\n</div></main></div>\n<!-- LIGHTBOX MODAL: Zoom Foto Barang -->\n<div id=\"modal-zoom-image\" class=\"fixed inset-0 z-50 hidden bg-inverse-surface/80 backdrop-blur-md flex items-center justify-center p-4\">\n  <div class=\"relative max-w-3xl w-full bg-surface-container-lowest rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200\">\n    <div class=\"p-4 bg-surface-container-low flex items-center justify-between border-b border-surface-container-high\">\n      <div class=\"flex items-center gap-2\">\n        <span class=\"material-symbols-outlined text-secondary text-[22px]\">photo_camera</span>\n        <span class=\"font-headline-sm text-headline-sm font-semibold text-on-surface\">Dokumentasi Foto Fisik Resolusi Tinggi</span>\n      </div>\n      <button class=\"p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors\" data-action=\"close-modal-zoom\">\n        <span class=\"material-symbols-outlined text-[22px]\">close</span>\n      </button>\n    </div>\n    <div class=\"p-6 flex flex-col items-center justify-center bg-black/5\">\n      <img src=\"https://images.unsplash.com/photo-1624823183493-27e7f7b6b907?auto=format&fit=crop&w=1200&q=80\" alt=\"Foto Fisik Barang Inventaris\" class=\"max-h-[65vh] w-auto rounded-xl shadow-lg object-contain\"/>\n      <div class=\"mt-4 px-4 py-2 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm flex items-center gap-3\">\n        <span>Kamera Posko Induk GKU #02</span>\n        <span>\u2022</span>\n        <span>Resolusi: 1920x1080 (Webcam HD)</span>\n        <span>\u2022</span>\n        <span>Hash: 8f4c3e1a</span>\n      </div>\n    </div>\n  </div>\n</div>\n";
+
+export default function DetailFisikInventaris({ onNavigate }) {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const el = containerRef.current;
+
+    const handleClick = (e) => {
+      const target = e.target.closest('a, button, [data-path], [data-action], tr, [role="button"], label');
+      if (!target) return;
+
+      const path = (target.getAttribute('data-path') || target.getAttribute('href') || '').trim();
+      const action = (target.getAttribute('data-action') || '').trim();
+      const title = (target.getAttribute('title') || '').toLowerCase();
+      const text = (target.textContent || '').trim();
+      const lowerText = text.toLowerCase();
+
+      // =========================================================================
+      // 0. Kembali ke Portal Publik
+      // =========================================================================
+      if (
+        path === 'portal-publik' ||
+        lowerText.includes('portal publik') ||
+        path === 'logout' ||
+        title.includes('keluar portal') ||
+        title.includes('logout petugas')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
+      }
+
+      // =========================================================================
+      // 1. Sidebar Nav: Beranda / Dashboard
+      // =========================================================================
+      if (
+        (path === 'beranda' && target.closest('nav')) ||
+        (lowerText === 'beranda' && target.closest('aside')) ||
+        (lowerText === 'beranda' && target.tagName === 'A' && target.closest('nav'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_dashboard');
+        return;
+      }
+
+      // =========================================================================
+      // 2. Sidebar Nav: Penerimaan
+      // =========================================================================
+      if (
+        (path === 'penerimaan' && target.closest('aside')) ||
+        (lowerText === 'penerimaan' && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_antrean');
+        return;
+      }
+
+      // =========================================================================
+      // 3. Sidebar Nav: Barang / Inventaris
+      // =========================================================================
+      if (
+        (path === 'barang' && target.closest('aside')) ||
+        (lowerText === 'barang' && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_inventaris');
+        return;
+      }
+
+      // =========================================================================
+      // 4. Sidebar Nav: Hasil Matching (AI)
+      // =========================================================================
+      if (
+        (path === 'hasil-matching' && target.closest('aside')) ||
+        (lowerText.includes('hasil matching') && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_matching');
+        return;
+      }
+
+      // =========================================================================
+      // 5. Sidebar Nav: Verifikasi
+      // =========================================================================
+      if (
+        (path === 'verifikasi' && target.closest('aside')) ||
+        (lowerText === 'verifikasi' && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_verifikasi_1');
+        return;
+      }
+
+      // =========================================================================
+      // 6. Sidebar Nav: Laporan Kehilangan
+      // =========================================================================
+      if (
+        (path === 'laporan-kehilangan' && target.closest('aside')) ||
+        (lowerText.includes('laporan kehilangan') && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_kehilangan');
+        return;
+      }
+
+      // =========================================================================
+      // 7. SPECIFIC FIX: Penerimaan Barang Temuan (PenerimaanBarang.jsx)
+      // =========================================================================
+      // KESESUAIAN FISIK TOGGLE: Sesuai (Cocok) vs Tidak Sesuai / Tolak
+      if (
+        target.id === 'match-card-true' ||
+        target.closest('#match-card-true') ||
+        (target.name === 'kesesuaian' && target.value === 'sesuai') ||
+        lowerText.includes('kembali ke opsi sesuai')
+      ) {
+        e.preventDefault();
+        const cardTrue = el.querySelector('#match-card-true');
+        const cardFalse = el.querySelector('#match-card-false');
+        const secSesuai = el.querySelector('#section-sesuai');
+        const secTidak = el.querySelector('#section-tidak-sesuai');
+
+        if (cardTrue) {
+          cardTrue.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-primary text-on-primary shadow-sm';
+          const inp = cardTrue.querySelector('input');
+          if (inp) inp.checked = true;
+        }
+        if (cardFalse) {
+          cardFalse.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-surface-container-low text-on-surface hover:bg-surface-container-high';
+          const inp = cardFalse.querySelector('input');
+          if (inp) inp.checked = false;
+        }
+        if (secSesuai) secSesuai.classList.remove('hidden');
+        if (secTidak) {
+          secTidak.classList.add('hidden');
+          secTidak.classList.remove('flex');
+        }
+        return;
+      }
+
+      if (
+        target.id === 'match-card-false' ||
+        target.closest('#match-card-false') ||
+        (target.name === 'kesesuaian' && target.value === 'tidak_sesuai') ||
+        lowerText.includes('tidak sesuai / tolak')
+      ) {
+        e.preventDefault();
+        const cardTrue = el.querySelector('#match-card-true');
+        const cardFalse = el.querySelector('#match-card-false');
+        const secSesuai = el.querySelector('#section-sesuai');
+        const secTidak = el.querySelector('#section-tidak-sesuai');
+
+        if (cardFalse) {
+          cardFalse.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-primary text-on-primary shadow-sm';
+          const inp = cardFalse.querySelector('input');
+          if (inp) inp.checked = true;
+        }
+        if (cardTrue) {
+          cardTrue.className = 'cursor-pointer p-space-sm rounded-xl transition-all flex items-start gap-3 bg-surface-container-low text-on-surface hover:bg-surface-container-high';
+          const inp = cardTrue.querySelector('input');
+          if (inp) inp.checked = false;
+        }
+        if (secSesuai) secSesuai.classList.add('hidden');
+        if (secTidak) {
+          secTidak.classList.remove('hidden');
+          secTidak.classList.add('flex');
+        }
+        return;
+      }
+
+      // Rejection Reason Preset Chips
+      if (
+        lowerText.includes('barang tidak cocok') ||
+        lowerText.includes('barang rusak parah') ||
+        lowerText.includes('pelapor batal secara sukarela')
+      ) {
+        e.preventDefault();
+        const textarea = el.querySelector('#rejection-textarea');
+        if (textarea) {
+          if (lowerText.includes('barang tidak cocok')) {
+            textarea.value = 'Fisik barang yang dibawa penemu berbeda dengan model Sandisk 64GB di laporan TM-7F3P9X.';
+          } else if (lowerText.includes('barang rusak parah')) {
+            textarea.value = 'Barang rusak parah / hancur total sehingga nomor seri dan identitas fisik tidak dapat diidentifikasi sama sekali.';
+          } else {
+            textarea.value = 'Pelapor membatalkan serah terima secara sukarela karena barang ternyata telah diambil langsung.';
+          }
+        }
+        return;
+      }
+
+      // Tolak Laporan & Batalkan Tiket
+      if (lowerText.includes('tolak laporan & batalkan tiket') || lowerText.includes('tolak laporan')) {
+        e.preventDefault();
+        alert('Penyerahan Barang Ditolak!\n\nAlasan: Ketidaksesuaian fisik barang temuan.\nTiket drop-off TM-7F3P9X dibatalkan dan status antrean telah diperbarui.');
+        if (onNavigate) onNavigate('satpam_antrean');
+        return;
+      }
+
+      // Simpan & Buat Item ID Inventaris -> kembali ke dashboard awal penerimaan (satpam_antrean)
+      if (
+        lowerText.includes('simpan & buat item id inventaris') ||
+        lowerText.includes('simpan & buat item') ||
+        lowerText.includes('buat item id inventaris')
+      ) {
+        e.preventDefault();
+        alert('Barang Temuan Berhasil Diterima & Disimpan!\n\nNomor Registrasi: BRG-2024-0143\nStatus: Tersimpan di Loker Posko GKU.\nKembali ke Dashboard Antrean Penerimaan.');
+        if (onNavigate) onNavigate('satpam_antrean');
+        return;
+      }
+
+      // Batal / Tunda di Penerimaan Barang -> kembali ke Antrean
+      if (
+        lowerText.includes('batal / tunda penyerahan') ||
+        lowerText.includes('kembali ke mode tiket') ||
+        (lowerText === 'batal' && (window.location.hash.includes('penerimaan') || document.querySelector('#section-inspeksi')))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_antrean');
+        return;
+      }
+
+      // Action: Terima Fisik di Antrean Penerimaan / Dashboard
+      if (
+        action === 'terima-fisik' ||
+        target.closest('[data-action="terima-fisik"]') ||
+        lowerText === 'terima' ||
+        lowerText.includes('terima barang temuan') ||
+        lowerText.includes('input penerimaan') ||
+        lowerText.includes('catat tanpa nomor laporan') ||
+        lowerText.includes('tambah barang masuk') ||
+        lowerText.includes('pemeriksaan fisik walk-in')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_penerimaan');
+        return;
+      }
+
+      // =========================================================================
+      // 8. SPECIFIC FIX: Detail Fisik Barang Inventaris (DetailFisikInventaris.jsx)
+      // =========================================================================
+      // Hubungi Pelapor
+      if (lowerText.includes('hubungi pelapor')) {
+        e.preventDefault();
+        alert('Membuka Kontak WhatsApp Pelapor:\n\nNama: M. Alif Fadhlurrahman (FTI - Informatika)\nNomor WhatsApp: +62 812-9844-8910\nNomor Tiket: HL-88219');
+        return;
+      }
+
+      // Tab 1: Riwayat Status
+      if (target.id === 'tabBtn1' || target.closest('#tabBtn1') || lowerText.includes('riwayat status')) {
+        e.preventDefault();
+        const b1 = el.querySelector('#tabBtn1');
+        const b2 = el.querySelector('#tabBtn2');
+        const b3 = el.querySelector('#tabBtn3');
+        const c1 = el.querySelector('#tabContent1');
+        const c2 = el.querySelector('#tabContent2');
+        const c3 = el.querySelector('#tabContent3');
+        if (c1) c1.classList.remove('hidden');
+        if (c2) c2.classList.add('hidden');
+        if (c3) c3.classList.add('hidden');
+        if (b1) {
+          b1.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 bg-surface-container-lowest text-on-surface font-semibold shadow-xs transition-all';
+        }
+        if (b2) {
+          b2.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        if (b3) {
+          b3.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        return;
+      }
+
+      // Tab 2: Riwayat Klaim
+      if (target.id === 'tabBtn2' || target.closest('#tabBtn2') || lowerText.includes('riwayat klaim')) {
+        e.preventDefault();
+        const b1 = el.querySelector('#tabBtn1');
+        const b2 = el.querySelector('#tabBtn2');
+        const b3 = el.querySelector('#tabBtn3');
+        const c1 = el.querySelector('#tabContent1');
+        const c2 = el.querySelector('#tabContent2');
+        const c3 = el.querySelector('#tabContent3');
+        if (c1) c1.classList.add('hidden');
+        if (c2) c2.classList.remove('hidden');
+        if (c3) c3.classList.add('hidden');
+        if (b2) {
+          b2.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 bg-surface-container-lowest text-on-surface font-semibold shadow-xs transition-all';
+        }
+        if (b1) {
+          b1.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        if (b3) {
+          b3.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        return;
+      }
+
+      // Tab 3: Kandidat Laporan (AI)
+      if (target.id === 'tabBtn3' || target.closest('#tabBtn3') || lowerText.includes('kandidat laporan (ai)')) {
+        e.preventDefault();
+        const b1 = el.querySelector('#tabBtn1');
+        const b2 = el.querySelector('#tabBtn2');
+        const b3 = el.querySelector('#tabBtn3');
+        const c1 = el.querySelector('#tabContent1');
+        const c2 = el.querySelector('#tabContent2');
+        const c3 = el.querySelector('#tabContent3');
+        if (c1) c1.classList.add('hidden');
+        if (c2) c2.classList.add('hidden');
+        if (c3) c3.classList.remove('hidden');
+        if (b3) {
+          b3.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 bg-surface-container-lowest text-on-surface font-semibold shadow-xs transition-all';
+        }
+        if (b1) {
+          b1.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        if (b2) {
+          b2.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        return;
+      }
+
+      // Lightbox Zoom Foto
+      if (
+        lowerText.includes('perbesar grid') ||
+        lowerText.includes('perbesar foto') ||
+        target.closest('[data-action="open-zoom"]') ||
+        (target.tagName === 'IMG' && target.closest('.rounded-xl'))
+      ) {
+        e.preventDefault();
+        const zoomModal = el.querySelector('#modal-zoom-image');
+        if (zoomModal) zoomModal.classList.remove('hidden');
+        return;
+      }
+
+      // Close Lightbox Zoom
+      if (
+        action === 'close-modal-zoom' ||
+        target.closest('[data-action="close-modal-zoom"]') ||
+        (target.id === 'modal-zoom-image')
+      ) {
+        e.preventDefault();
+        const zoomModal = el.querySelector('#modal-zoom-image');
+        if (zoomModal) zoomModal.classList.add('hidden');
+        return;
+      }
+
+      // =========================================================================
+      // 9. SPECIFIC FIX: Verifikasi Langkah 1 (VerifikasiLangkah1.jsx)
+      // =========================================================================
+      // Jenis Identitas Fisik Selection (KTM UII, KTP / SIM, Pegawai)
+      if (target.name === 'idType' || target.closest('label')?.querySelector('input[name="idType"]')) {
+        const parentGrid = target.closest('.grid-cols-3');
+        if (parentGrid) {
+          const allLabels = parentGrid.querySelectorAll('label');
+          allLabels.forEach(lbl => {
+            lbl.className = 'flex items-center justify-center gap-1.5 p-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium hover:bg-surface-container cursor-pointer transition-all';
+            const inp = lbl.querySelector('input');
+            if (inp) inp.checked = false;
+          });
+          const activeLabel = target.tagName === 'LABEL' ? target : target.closest('label');
+          if (activeLabel) {
+            activeLabel.className = 'flex items-center justify-center gap-1.5 p-2 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold cursor-pointer shadow-xs transition-all';
+            const activeInp = activeLabel.querySelector('input');
+            if (activeInp) activeInp.checked = true;
+          }
+        }
+        return;
+      }
+
+      // Hubungan Pemohon Terhadap Barang (Pemilik Asli vs Kuasa / Perwakilan)
+      if (target.name === 'claimRel' || target.closest('label')?.querySelector('input[name="claimRel"]')) {
+        const parentGrid = target.closest('.grid-cols-2');
+        if (parentGrid) {
+          const allLabels = parentGrid.querySelectorAll('label');
+          allLabels.forEach(lbl => {
+            lbl.className = 'flex items-center gap-2 p-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium hover:bg-surface-container cursor-pointer transition-all';
+            const inp = lbl.querySelector('input');
+            if (inp) inp.checked = false;
+          });
+          const activeLabel = target.tagName === 'LABEL' ? target : target.closest('label');
+          if (activeLabel) {
+            activeLabel.className = 'flex items-center gap-2 p-2 rounded-lg bg-secondary-fixed/50 text-on-secondary-fixed font-label-sm text-label-sm font-semibold cursor-pointer shadow-xs';
+            const activeInp = activeLabel.querySelector('input');
+            if (activeInp) activeInp.checked = true;
+          }
+        }
+        return;
+      }
+
+      // =========================================================================
+      // 10. SPECIFIC FIX: Verifikasi Langkah 3 (VerifikasiLangkah3.jsx)
+      // =========================================================================
+      // Tombol Tampilan Terbuka & Tampilan Terkunci
+      if (lowerText.includes('tampilan terbuka') || target.closest('[onclick*="revealed"]')) {
+        e.preventDefault();
+        const vMasked = el.querySelector('#view-masked');
+        const vRevealed = el.querySelector('#view-revealed');
+        if (vMasked) vMasked.classList.add('hidden');
+        if (vRevealed) vRevealed.classList.remove('hidden');
+
+        const allToggleBtns = el.querySelectorAll('button');
+        allToggleBtns.forEach(b => {
+          if (b.textContent.includes('Tampilan Terbuka')) {
+            b.className = 'px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm font-semibold transition-all';
+          }
+          if (b.textContent.includes('Tampilan Terkunci')) {
+            b.className = 'px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all';
+          }
+        });
+        return;
+      }
+
+      if (lowerText.includes('tampilan terkunci') || target.closest('[onclick*="masked"]')) {
+        e.preventDefault();
+        const vMasked = el.querySelector('#view-masked');
+        const vRevealed = el.querySelector('#view-revealed');
+        if (vMasked) vMasked.classList.remove('hidden');
+        if (vRevealed) vRevealed.classList.add('hidden');
+
+        const allToggleBtns = el.querySelectorAll('button');
+        allToggleBtns.forEach(b => {
+          if (b.textContent.includes('Tampilan Terkunci')) {
+            b.className = 'px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm font-semibold transition-all';
+          }
+          if (b.textContent.includes('Tampilan Terbuka')) {
+            b.className = 'px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all';
+          }
+        });
+        return;
+      }
+
+      // Buka Data Rahasia Sekarang -> buka dialog konfirmasi
+      if (lowerText.includes('buka data rahasia sekarang')) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-reveal-confirm');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        }
+        return;
+      }
+
+      // Modal Reveal Confirm: Ya Buka Data Sekarang
+      if (lowerText.includes('ya, buka data sekarang') || lowerText.includes('buka data sekarang')) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-reveal-confirm');
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+        const vMasked = el.querySelector('#view-masked');
+        const vRevealed = el.querySelector('#view-revealed');
+        if (vMasked) vMasked.classList.add('hidden');
+        if (vRevealed) vRevealed.classList.remove('hidden');
+
+        const allToggleBtns = el.querySelectorAll('button');
+        allToggleBtns.forEach(b => {
+          if (b.textContent.includes('Tampilan Terbuka')) {
+            b.className = 'px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm font-semibold transition-all';
+          }
+          if (b.textContent.includes('Tampilan Terkunci')) {
+            b.className = 'px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all';
+          }
+        });
+        alert('Data rahasia berhasil diverifikasi dan dicatat pada audit log pos jaga.');
+        return;
+      }
+
+      // Tombol Tidak Cocok (Klaim Gagal)
+      if (lowerText.includes('tidak cocok (klaim gagal)') || lowerText.includes('klaim gagal')) {
+        e.preventDefault();
+        const modalFail = el.querySelector('#modal-failure');
+        if (modalFail) {
+          modalFail.classList.remove('hidden');
+          modalFail.classList.add('flex');
+        } else {
+          if (confirm('Konfirmasi penolakan klaim karena ketidaksesuaian ciri khusus rahasia?')) {
+            alert('Penolakan Klaim Tercatat!\n\nBarang tetap aman disimpan di brankas inventaris pos jaga.');
+            if (onNavigate) onNavigate('satpam_inventaris');
+          }
+        }
+        return;
+      }
+
+      // Modal Failure: Konfirmasi Penolakan Klaim
+      if (lowerText.includes('konfirmasi penolakan klaim')) {
+        e.preventDefault();
+        const modalFail = el.querySelector('#modal-failure');
+        if (modalFail) {
+          modalFail.classList.add('hidden');
+          modalFail.classList.remove('flex');
+        }
+        alert('Penolakan Klaim Berhasil Dicatat!\n\nStatus klaim diperbarui menjadi GAGAL (Karakteristik rahasia tidak sesuai).\nBarang tetap aman berada di loker inventaris posko.');
+        if (onNavigate) onNavigate('satpam_inventaris');
+        return;
+      }
+
+      // Close modal confirm or failure
+      if (
+        (lowerText === 'batal' || lowerText === 'close') &&
+        (target.closest('#modal-reveal-confirm') || target.closest('#modal-failure'))
+      ) {
+        e.preventDefault();
+        const m1 = el.querySelector('#modal-reveal-confirm');
+        const m2 = el.querySelector('#modal-failure');
+        if (m1) { m1.classList.add('hidden'); m1.classList.remove('flex'); }
+        if (m2) { m2.classList.add('hidden'); m2.classList.remove('flex'); }
+        return;
+      }
+
+      // Tombol Kembali ke Langkah 2 (Kembali ke Langkah 1 Verifikasi)
+      if (lowerText.includes('kembali ke langkah 2') || lowerText.includes('kembali ke langkah 1')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_verifikasi_1');
+        return;
+      }
+
+      // =========================================================================
+      // 11. SPECIFIC FIX: Laporan Kehilangan (DaftarLaporanKehilangan.jsx)
+      // =========================================================================
+      // Tombol Sinkronisasi Data -> tampilkan toast sukses (JANGAN location.reload)
+      if (action === 'sync-data' || lowerText.includes('sinkronisasi data') || (lowerText.includes('sinkronisasi') && target.closest('button'))) {
+        e.preventDefault();
+        alert('Sinkronisasi Berhasil!\n\n44 Laporan kehilangan civitas telah dimutakhirkan secara real-time dari database kampus UII.');
+        return;
+      }
+
+      // Buka Modal Input Tiket Manual
+      if (
+        lowerText.includes('input tiket manual') ||
+        lowerText.includes('input manual') ||
+        action === 'open-modal-input-manual'
+      ) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-input-manual');
+        if (modal) modal.classList.remove('hidden');
+        return;
+      }
+
+      // Tutup Modal Input Tiket Manual
+      if (action === 'close-modal-input-manual') {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-input-manual');
+        if (modal) modal.classList.add('hidden');
+        return;
+      }
+
+      // Simpan Tiket Manual
+      if (action === 'save-manual-ticket' || target.id === 'btn-save-manual-ticket' || lowerText.includes('simpan laporan & terbitkan')) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-input-manual');
+        if (modal) modal.classList.add('hidden');
+        alert('Laporan Kehilangan Baru Berhasil Dicatat!\n\nNomor Tiket: HL-2024-0895 (Walk-in Posko GKU)\nStatus: Aktif & Diantrikan ke Algoritma AI Matching.');
+        return;
+      }
+
+      // Modal Tutup Tiket Laporan (HL-88219)
+      if (action === 'open-modal-close-ticket') {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-tutup-laporan');
+        if (modal) modal.classList.remove('hidden');
+        return;
+      }
+
+      if (action === 'close-modal-close-ticket') {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-tutup-laporan');
+        if (modal) modal.classList.add('hidden');
+        if (lowerText.includes('konfirmasi tutup laporan')) {
+          alert('Tiket HL-88219 Berhasil Ditutup!\n\nStatus laporan telah diarsipkan.');
+        }
+        return;
+      }
+
+      // Klik Baris Tabel / Tombol Detail di Laporan Kehilangan
+      if (
+        target.classList.contains('report-table-row') ||
+        target.closest('.report-table-row') ||
+        lowerText === 'detail'
+      ) {
+        e.preventDefault();
+        const row = target.classList.contains('report-table-row') ? target : target.closest('.report-table-row');
+        if (row) {
+          const allRows = el.querySelectorAll('.report-table-row');
+          allRows.forEach(r => {
+            r.classList.remove('bg-surface-container-high', 'shadow-sm');
+            r.classList.add('hover:bg-surface-container-low');
+          });
+          row.classList.add('bg-surface-container-high', 'shadow-sm');
+          row.classList.remove('hover:bg-surface-container-low');
+        }
+        return;
+      }
+
+      // =========================================================================
+      // 12. GENERAL WORKFLOW NAVIGATION
+      // =========================================================================
+      // Action: Detail Fisik Inventaris
+      if (
+        action === 'detail-inventaris' ||
+        target.closest('[data-action="detail-inventaris"]') ||
+        title.includes('lihat detail') ||
+        title.includes('detail barang') ||
+        lowerText === 'visibility' ||
+        lowerText.includes('tinjau detail') ||
+        lowerText.includes('detail fisik') ||
+        lowerText.includes('detail item') ||
+        (lowerText.startsWith('brg-2024-') && !lowerText.includes('status matching')) ||
+        path === 'detail-inventaris'
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_detail_inventaris');
+        return;
+      }
+
+      // Breadcrumb / Nav: Daftar Inventaris
+      if (
+        lowerText.includes('daftar inventaris') ||
+        lowerText.includes('kembali ke daftar inventaris') ||
+        lowerText === 'inventaris barang'
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_inventaris');
+        return;
+      }
+
+      // Action: Koreksi Data Inventaris
+      if (
+        lowerText.includes('koreksi data') ||
+        lowerText.includes('edit data') ||
+        lowerText.includes('ubah data') ||
+        path === 'koreksi-inventaris'
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_koreksi');
+        return;
+      }
+
+      // Simpan / Batal di Koreksi Data -> kembali ke Detail Fisik
+      if (
+        lowerText.includes('simpan koreksi') ||
+        lowerText.includes('simpan perubahan') ||
+        lowerText === 'batal'
+      ) {
+        e.preventDefault();
+        alert('Koreksi Data Inventaris Berhasil Disimpan!');
+        if (onNavigate) onNavigate('satpam_detail_inventaris');
+        return;
+      }
+
+      // Action: Hasil Matching AI
+      if (
+        lowerText.includes('hasil matching') ||
+        lowerText.includes('pencocokan ai') ||
+        lowerText.includes('lihat semua 12 hasil matching') ||
+        lowerText.includes('kandidat (94%)') ||
+        lowerText.includes('kandidat (88%)') ||
+        lowerText.includes('status matching') ||
+        lowerText.includes('lanjutkan ke verifikasi ai')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_matching');
+        return;
+      }
+
+      // Action: Mulai Verifikasi Klaim
+      if (
+        lowerText.includes('verifikasi pengambilan') ||
+        lowerText.includes('mulai verifikasi klaim') ||
+        lowerText.includes('verifikasi kepemilikan')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_verifikasi_1');
+        return;
+      }
+
+      // Action: Lanjut ke Verifikasi Langkah 3
+      if (
+        lowerText.includes('lihat perbandingan klaim') ||
+        lowerText.includes('bandingkan ciri khusus') ||
+        lowerText.includes('mulai verifikasi (lanjut') ||
+        lowerText.includes('langkah 3')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_verifikasi_3');
+        return;
+      }
+
+      // Submit BAST in Verifikasi 3
+      if (
+        lowerText.includes('terbitkan bast') ||
+        lowerText.includes('serahkan barang') ||
+        lowerText.includes('cocok, lanjut serah terima')
+      ) {
+        e.preventDefault();
+        alert('Berita Acara Serah Terima (BAST) Berhasil Diterbitkan!\n\nNomor BAST: BAST-2024-1024-0089\nBarang resmi diserahkan kepada pemohon yang sah dan status inventaris telah diperbarui.');
+        if (onNavigate) onNavigate('satpam_inventaris');
+        return;
+      }
+    };
+
+    el.addEventListener('click', handleClick);
+    return () => el.removeEventListener('click', handleClick);
+  }, [onNavigate]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="bg-surface font-body-md text-on-surface antialiased min-h-screen"
+      dangerouslySetInnerHTML={{ __html: rawHTML }}
+    />
+  );
+}

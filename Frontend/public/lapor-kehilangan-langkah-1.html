@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lost &amp; Found Kampus UII — Temukan Kembali Barangmu</title>
+<!-- Tailwind CSS v3 CDN with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.preconnect.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "secondary": "#006398",
+          "on-primary-fixed": "#131b2e",
+          "on-primary-fixed-variant": "#3f465c",
+          "inverse-on-surface": "#eff1f3",
+          "surface-container": "#eceef0",
+          "outline-variant": "#c6c6cd",
+          "surface-container-high": "#e6e8ea",
+          "on-primary-container": "#7c839b",
+          "surface-variant": "#e0e3e5",
+          "on-surface-variant": "#45464d",
+          "primary-fixed-dim": "#bec6e0",
+          "surface-container-lowest": "#ffffff",
+          "inverse-surface": "#2d3133",
+          "primary-container": "#131b2e",
+          "tertiary": "#000000",
+          "on-error": "#ffffff",
+          "error": "#ba1a1a",
+          "on-background": "#191c1e",
+          "secondary-fixed-dim": "#93ccff",
+          "on-tertiary": "#ffffff",
+          "on-secondary-container": "#00476e",
+          "outline": "#76777d",
+          "on-primary": "#ffffff",
+          "secondary-fixed": "#cce5ff",
+          "on-tertiary-container": "#008ebf",
+          "on-tertiary-fixed-variant": "#004c69",
+          "surface-container-low": "#f2f4f6",
+          "inverse-primary": "#bec6e0",
+          "on-tertiary-fixed": "#001e2c",
+          "on-secondary": "#ffffff",
+          "surface-bright": "#f7f9fb",
+          "surface-dim": "#d8dadc",
+          "on-surface": "#191c1e",
+          "surface-container-highest": "#e0e3e5",
+          "primary": "#000000",
+          "on-error-container": "#93000a",
+          "tertiary-container": "#001e2c",
+          "on-secondary-fixed": "#001d31",
+          "background": "#f7f9fb",
+          "primary-fixed": "#dae2fd",
+          "surface-tint": "#565e74",
+          "surface": "#f7f9fb",
+          "tertiary-fixed": "#c4e7ff",
+          "on-secondary-fixed-variant": "#004b73",
+          "secondary-container": "#5bb8fe",
+          "error-container": "#ffdad6",
+          "tertiary-fixed-dim": "#7bd0ff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-sm": "0.75rem",
+          "gutter-mobile": "1rem",
+          "gutter": "1.5rem",
+          "space-xl": "3rem",
+          "space-xs": "0.375rem",
+          "space-md": "1.25rem",
+          "margin-mobile": "1rem",
+          "margin": "2rem",
+          "space-lg": "2rem"
+        },
+        "fontFamily": {
+          "label-sm": ["Plus Jakarta Sans"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"],
+          "body-md": ["Plus Jakarta Sans"],
+          "body-lg": ["Plus Jakarta Sans"],
+          "display": ["Plus Jakarta Sans"],
+          "headline-sm": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "label-lg": ["Plus Jakarta Sans"],
+          "label-md": ["Plus Jakarta Sans"],
+          "display-mobile": ["Plus Jakarta Sans"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "body-sm": ["Plus Jakarta Sans"]
+        },
+        "fontSize": {
+          "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+          "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "700" }],
+          "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+          "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+          "display": ["40px", { "lineHeight": "52px", "fontWeight": "700" }],
+          "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+          "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+          "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+          "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+          "display-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+          "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }],
+          "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }]
+        }
+      }
+    }
+  };
+</script>
+<style>
+  @layer base {
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      overscroll-behavior-y: none;
+    }
+  }
+</style>
+<meta content="web_standard" name="shell-type"/>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- BEGIN: MainHeader -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_2px_14px_-2px_rgba(15,23,42,0.06)]">
+<div class="max-w-7xl mx-auto px-margin-mobile sm:px-gutter lg:px-margin h-20 flex items-center justify-between">
+<!-- Brand Logo & Identity -->
+<a class="flex items-center space-x-3.5 group" data-path="beranda" href="#beranda">
+<div class="w-11 h-11 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-md group-hover:bg-secondary transition-colors duration-200">
+<span class="material-symbols-outlined text-2xl">qr_code_2</span>
+</div>
+<div>
+<span class="block font-headline-sm text-headline-sm text-on-surface tracking-tight leading-tight">Lost &amp; Found UII</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Kampus Terpadu • Temukan kembali barangmu</span>
+</div>
+</a>
+<!-- Desktop Navigation Links -->
+<nav aria-label="Menu Utama" class="hidden md:flex items-center space-x-space-lg" data-active-classes="text-primary font-headline-sm border-b-2 border-primary py-1">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" data-path="beranda" href="#beranda">Beranda</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" data-path="barang-temuan" href="#barang-temuan">Barang Temuan</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" data-path="cara-kerja" href="#cara-kerja">Cara Kerja</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" data-path="pos-satpam" href="#pos-satpam">Pos Satpam</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors duration-200" data-path="faq" href="#faq">FAQ</a>
+</nav>
+<!-- Action Buttons (No Login Required) -->
+<div class="flex items-center space-x-space-sm">
+<a class="inline-flex items-center justify-center px-space-md py-space-xs font-label-lg text-label-lg text-on-surface bg-surface-container-lowest border border-outline-variant rounded-full hover:bg-surface-container-low hover:border-outline shadow-sm transition-all duration-200" data-path="lapor-kehilangan" href="#lapor-kehilangan">
+        Saya Kehilangan
+      </a>
+<a class="inline-flex items-center justify-center px-space-md py-space-xs font-label-lg text-label-lg text-on-primary bg-primary hover:bg-primary-container rounded-full shadow-sm hover:shadow transition-all duration-200" data-path="lapor-temuan" href="#lapor-temuan">
+        Saya Menemukan
+      </a>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<main class="pt-20"><div class="flex flex-col w-full">
+<!-- Content Container with strict adherence to tokens & layout guidelines -->
+<div class="max-w-7xl mx-auto w-full px-margin-mobile sm:px-gutter lg:px-margin py-space-md sm:py-space-lg">
+<!-- 1. Breadcrumb navigation -->
+<nav aria-label="Breadcrumb" class="flex items-center space-x-2 text-on-surface-variant font-label-md text-label-md mb-space-md">
+<a class="hover:text-primary transition-colors flex items-center gap-1" data-path="beranda" href="#beranda">
+<span class="material-symbols-outlined text-sm leading-none">home</span>
+        Beranda
+      </a>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface-variant">Lapor Kehilangan</span>
+<span class="text-outline-variant">/</span>
+<span class="text-primary font-headline-sm text-label-md">Langkah 1: Detail Barang</span>
+</nav>
+<!-- 2. Stepper Component (3 Steps) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md sm:p-space-lg shadow-sm mb-space-lg">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm sm:gap-space-md relative">
+<!-- Step 1 (Active) -->
+<div class="flex items-center space-x-3.5 bg-surface-container-low sm:bg-transparent p-3 sm:p-0 rounded-lg">
+<div class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-body-md shadow-sm shrink-0">
+            1
+          </div>
+<div class="min-w-0">
+<span class="block font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Langkah 1</span>
+<span class="block font-headline-sm text-headline-sm text-on-surface truncate">Detail Barang &amp; Kontak</span>
+</div>
+</div>
+<!-- Step 2 (Upcoming) -->
+<div class="flex items-center space-x-3.5 opacity-60 p-3 sm:p-0 rounded-lg">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-headline-sm text-body-md shrink-0">
+            2
+          </div>
+<div class="min-w-0">
+<span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Langkah 2</span>
+<span class="block font-label-lg text-label-lg text-on-surface truncate">Verifikasi WhatsApp</span>
+</div>
+</div>
+<!-- Step 3 (Upcoming) -->
+<div class="flex items-center space-x-3.5 opacity-60 p-3 sm:p-0 rounded-lg">
+<div class="w-9 h-9 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-headline-sm text-body-md shrink-0">
+            3
+          </div>
+<div class="min-w-0">
+<span class="block font-label-sm text-label-sm text-outline uppercase tracking-wider">Langkah 3</span>
+<span class="block font-label-lg text-label-lg text-on-surface truncate">Persetujuan &amp; Selesai</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Rate-Limit Banner Callout -->
+<div class="bg-error-container text-on-error-container rounded-xl p-space-md mb-space-lg shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm" id="rate-limit-banner" role="alert">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-error text-on-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-xl">timer</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm leading-tight text-on-error-container">Terlalu banyak permintaan</h4>
+<p class="font-body-sm text-body-sm text-on-error-container opacity-90 mt-0.5">
+            Sistem pengamanan mendeteksi pengiriman berulang. Harap tunggu sebelum mengirimkan kode OTP baru.
+          </p>
+</div>
+</div>
+<div class="flex items-center space-x-2 bg-surface-container-lowest/80 text-error px-space-md py-1.5 rounded-full shrink-0 font-label-lg text-label-lg shadow-xs">
+<span class="material-symbols-outlined text-base animate-spin" style="animation-duration: 3s;">hourglass_top</span>
+<span>Coba lagi dalam <span class="font-bold" id="countdown-timer">58</span> detik</span>
+</div>
+</div>
+<!-- Main Two-Column Layout (Form + Help Sidebar) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- 4. Left Column: Main Form (8 Columns) -->
+<div class="lg:col-span-8 flex flex-col space-y-space-md">
+<!-- Form Header Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md sm:p-space-lg shadow-sm">
+<div class="flex items-start justify-between">
+<div>
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm mb-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                Tanpa Login Diperlukan
+              </span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mt-1">Formulir Laporan Kehilangan Barang</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 leading-relaxed">
+                Isi informasi barang yang hilang seakurat mungkin. Tim Satpam Kampus UII akan mencocokkan data ini dengan barang temuan fisik di Pos Keamanan Terpadu.
+              </p>
+</div>
+</div>
+<!-- Privacy Reassurance Callout -->
+<div class="mt-space-md bg-surface-container-low rounded-xl p-space-md flex items-start space-x-3.5">
+<span class="material-symbols-outlined text-secondary text-2xl shrink-0 mt-0.5">shield_lock</span>
+<div class="text-on-surface-variant font-body-sm text-body-sm leading-relaxed">
+<span class="font-headline-sm text-on-surface block mb-0.5">Kerahasiaan Data Terjamin</span>
+              Laporanmu tidak tampil ke publik. Rincian deskripsi rahasia dan kontak pribadi hanya dapat diakses oleh petugas Satpam resmi UII untuk verifikasi saat barang ditemukan.
+            </div>
+</div>
+</div>
+<!-- Form Body Card -->
+<form class="bg-surface-container-lowest rounded-xl p-space-md sm:p-space-lg shadow-sm flex flex-col space-y-space-md" onsubmit="event.preventDefault();">
+<!-- Section 1: Informasi Barang -->
+<div class="pb-space-sm">
+<div class="flex items-center space-x-2 mb-space-md">
+<span class="w-7 h-7 rounded-lg bg-surface-container text-secondary flex items-center justify-center font-label-sm text-label-sm font-bold">A</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Informasi Barang Hilang</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Kategori Barang (Dropdown) -->
+<div class="sm:col-span-2">
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="kategori">
+                  Kategori Barang <span class="text-error">*</span>
+</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-inner" id="kategori" name="kategori">
+<option disabled="" selected="" value="">Pilih Kategori Barang</option>
+<option value="elektronik">Ponsel &amp; Gadget</option>
+<option value="laptop">Laptop &amp; Tablet</option>
+<option value="dompet">Dompet, Kartu &amp; Identitas (KTM/KTP/SIM)</option>
+<option value="kunci">Kunci Kendaraan / Kunci Kos</option>
+<option value="tas">Tas, Ransel &amp; Pouch</option>
+<option value="helm">Helm &amp; Aksesori Motor</option>
+<option value="botol">Botol Minum / Tumbler</option>
+<option value="dokumen">Buku, Binder &amp; Dokumen Akademik</option>
+<option value="lainnya">Lainnya</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">expand_more</span>
+</div>
+</div>
+<p class="mt-1.5 font-body-sm text-body-sm text-on-surface-variant">Pilih kelompok barang yang paling merepresentasikan barangmu.</p>
+</div>
+<!-- Warna Dominan -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="warna">
+                  Warna Dominan <span class="text-error">*</span>
+</label>
+<input class="w-full bg-surface-container-low rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-inner" id="warna" name="warna" placeholder="Cth: Hitam pekat dengan garis abu-abu" type="text"/>
+<p class="mt-1 font-body-sm text-body-sm text-on-surface-variant">Sebutkan kombinasi warna utama barang.</p>
+</div>
+<!-- Lokasi Terakhir Terlihat -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="lokasi">
+                  Lokasi Terakhir Terlihat <span class="text-error">*</span>
+</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface appearance-none focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-inner" id="lokasi" name="lokasi">
+<option disabled="" selected="" value="">Pilih Area Kampus Terpadu</option>
+<option value="gku">Gedung Kuliah Umum (GKU)</option>
+<option value="perpus">Perpustakaan Pusat UII (Moh. Hatta)</option>
+<option value="masjid">Masjid Ulil Albab</option>
+<option value="fti">Fakultas Teknologi Industri (FTI)</option>
+<option value="ftsp">Fakultas Teknik Sipil &amp; Perencanaan (FTSP)</option>
+<option value="fbe">Fakultas Bisnis &amp; Ekonomika (FBE)</option>
+<option value="fh">Fakultas Hukum (FH)</option>
+<option value="fpsb">Fakultas Psikologi &amp; Ilmu Sosial Budaya (FPSB)</option>
+<option value="fiai">Fakultas Ilmu Agama Islam (FIAI)</option>
+<option value="fmipa">Fakultas MIPA</option>
+<option value="parkir">Area Parkir Kendaraan Mahasiswa</option>
+<option value="kantin">Kantin Kampus / Halte Bus UII</option>
+<option value="lainnya">Lainnya / Tidak Ingat Pasti</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">expand_more</span>
+</div>
+</div>
+<p class="mt-1 font-body-sm text-body-sm text-on-surface-variant">Contoh spesifik: Lt. 2 dekat tangga barat.</p>
+</div>
+<!-- Tanggal Hilang -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="tanggal">
+                  Tanggal Perkiraan Hilang <span class="text-error">*</span>
+</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-inner" id="tanggal" name="tanggal" type="date" value="2024-11-20"/>
+</div>
+</div>
+<!-- Jam Hilang -->
+<div>
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="waktu">
+                  Perkiraan Waktu (WIB) <span class="text-error">*</span>
+</label>
+<input class="w-full bg-surface-container-low rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-inner" id="waktu" name="waktu" type="time" value="13:45"/>
+</div>
+<!-- Ciri-ciri Khusus (Textarea with Character Counter) -->
+<div class="sm:col-span-2">
+<div class="flex items-center justify-between mb-1.5">
+<label class="block font-label-lg text-label-lg text-on-surface" for="ciri_khusus">
+                    Ciri-Ciri Khusus / Tanda Unik <span class="text-error">*</span>
+</label>
+<span class="font-label-sm text-label-sm text-outline" id="char-counter">78 / 500 karakter</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-1.5 shadow-inner">
+<textarea class="w-full bg-transparent border-0 rounded-lg p-2.5 font-body-md text-body-md text-on-surface placeholder:text-outline-variant focus:outline-none focus:ring-0 resize-y" id="ciri_khusus" maxlength="500" name="ciri_khusus" placeholder="Tuliskan tanda unik yang hanya Anda ketahui (contoh: stiker astronot di sudut kanan, goresan tipis dekat kamera, nomor seri kartu, atau isi gantungan kunci)..." rows="4">Terdapat stiker logo Jurusan Informatika UII di bagian belakang casing, goresan halus di sisi port pengisian daya.</textarea>
+</div>
+<div class="mt-1.5 flex items-start space-x-1.5 text-secondary">
+<span class="material-symbols-outlined text-sm shrink-0 mt-0.5">lock</span>
+<p class="font-body-sm text-body-sm leading-tight">
+<strong>Tidak ditampilkan ke publik.</strong> Tanda rahasia ini dipakai Satpam untuk memverifikasi kesesuaian fisik saat Anda mengklaim barang di pos jaga.
+                  </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Data Kontak Pelapor -->
+<div class="pt-space-sm">
+<div class="flex items-center space-x-2 mb-space-md">
+<span class="w-7 h-7 rounded-lg bg-surface-container text-secondary flex items-center justify-center font-label-sm text-label-sm font-bold">B</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Kontak Pelapor (Untuk Notifikasi Temuan)</h2>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<!-- Nama Lengkap -->
+<div class="sm:col-span-2">
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="nama_lengkap">
+                  Nama Lengkap Pemilik <span class="text-error">*</span>
+</label>
+<input class="w-full bg-surface-container-low rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40 shadow-inner" id="nama_lengkap" name="nama_lengkap" type="text" value="Ahmad Fadhil Pratama"/>
+<p class="mt-1 font-body-sm text-body-sm text-on-surface-variant">Sesuai nama pada KTM atau KTP Anda.</p>
+</div>
+<!-- Nomor WhatsApp dengan Prefix Group -->
+<div class="sm:col-span-2">
+<label class="block font-label-lg text-label-lg text-on-surface mb-1.5" for="whatsapp">
+                  Nomor WhatsApp Aktif <span class="text-error">*</span>
+</label>
+<div class="flex rounded-lg overflow-hidden shadow-inner bg-surface-container-low">
+<span class="inline-flex items-center px-4 bg-surface-container-high text-on-surface font-headline-sm text-body-md select-none shrink-0">
+<span class="material-symbols-outlined text-base mr-1.5 text-secondary">chat</span>
+                    +62
+                  </span>
+<input class="w-full bg-surface-container-low border-0 px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary/40" id="whatsapp" name="whatsapp" placeholder="812-xxxx-xxxx" type="tel" value="812-3456-7890"/>
+</div>
+<p class="mt-1.5 font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-secondary">info</span>
+                  Kode verifikasi OTP 6-digit akan dikirimkan otomatis ke nomor WhatsApp ini pada langkah berikutnya.
+                </p>
+</div>
+</div>
+</div>
+<!-- Inline Error State Demonstration Box (Design System Requirement) -->
+<div class="mt-space-sm p-space-sm bg-surface-container-low rounded-xl">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Tampilan Status Validasi (Demo Error State)</span>
+<span class="text-xs px-2 py-0.5 rounded bg-error-container text-on-error-container font-medium">Contoh Input Tidak Valid</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg p-space-sm">
+<label class="block font-label-lg text-label-lg text-on-surface mb-1">
+                Nomor Induk Mahasiswa (NIM) / Identitas Tambahan
+              </label>
+<input class="w-full bg-error-container/20 rounded-lg px-4 py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-error shadow-inner" placeholder="Masukkan 8-digit NIM..." type="text" value=""/>
+<div class="mt-1 flex items-center space-x-1.5 text-error font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-sm">error</span>
+<span>Wajib diisi dengan 8 digit angka jika Anda mahasiswa aktif UII.</span>
+</div>
+</div>
+</div>
+<!-- Form Action CTA Buttons -->
+<div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<a class="w-full sm:w-auto inline-flex items-center justify-center px-space-lg py-3 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high font-label-lg text-label-lg transition-colors order-2 sm:order-1" data-path="beranda" href="#beranda">
+<span class="material-symbols-outlined text-base mr-1.5">arrow_back</span>
+              Batal / Kembali ke Beranda
+            </a>
+<button class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-primary text-on-primary hover:bg-primary-container font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all order-1 sm:order-2 group" type="button">
+<span>Kirim OTP via WhatsApp</span>
+<span class="material-symbols-outlined text-lg ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<!-- 5. Right Column: Help, Security & Satpam SOP Sidebar (4 Columns) -->
+<aside class="lg:col-span-4 flex flex-col space-y-space-md">
+<!-- Card 1: Mengapa Verifikasi WhatsApp -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center mb-space-sm">
+<span class="material-symbols-outlined text-2xl">verified_user</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Mengapa Verifikasi WhatsApp?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 leading-relaxed">
+            Untuk menjaga integritas layanan tanpa perlu login akun SSO UII, verifikasi WhatsApp memastikan:
+          </p>
+<ul class="mt-space-sm space-y-2.5 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start space-x-2">
+<span class="material-symbols-outlined text-secondary text-base shrink-0 mt-0.5">check_circle</span>
+<span>Perlindungan dari laporan spam dan manipulasi kepemilikan.</span>
+</li>
+<li class="flex items-start space-x-2">
+<span class="material-symbols-outlined text-secondary text-base shrink-0 mt-0.5">check_circle</span>
+<span>Notifikasi seketika jika ada barang cocok diserahkan ke pos Satpam.</span>
+</li>
+<li class="flex items-start space-x-2">
+<span class="material-symbols-outlined text-secondary text-base shrink-0 mt-0.5">check_circle</span>
+<span>Kerahasiaan nomor hanya untuk keperluan darurat pelacakan.</span>
+</li>
+</ul>
+</div>
+<!-- Card 2: Posko Satpam Kampus Terpadu -->
+<div class="bg-primary text-on-primary rounded-xl p-space-md shadow-md relative overflow-hidden">
+<!-- Background geometric accent -->
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-secondary opacity-20 pointer-events-none blur-xl"></div>
+<div class="flex items-center space-x-2 text-secondary-fixed mb-space-xs font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Siaga 24 Jam Non-Stop
+          </div>
+<h3 class="font-headline-md text-headline-md text-on-primary">Posko Satpam Kampus Terpadu</h3>
+<p class="font-body-sm text-body-sm text-surface-container-high mt-1.5 leading-relaxed">
+            Barang temuan berharga fisik (laptop, ponsel, dompet, kunci) langsung diamankan di lemari inventaris Pos Utama Satpam.
+          </p>
+<div class="mt-space-md space-y-space-sm">
+<div class="flex items-start space-x-2.5 bg-surface-container-lowest/10 p-2.5 rounded-lg backdrop-blur-xs">
+<span class="material-symbols-outlined text-secondary-fixed text-lg shrink-0 mt-0.5">location_on</span>
+<div class="font-body-sm text-body-sm">
+<span class="font-semibold block text-on-primary">Pos GKU &amp; Gerbang Utama</span>
+<span class="text-surface-variant text-xs">Jl. Kaliurang Km 14.5 Sleman</span>
+</div>
+</div>
+<div class="flex items-start space-x-2.5 bg-surface-container-lowest/10 p-2.5 rounded-lg backdrop-blur-xs">
+<span class="material-symbols-outlined text-secondary-fixed text-lg shrink-0 mt-0.5">call</span>
+<div class="font-body-sm text-body-sm">
+<span class="font-semibold block text-on-primary">Hotline Satpam: (0274) 898444</span>
+<span class="text-surface-variant text-xs">Pesawat / Ext. Keamanan Kampus</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: SOP Pengambilan Barang -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-center space-x-2 mb-space-xs">
+<span class="material-symbols-outlined text-secondary text-xl">assignment_turned_in</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">SOP Pengambilan Barang</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+            Saat barang Anda ditemukan, siapkan langkah berikut di Pos Satpam:
+          </p>
+<ol class="space-y-space-sm font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start space-x-3 bg-surface-container-low p-2.5 rounded-lg">
+<span class="w-6 h-6 rounded-full bg-surface-container-high text-primary font-bold text-xs flex items-center justify-center shrink-0">1</span>
+<div>
+<strong class="font-headline-sm text-body-sm block">Bawa Tanda Pengenal Asli</strong>
+<span class="text-on-surface-variant text-xs">Wajib menunjukkan KTM aktif atau KTP fisik asli.</span>
+</div>
+</li>
+<li class="flex items-start space-x-3 bg-surface-container-low p-2.5 rounded-lg">
+<span class="w-6 h-6 rounded-full bg-surface-container-high text-primary font-bold text-xs flex items-center justify-center shrink-0">2</span>
+<div>
+<strong class="font-headline-sm text-body-sm block">Uji Bukti Kepemilikan Fisik</strong>
+<span class="text-on-surface-variant text-xs">Membuka kunci layar perangkat, mencocokkan nomor seri, atau detail isi barang.</span>
+</div>
+</li>
+<li class="flex items-start space-x-3 bg-surface-container-low p-2.5 rounded-lg">
+<span class="w-6 h-6 rounded-full bg-surface-container-high text-primary font-bold text-xs flex items-center justify-center shrink-0">3</span>
+<div>
+<strong class="font-headline-sm text-body-sm block">Penandatanganan BAST</strong>
+<span class="text-on-surface-variant text-xs">Menandatangani Berita Acara Serah Terima barang di pos jaga.</span>
+</div>
+</li>
+</ol>
+</div>
+<!-- Trust Indicator Badge Strip -->
+<div class="p-space-sm rounded-xl bg-surface-container-low flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center space-x-2 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-secondary text-base">support_agent</span>
+<span>Didukung Satpam Kampus UII</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Versi 2.4</span>
+</div>
+</aside>
+</div>
+</div>
+<!-- Interactive Client-side Script for Character Counter & Timer Simulation -->
+<script>
+    (function() {
+      // Dynamic Character Counter
+      const textarea = document.getElementById('ciri_khusus');
+      const counter = document.getElementById('char-counter');
+      if (textarea && counter) {
+        textarea.addEventListener('input', function() {
+          const count = this.value.length;
+          counter.textContent = count + ' / 500 karakter';
+        });
+      }
+
+      // Live 60s Countdown simulation for Rate-Limit Banner
+      const timerElement = document.getElementById('countdown-timer');
+      if (timerElement) {
+        let timeLeft = 58;
+        const interval = setInterval(function() {
+          timeLeft--;
+          if (timeLeft <= 0) {
+            clearInterval(interval);
+            const banner = document.getElementById('rate-limit-banner');
+            if (banner) {
+              banner.classList.add('transition-opacity', 'duration-500', 'opacity-0');
+              setTimeout(() => banner.remove(), 500);
+            }
+          } else {
+            timerElement.textContent = timeLeft;
+          }
+        }, 1000);
+      }
+    })();
+  </script>
+</div></main>
+<!-- BEGIN: MainFooter -->
+<footer class="bg-surface-container-lowest border-t border-surface-variant pt-space-xl pb-space-lg" id="pos-satpam">
+<div class="max-w-7xl mx-auto px-margin-mobile sm:px-gutter lg:px-margin">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter pb-space-lg border-b border-surface-container">
+<!-- Brand & Description (Col 1) -->
+<div class="md:col-span-5">
+<div class="flex items-center space-x-space-sm mb-space-sm">
+<div class="w-9 h-9 rounded-lg bg-primary text-on-primary flex items-center justify-center font-headline-sm text-headline-sm">
+            UII
+          </div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Lost &amp; Found Kampus UII</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed pr-0 md:pr-space-lg">
+          Layanan resmi pelaporan barang hilang dan temuan untuk mahasiswa, staf, dan pengunjung Universitas Islam Indonesia bekerja sama dengan Satuan Pengamanan Kampus.
+        </p>
+<div class="mt-space-sm flex items-center space-x-space-sm font-label-sm text-label-sm text-outline">
+<span class="inline-flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Sistem Aktif 24 Jam
+          </span>
+<span>•</span>
+<span>Kampus Terpadu Yogyakarta</span>
+</div>
+</div>
+<!-- Quick Links (Col 2) -->
+<div class="md:col-span-3">
+<h4 class="font-label-lg text-label-lg text-on-surface uppercase tracking-wider mb-space-sm">Tautan Cepat</h4>
+<ul class="space-y-space-xs font-body-md text-body-md text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" data-path="beranda" href="#beranda">Beranda</a></li>
+<li><a class="hover:text-primary transition-colors" data-path="barang-temuan" href="#barang-temuan">Barang Temuan</a></li>
+<li><a class="hover:text-primary transition-colors" data-path="lapor-kehilangan" href="#lapor-kehilangan">Lapor Kehilangan</a></li>
+<li><a class="hover:text-primary transition-colors" data-path="cara-kerja" href="#cara-kerja">Cara Kerja &amp; Panduan</a></li>
+<li><a class="hover:text-primary transition-colors" data-path="pos-satpam" href="#pos-satpam">Pos Satpam &amp; Lokasi</a></li>
+</ul>
+</div>
+<!-- Pos Satpam Contact Info (Col 3) -->
+<div class="md:col-span-4">
+<h4 class="font-label-lg text-label-lg text-on-surface uppercase tracking-wider mb-space-sm">Kontak Pos Satpam</h4>
+<div class="font-body-md text-body-md text-on-surface-variant space-y-space-sm">
+<p class="leading-relaxed">
+<strong class="text-on-surface font-headline-sm text-body-md">Pos Utama Satpam:</strong> Gedung Kuliah Umum (GKU) &amp; Gerbang Utama, Kampus Terpadu UII, Jl. Kaliurang Km 14,5, Sleman, D.I. Yogyakarta 55584.
+          </p>
+<div class="p-space-sm bg-surface-container-low rounded-xl border border-outline-variant/60 shadow-sm">
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Hotline 24 Jam Satpam:</span>
+<a class="font-headline-sm text-headline-sm text-secondary hover:underline" href="tel:0274898444">
+              (0274) 898444 ext. Satpam
+            </a>
+<span class="block font-label-sm text-label-sm text-on-surface-variant mt-1">WhatsApp Tanggap Darurat: +62 812-3456-7890</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Copyright Bottom Bar -->
+<div class="mt-space-md flex flex-col sm:flex-row items-center justify-between font-body-sm text-body-sm text-outline gap-space-sm">
+<p>© 2024 Universitas Islam Indonesia. Dilindungi hak cipta.</p>
+<div class="flex items-center space-x-space-md">
+<a class="hover:text-on-surface transition-colors" href="#syarat-ketentuan">Syarat &amp; Ketentuan</a>
+<a class="hover:text-on-surface transition-colors" href="#kebijakan-privasi">Kebijakan Privasi</a>
+<a class="hover:text-on-surface transition-colors" href="#pos-satpam">Bantuan Satpam</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+</body></html>

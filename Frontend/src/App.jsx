@@ -1,102 +1,156 @@
 import React, { useState } from 'react';
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import Home from './pages/public/Home';
-import KatalogTemuan from './pages/public/KatalogTemuan';
-import DetailTemuan from './pages/public/DetailTemuan';
-import LaporKehilangan from './pages/public/LaporKehilangan';
-import LaporPenemuan from './pages/public/LaporPenemuan';
-import PosSatpam from './pages/public/PosSatpam';
-import CaraKerja from './pages/public/CaraKerja';
-import DashboardSatpam from './pages/admin/DashboardSatpam';
-import { initialFoundItems, initialLostReports } from './data/mockData';
+
+// =========================================================================
+// 1. PORTAL PUBLIK (Mahasiswa, Tendik, Tamu Kampus)
+// =========================================================================
+import LandingPage from './pages/LandingPage';
+import DaftarTemuanEnhanced from './pages/DaftarTemuanEnhanced';
+import DetailTemuan from './pages/DetailTemuan';
+import LaporKehilanganStep1 from './pages/LaporKehilanganStep1';
+import LaporKehilanganStep2OTP from './pages/LaporKehilanganStep2OTP';
+import LaporKehilanganStep3 from './pages/LaporKehilanganStep3';
+import LaporKehilanganSukses from './pages/LaporKehilanganSukses';
+import PilihanPenyerahanTemuan from './pages/PilihanPenyerahanTemuan';
+import LaporTemuanStep1 from './pages/LaporTemuanStep1';
+import LaporTemuanSukses from './pages/LaporTemuanSukses';
+import CaraKerja from './pages/CaraKerja';
+import FAQ from './pages/FAQ';
+import KebijakanPrivasi from './pages/KebijakanPrivasi';
+
+// =========================================================================
+// 2. PORTAL INTERNAL SATPAM (Unit Keamanan Kampus Terpadu UII)
+// =========================================================================
+import DashboardSatpam from './pages/satpam/DashboardSatpam';
+import AntreanPenerimaan from './pages/satpam/AntreanPenerimaan';
+import PenerimaanBarang from './pages/satpam/PenerimaanBarang';
+import DaftarInventaris from './pages/satpam/DaftarInventaris';
+import DetailFisikInventaris from './pages/satpam/DetailFisikInventaris';
+import HasilMatchingAlgoritma from './pages/satpam/HasilMatchingAlgoritma';
+import VerifikasiLangkah1 from './pages/satpam/VerifikasiLangkah1';
+import VerifikasiLangkah3 from './pages/satpam/VerifikasiLangkah3';
+import KoreksiDataInventaris from './pages/satpam/KoreksiDataInventaris';
+import DaftarLaporanKehilangan from './pages/satpam/DaftarLaporanKehilangan';
+
+// =========================================================================
+// 3. PORTAL ADMINISTRATOR BSI (Badan Sistem Informasi Kampus UII)
+// =========================================================================
+import BerandaAdmin from './pages/admin/BerandaAdmin';
+import PenandaAnomali from './pages/admin/PenandaAnomali';
+import DetailInsiden from './pages/admin/DetailInsiden';
+import AuditLog from './pages/admin/AuditLog';
+import ManajemenSatpam from './pages/admin/ManajemenSatpam';
+import BarangDitahan from './pages/admin/BarangDitahan';
+import KonfigurasiSentinel from './pages/admin/KonfigurasiSentinel';
+
+const screens = {
+  // === Alur Portal Publik ===
+  landing: LandingPage,
+  temuan_enhanced: DaftarTemuanEnhanced,
+  detail: DetailTemuan,
+  lapor_1: LaporKehilanganStep1,
+  lapor_2_otp: LaporKehilanganStep2OTP,
+  lapor_3: LaporKehilanganStep3,
+  lapor_sukses: LaporKehilanganSukses,
+  pilihan_penyerahan: PilihanPenyerahanTemuan,
+  lapor_temuan_1: LaporTemuanStep1,
+  lapor_temuan_sukses: LaporTemuanSukses,
+  cara_kerja: CaraKerja,
+  faq: FAQ,
+  cara_kerja_faq: CaraKerja, // alias fallback
+  kebijakan_privasi: KebijakanPrivasi,
+
+  // === Alur Portal Satpam (Dipisahkan) ===
+  satpam_dashboard: DashboardSatpam,
+  satpam_antrean: AntreanPenerimaan,
+  satpam_penerimaan: PenerimaanBarang,
+  satpam_inventaris: DaftarInventaris,
+  satpam_detail_inventaris: DetailFisikInventaris,
+  satpam_matching: HasilMatchingAlgoritma,
+  satpam_verifikasi_1: VerifikasiLangkah1,
+  satpam_verifikasi_3: VerifikasiLangkah3,
+  satpam_koreksi: KoreksiDataInventaris,
+  satpam_kehilangan: DaftarLaporanKehilangan,
+
+  // === Alur Portal Administrator BSI ===
+  admin_dashboard: BerandaAdmin,
+  admin_anomali: PenandaAnomali,
+  admin_detail_insiden: DetailInsiden,
+  admin_audit: AuditLog,
+  admin_satpam: ManajemenSatpam,
+  admin_barang_ditahan: BarangDitahan,
+  admin_parameter: KonfigurasiSentinel,
+};
 
 export default function App() {
-  const [activePage, setActivePage] = useState('home');
-  const [items, setItems] = useState(initialFoundItems);
-  const [lostReports, setLostReports] = useState(initialLostReports);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [activeScreen, setActiveScreen] = useState('landing');
 
-  const handleNewReport = (newReport) => {
-    setLostReports([newReport, ...lostReports]);
+  const CurrentScreenComponent = screens[activeScreen] || LandingPage;
+  const isSatpamPortal = activeScreen.startsWith('satpam_');
+  const isAdminPortal = activeScreen.startsWith('admin_');
+  const isPublicPortal = !isSatpamPortal && !isAdminPortal;
+
+  const handleNavigate = (target) => {
+    if (screens[target]) {
+      setActiveScreen(target);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
-  const handleNewFoundItem = (newItem) => {
-    setItems([newItem, ...items]);
-  };
-
-  const handleUpdateItemStatus = (itemId, newStatus) => {
-    setItems(items.map(item => item.id === itemId ? { ...item, status: newStatus } : item));
+  const getPortalLabel = () => {
+    if (isAdminPortal) return 'Portal Admin BSI';
+    if (isSatpamPortal) return 'Portal Satpam';
+    return 'Portal Publik';
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-canvasBg text-slate-800 font-sans">
-      {/* Top Navigation */}
-      <Navbar activePage={activePage} setActivePage={setActivePage} />
+    <div className="relative min-h-screen">
+      <CurrentScreenComponent onNavigate={handleNavigate} />
 
-      {/* Main Page Content */}
-      <main className="flex-1 flex flex-col">
-        {activePage === 'home' && (
-          <Home
-            items={items}
-            setActivePage={setActivePage}
-            setSelectedItem={setSelectedItem}
-          />
-        )}
+      {/* Floating 3-Way Portal Switcher (Publik, Satpam, Admin BSI) */}
+      <aside aria-label="Portal Switcher" className="fixed bottom-4 right-4 z-50">
+        <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-slate-900/95 text-white shadow-2xl backdrop-blur-md border border-slate-700/80 text-xs font-semibold">
+          <div className="flex items-center gap-1.5 pl-3 pr-2 border-r border-slate-700/80">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-slate-300 hidden md:inline">Mode:</span>
+            <strong className="text-white font-medium">{getPortalLabel()}</strong>
+          </div>
 
-        {activePage === 'katalog' && (
-          <KatalogTemuan
-            items={items}
-            setActivePage={setActivePage}
-            setSelectedItem={setSelectedItem}
-          />
-        )}
+          <div className="flex items-center gap-1">
+            {!isPublicPortal && (
+              <button
+                onClick={() => handleNavigate('landing')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Buka Portal Publik Mahasiswa/Sivitas"
+              >
+                <span className="material-symbols-outlined text-[15px]">public</span>
+                <span className="hidden sm:inline">Publik</span>
+              </button>
+            )}
 
-        {activePage === 'detail' && (
-          <DetailTemuan
-            item={selectedItem}
-            setActivePage={setActivePage}
-          />
-        )}
+            {!isSatpamPortal && (
+              <button
+                onClick={() => handleNavigate('satpam_dashboard')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Buka Portal Satpam Kampus UII"
+              >
+                <span className="material-symbols-outlined text-[15px]">local_police</span>
+                <span className="hidden sm:inline">Satpam</span>
+              </button>
+            )}
 
-        {activePage === 'lapor-kehilangan' && (
-          <LaporKehilangan
-            setActivePage={setActivePage}
-            onNewReport={handleNewReport}
-          />
-        )}
-
-        {activePage === 'lapor-penemuan' && (
-          <LaporPenemuan
-            setActivePage={setActivePage}
-            onNewFoundItem={handleNewFoundItem}
-          />
-        )}
-
-        {activePage === 'pos-satpam' && (
-          <PosSatpam
-            setActivePage={setActivePage}
-          />
-        )}
-
-        {activePage === 'cara-kerja' && (
-          <CaraKerja
-            setActivePage={setActivePage}
-          />
-        )}
-
-        {activePage === 'admin-dashboard' && (
-          <DashboardSatpam
-            items={items}
-            lostReports={lostReports}
-            onUpdateItemStatus={handleUpdateItemStatus}
-          />
-        )}
-      </main>
-
-      {/* Footer */}
-      <Footer setActivePage={setActivePage} />
+            {!isAdminPortal && (
+              <button
+                onClick={() => handleNavigate('admin_dashboard')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Buka Portal Administrator BSI UII"
+              >
+                <span className="material-symbols-outlined text-[15px]">admin_panel_settings</span>
+                <span className="hidden sm:inline">Admin BSI</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </aside>
     </div>
   );
 }
-
