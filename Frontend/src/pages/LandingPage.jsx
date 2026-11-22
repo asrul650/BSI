@@ -24,6 +24,27 @@ export default function LandingPage({ onNavigate }) {
         return;
       }
 
+      // "Saya Menemukan"
+      if (text.includes('Saya Menemukan') || path === '#lapor-temuan' || path === 'lapor-temuan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('pilihan_penyerahan');
+        return;
+      }
+
+      // "Cara Kerja" or "FAQ"
+      if (text.includes('Cara Kerja') || text.includes('FAQ') || path === '#cara-kerja' || path === '#faq') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('cara_kerja_faq');
+        return;
+      }
+
+      // "Kebijakan Privasi"
+      if (text.includes('Kebijakan Privasi') || path === '#kebijakan-privasi') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('kebijakan_privasi');
+        return;
+      }
+
       // "Barang Temuan" or "Lihat Semua"
       if (text.includes('Barang Temuan') || text.includes('Lihat Semua') || path === '#barang-temuan' || path === '#katalog-lengkap') {
         e.preventDefault();

@@ -24,6 +24,27 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
         return;
       }
 
+      // "Saya Menemukan"
+      if (text.includes('Saya Menemukan') || path === '#lapor-temuan' || path === 'lapor-temuan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('pilihan_penyerahan');
+        return;
+      }
+
+      // "Cara Kerja" or "FAQ"
+      if (text.includes('Cara Kerja') || text.includes('FAQ') || path === '#cara-kerja' || path === '#faq') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('cara_kerja_faq');
+        return;
+      }
+
+      // "Kebijakan Privasi"
+      if (text.includes('Kebijakan Privasi') || path === '#kebijakan-privasi') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('kebijakan_privasi');
+        return;
+      }
+
       // "Klaim di Pos Satpam" OR clicking any card in the grid -> goes to detail
       if (text.includes('Klaim di Pos Satpam') || target.closest('.grid .group') || path.includes('detail') || path.includes('0064cc74')) {
         e.preventDefault();

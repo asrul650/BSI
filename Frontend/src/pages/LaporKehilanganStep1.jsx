@@ -51,6 +51,27 @@ export default function LaporKehilanganStep1({ onNavigate }) {
         if (onNavigate) onNavigate('lapor_1');
         return;
       }
+
+      // "Saya Menemukan"
+      if (text.includes('Saya Menemukan') || path === '#lapor-temuan' || path === 'lapor-temuan') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('pilihan_penyerahan');
+        return;
+      }
+
+      // "Cara Kerja" or "FAQ"
+      if (text.includes('Cara Kerja') || text.includes('FAQ') || path === '#cara-kerja' || path === '#faq') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('cara_kerja_faq');
+        return;
+      }
+
+      // "Kebijakan Privasi"
+      if (text.includes('Kebijakan Privasi') || path === '#kebijakan-privasi') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('kebijakan_privasi');
+        return;
+      }
     };
 
     const el = containerRef.current;
