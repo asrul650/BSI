@@ -11,7 +11,7 @@ export default function DaftarInventaris({ onNavigate }) {
     const el = containerRef.current;
 
     const handleClick = (e) => {
-      const target = e.target.closest('a, button, [data-path], [data-action], tr, [role="button"]');
+      const target = e.target.closest('a, button, [data-path], [data-action], tr, [role="button"], label');
       if (!target) return;
 
       const path = (target.getAttribute('data-path') || target.getAttribute('href') || '').trim();
@@ -20,79 +20,492 @@ export default function DaftarInventaris({ onNavigate }) {
       const text = (target.textContent || '').trim();
       const lowerText = text.toLowerCase();
 
+      // =========================================================================
       // 0. Kembali ke Portal Publik
+      // =========================================================================
       if (
         path === 'portal-publik' ||
         lowerText.includes('portal publik') ||
         path === 'logout' ||
-        title.includes('keluar portal')
+        title.includes('keluar portal') ||
+        title.includes('logout petugas')
       ) {
         e.preventDefault();
         if (onNavigate) onNavigate('landing');
         return;
       }
 
+      // =========================================================================
       // 1. Sidebar Nav: Beranda / Dashboard
+      // =========================================================================
       if (
-        path === 'beranda' ||
-        (lowerText === 'beranda' && target.closest('nav')) ||
-        lowerText === 'dashboard'
+        (path === 'beranda' && target.closest('nav')) ||
+        (lowerText === 'beranda' && target.closest('aside')) ||
+        (lowerText === 'beranda' && target.tagName === 'A' && target.closest('nav'))
       ) {
         e.preventDefault();
         if (onNavigate) onNavigate('satpam_dashboard');
         return;
       }
 
-      // 2. Sidebar Nav: Penerimaan / Antrean
+      // =========================================================================
+      // 2. Sidebar Nav: Penerimaan
+      // =========================================================================
       if (
-        (path === 'penerimaan' && target.closest('nav')) ||
-        (path === 'antrean' && target.closest('nav')) ||
-        (lowerText === 'penerimaan' && target.closest('nav')) ||
-        lowerText.includes('seluruh antrean penerimaan') ||
-        lowerText.includes('antrean serah terima fisik') ||
-        lowerText.includes('antrean penerimaan') ||
-        lowerText.includes('tinjau seluruh antrean')
+        (path === 'penerimaan' && target.closest('aside')) ||
+        (lowerText === 'penerimaan' && target.closest('aside'))
       ) {
         e.preventDefault();
         if (onNavigate) onNavigate('satpam_antrean');
         return;
       }
 
-      // 3. Action: Proses Penerimaan Barang Fisik (satpam_penerimaan)
-      // When clicking "Terima", "+ Catat Tanpa Nomor Laporan", "+ Terima Barang Temuan", "Input Penerimaan",
-      // or row in Antrean Penerimaan
+      // =========================================================================
+      // 3. Sidebar Nav: Barang / Inventaris
+      // =========================================================================
       if (
-        action === 'terima-fisik' ||
-        target.closest('[data-action="terima-fisik"]') ||
-        lowerText === 'terima' ||
-        lowerText.includes('terima barang') ||
-        lowerText.includes('proses penerimaan') ||
-        lowerText.includes('penerimaan barang temuan') ||
-        lowerText.includes('input barang baru') ||
-        lowerText.includes('input penerimaan') ||
-        lowerText.includes('catat tanpa nomor laporan') ||
-        lowerText.includes('tambah barang masuk') ||
-        lowerText.includes('pemeriksaan fisik walk-in') ||
-        lowerText.includes('buka kamera pos jaga') ||
-        path === 'form-penerimaan'
+        (path === 'barang' && target.closest('aside')) ||
+        (lowerText === 'barang' && target.closest('aside'))
       ) {
         e.preventDefault();
-        if (onNavigate) onNavigate('satpam_penerimaan');
+        if (onNavigate) onNavigate('satpam_inventaris');
+        return;
+      }
+
+      // =========================================================================
+      // 4. Sidebar Nav: Hasil Matching (AI)
+      // =========================================================================
+      if (
+        (path === 'hasil-matching' && target.closest('aside')) ||
+        (lowerText.includes('hasil matching') && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_matching');
+        return;
+      }
+
+      // =========================================================================
+      // 5. Sidebar Nav: Verifikasi
+      // =========================================================================
+      if (
+        (path === 'verifikasi' && target.closest('aside')) ||
+        (lowerText === 'verifikasi' && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_verifikasi_1');
+        return;
+      }
+
+      // =========================================================================
+      // 6. Sidebar Nav: Laporan Kehilangan
+      // =========================================================================
+      if (
+        (path === 'laporan-kehilangan' && target.closest('aside')) ||
+        (lowerText.includes('laporan kehilangan') && target.closest('aside'))
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_kehilangan');
+        return;
+      }
+
+      // =========================================================================
+      // 7. SPECIFIC FIX: Penerimaan Barang Temuan (PenerimaanBarang.jsx)
+      // =========================================================================
+      // Simpan & Buat Item ID Inventaris -> kembali ke dashboard awal penerimaan (satpam_antrean)
+      if (
+        lowerText.includes('simpan & buat item id inventaris') ||
+        lowerText.includes('simpan & buat item') ||
+        lowerText.includes('buat item id inventaris')
+      ) {
+        e.preventDefault();
+        alert('Barang Temuan Berhasil Diterima & Disimpan!\n\nNomor Registrasi: BRG-2024-0143\nStatus: Tersimpan di Loker Posko GKU.\nKembali ke Dashboard Antrean Penerimaan.');
+        if (onNavigate) onNavigate('satpam_antrean');
         return;
       }
 
       // Batal / Tunda di Penerimaan Barang -> kembali ke Antrean
       if (
         lowerText.includes('batal / tunda penyerahan') ||
-        lowerText.includes('kembali ke mode tiket')
+        lowerText.includes('kembali ke mode tiket') ||
+        (lowerText === 'batal' && (window.location.hash.includes('penerimaan') || document.querySelector('#section-inspeksi')))
       ) {
         e.preventDefault();
         if (onNavigate) onNavigate('satpam_antrean');
         return;
       }
 
-      // 4. Action: Detail Fisik Inventaris (satpam_detail_inventaris)
-      // When clicking eye icon, title "Lihat Detail", "BRG-2024-", row in DaftarInventaris, or "Tinjau Detail"
+      // Action: Terima Fisik di Antrean Penerimaan / Dashboard
+      if (
+        action === 'terima-fisik' ||
+        target.closest('[data-action="terima-fisik"]') ||
+        lowerText === 'terima' ||
+        lowerText.includes('terima barang temuan') ||
+        lowerText.includes('input penerimaan') ||
+        lowerText.includes('catat tanpa nomor laporan') ||
+        lowerText.includes('tambah barang masuk') ||
+        lowerText.includes('pemeriksaan fisik walk-in')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_penerimaan');
+        return;
+      }
+
+      // =========================================================================
+      // 8. SPECIFIC FIX: Detail Fisik Barang Inventaris (DetailFisikInventaris.jsx)
+      // =========================================================================
+      // Tab 1: Riwayat Status
+      if (target.id === 'tabBtn1' || target.closest('#tabBtn1') || lowerText.includes('riwayat status')) {
+        e.preventDefault();
+        const b1 = el.querySelector('#tabBtn1');
+        const b2 = el.querySelector('#tabBtn2');
+        const b3 = el.querySelector('#tabBtn3');
+        const c1 = el.querySelector('#tabContent1');
+        const c2 = el.querySelector('#tabContent2');
+        const c3 = el.querySelector('#tabContent3');
+        if (c1) c1.classList.remove('hidden');
+        if (c2) c2.classList.add('hidden');
+        if (c3) c3.classList.add('hidden');
+        if (b1) {
+          b1.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 bg-surface-container-lowest text-on-surface font-semibold shadow-xs transition-all';
+        }
+        if (b2) {
+          b2.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        if (b3) {
+          b3.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        return;
+      }
+
+      // Tab 2: Riwayat Klaim
+      if (target.id === 'tabBtn2' || target.closest('#tabBtn2') || lowerText.includes('riwayat klaim')) {
+        e.preventDefault();
+        const b1 = el.querySelector('#tabBtn1');
+        const b2 = el.querySelector('#tabBtn2');
+        const b3 = el.querySelector('#tabBtn3');
+        const c1 = el.querySelector('#tabContent1');
+        const c2 = el.querySelector('#tabContent2');
+        const c3 = el.querySelector('#tabContent3');
+        if (c1) c1.classList.add('hidden');
+        if (c2) c2.classList.remove('hidden');
+        if (c3) c3.classList.add('hidden');
+        if (b2) {
+          b2.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 bg-surface-container-lowest text-on-surface font-semibold shadow-xs transition-all';
+        }
+        if (b1) {
+          b1.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        if (b3) {
+          b3.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        return;
+      }
+
+      // Tab 3: Kandidat Laporan (AI)
+      if (target.id === 'tabBtn3' || target.closest('#tabBtn3') || lowerText.includes('kandidat laporan (ai)')) {
+        e.preventDefault();
+        const b1 = el.querySelector('#tabBtn1');
+        const b2 = el.querySelector('#tabBtn2');
+        const b3 = el.querySelector('#tabBtn3');
+        const c1 = el.querySelector('#tabContent1');
+        const c2 = el.querySelector('#tabContent2');
+        const c3 = el.querySelector('#tabContent3');
+        if (c1) c1.classList.add('hidden');
+        if (c2) c2.classList.add('hidden');
+        if (c3) c3.classList.remove('hidden');
+        if (b3) {
+          b3.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 bg-surface-container-lowest text-on-surface font-semibold shadow-xs transition-all';
+        }
+        if (b1) {
+          b1.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        if (b2) {
+          b2.className = 'tab-button px-space-md py-3 rounded-t-lg font-label-lg text-label-lg flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-all';
+        }
+        return;
+      }
+
+      // Lightbox Zoom Foto
+      if (
+        lowerText.includes('perbesar grid') ||
+        lowerText.includes('perbesar foto') ||
+        target.closest('[data-action="open-zoom"]') ||
+        (target.tagName === 'IMG' && target.closest('.rounded-xl'))
+      ) {
+        e.preventDefault();
+        const zoomModal = el.querySelector('#modal-zoom-image');
+        if (zoomModal) zoomModal.classList.remove('hidden');
+        return;
+      }
+
+      // Close Lightbox Zoom
+      if (
+        action === 'close-modal-zoom' ||
+        target.closest('[data-action="close-modal-zoom"]') ||
+        (target.id === 'modal-zoom-image')
+      ) {
+        e.preventDefault();
+        const zoomModal = el.querySelector('#modal-zoom-image');
+        if (zoomModal) zoomModal.classList.add('hidden');
+        return;
+      }
+
+      // =========================================================================
+      // 9. SPECIFIC FIX: Verifikasi Langkah 1 (VerifikasiLangkah1.jsx)
+      // =========================================================================
+      // Jenis Identitas Fisik Selection (KTM UII, KTP / SIM, Pegawai)
+      if (target.name === 'idType' || target.closest('label')?.querySelector('input[name="idType"]')) {
+        const parentGrid = target.closest('.grid-cols-3');
+        if (parentGrid) {
+          const allLabels = parentGrid.querySelectorAll('label');
+          allLabels.forEach(lbl => {
+            lbl.className = 'flex items-center justify-center gap-1.5 p-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium hover:bg-surface-container cursor-pointer transition-all';
+            const inp = lbl.querySelector('input');
+            if (inp) inp.checked = false;
+          });
+          const activeLabel = target.tagName === 'LABEL' ? target : target.closest('label');
+          if (activeLabel) {
+            activeLabel.className = 'flex items-center justify-center gap-1.5 p-2 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold cursor-pointer shadow-xs transition-all';
+            const activeInp = activeLabel.querySelector('input');
+            if (activeInp) activeInp.checked = true;
+          }
+        }
+        return;
+      }
+
+      // Hubungan Pemohon Terhadap Barang (Pemilik Asli vs Kuasa / Perwakilan)
+      if (target.name === 'claimRel' || target.closest('label')?.querySelector('input[name="claimRel"]')) {
+        const parentGrid = target.closest('.grid-cols-2');
+        if (parentGrid) {
+          const allLabels = parentGrid.querySelectorAll('label');
+          allLabels.forEach(lbl => {
+            lbl.className = 'flex items-center gap-2 p-2 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm font-medium hover:bg-surface-container cursor-pointer transition-all';
+            const inp = lbl.querySelector('input');
+            if (inp) inp.checked = false;
+          });
+          const activeLabel = target.tagName === 'LABEL' ? target : target.closest('label');
+          if (activeLabel) {
+            activeLabel.className = 'flex items-center gap-2 p-2 rounded-lg bg-secondary-fixed/50 text-on-secondary-fixed font-label-sm text-label-sm font-semibold cursor-pointer shadow-xs';
+            const activeInp = activeLabel.querySelector('input');
+            if (activeInp) activeInp.checked = true;
+          }
+        }
+        return;
+      }
+
+      // =========================================================================
+      // 10. SPECIFIC FIX: Verifikasi Langkah 3 (VerifikasiLangkah3.jsx)
+      // =========================================================================
+      // Tombol Tampilan Terbuka & Tampilan Terkunci
+      if (lowerText.includes('tampilan terbuka') || target.closest('[onclick*="revealed"]')) {
+        e.preventDefault();
+        const vMasked = el.querySelector('#view-masked');
+        const vRevealed = el.querySelector('#view-revealed');
+        if (vMasked) vMasked.classList.add('hidden');
+        if (vRevealed) vRevealed.classList.remove('hidden');
+
+        // Update button styles
+        const allToggleBtns = el.querySelectorAll('button');
+        allToggleBtns.forEach(b => {
+          if (b.textContent.includes('Tampilan Terbuka')) {
+            b.className = 'px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm font-semibold transition-all';
+          }
+          if (b.textContent.includes('Tampilan Terkunci')) {
+            b.className = 'px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all';
+          }
+        });
+        return;
+      }
+
+      if (lowerText.includes('tampilan terkunci') || target.closest('[onclick*="masked"]')) {
+        e.preventDefault();
+        const vMasked = el.querySelector('#view-masked');
+        const vRevealed = el.querySelector('#view-revealed');
+        if (vMasked) vMasked.classList.remove('hidden');
+        if (vRevealed) vRevealed.classList.add('hidden');
+
+        // Update button styles
+        const allToggleBtns = el.querySelectorAll('button');
+        allToggleBtns.forEach(b => {
+          if (b.textContent.includes('Tampilan Terkunci')) {
+            b.className = 'px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm font-semibold transition-all';
+          }
+          if (b.textContent.includes('Tampilan Terbuka')) {
+            b.className = 'px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all';
+          }
+        });
+        return;
+      }
+
+      // Buka Data Rahasia Sekarang -> buka dialog konfirmasi
+      if (lowerText.includes('buka data rahasia sekarang')) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-reveal-confirm');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        }
+        return;
+      }
+
+      // Modal Reveal Confirm: Ya Buka Data Sekarang
+      if (lowerText.includes('ya, buka data sekarang') || lowerText.includes('buka data sekarang')) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-reveal-confirm');
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+        const vMasked = el.querySelector('#view-masked');
+        const vRevealed = el.querySelector('#view-revealed');
+        if (vMasked) vMasked.classList.add('hidden');
+        if (vRevealed) vRevealed.classList.remove('hidden');
+
+        // Update toggle buttons
+        const allToggleBtns = el.querySelectorAll('button');
+        allToggleBtns.forEach(b => {
+          if (b.textContent.includes('Tampilan Terbuka')) {
+            b.className = 'px-4 py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm font-semibold transition-all';
+          }
+          if (b.textContent.includes('Tampilan Terkunci')) {
+            b.className = 'px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all';
+          }
+        });
+        alert('Data rahasia berhasil diverifikasi dan dicatat pada audit log pos jaga.');
+        return;
+      }
+
+      // Tombol Tidak Cocok (Klaim Gagal)
+      if (lowerText.includes('tidak cocok (klaim gagal)') || lowerText.includes('klaim gagal')) {
+        e.preventDefault();
+        const modalFail = el.querySelector('#modal-failure');
+        if (modalFail) {
+          modalFail.classList.remove('hidden');
+          modalFail.classList.add('flex');
+        } else {
+          if (confirm('Konfirmasi penolakan klaim karena ketidaksesuaian ciri khusus rahasia?')) {
+            alert('Penolakan Klaim Tercatat!\n\nBarang tetap aman disimpan di brankas inventaris pos jaga.');
+            if (onNavigate) onNavigate('satpam_inventaris');
+          }
+        }
+        return;
+      }
+
+      // Modal Failure: Konfirmasi Penolakan Klaim
+      if (lowerText.includes('konfirmasi penolakan klaim')) {
+        e.preventDefault();
+        const modalFail = el.querySelector('#modal-failure');
+        if (modalFail) {
+          modalFail.classList.add('hidden');
+          modalFail.classList.remove('flex');
+        }
+        alert('Penolakan Klaim Berhasil Dicatat!\n\nStatus klaim diperbarui menjadi GAGAL (Karakteristik rahasia tidak sesuai).\nBarang tetap aman berada di loker inventaris posko.');
+        if (onNavigate) onNavigate('satpam_inventaris');
+        return;
+      }
+
+      // Close modal confirm or failure
+      if (
+        (lowerText === 'batal' || lowerText === 'close') &&
+        (target.closest('#modal-reveal-confirm') || target.closest('#modal-failure'))
+      ) {
+        e.preventDefault();
+        const m1 = el.querySelector('#modal-reveal-confirm');
+        const m2 = el.querySelector('#modal-failure');
+        if (m1) { m1.classList.add('hidden'); m1.classList.remove('flex'); }
+        if (m2) { m2.classList.add('hidden'); m2.classList.remove('flex'); }
+        return;
+      }
+
+      // Tombol Kembali ke Langkah 2 (Kembali ke Langkah 1 Verifikasi)
+      if (lowerText.includes('kembali ke langkah 2') || lowerText.includes('kembali ke langkah 1')) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_verifikasi_1');
+        return;
+      }
+
+      // =========================================================================
+      // 11. SPECIFIC FIX: Laporan Kehilangan (DaftarLaporanKehilangan.jsx)
+      // =========================================================================
+      // Tombol Sinkronisasi Data -> tampilkan toast sukses (JANGAN location.reload)
+      if (action === 'sync-data' || lowerText.includes('sinkronisasi data') || (lowerText.includes('sinkronisasi') && target.closest('button'))) {
+        e.preventDefault();
+        alert('Sinkronisasi Berhasil!\n\n44 Laporan kehilangan civitas telah dimutakhirkan secara real-time dari database kampus UII.');
+        return;
+      }
+
+      // Buka Modal Input Tiket Manual
+      if (
+        lowerText.includes('input tiket manual') ||
+        lowerText.includes('input manual') ||
+        action === 'open-modal-input-manual'
+      ) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-input-manual');
+        if (modal) modal.classList.remove('hidden');
+        return;
+      }
+
+      // Tutup Modal Input Tiket Manual
+      if (action === 'close-modal-input-manual') {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-input-manual');
+        if (modal) modal.classList.add('hidden');
+        return;
+      }
+
+      // Simpan Tiket Manual
+      if (action === 'save-manual-ticket' || target.id === 'btn-save-manual-ticket' || lowerText.includes('simpan laporan & terbitkan')) {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-input-manual');
+        if (modal) modal.classList.add('hidden');
+        alert('Laporan Kehilangan Baru Berhasil Dicatat!\n\nNomor Tiket: HL-2024-0895 (Walk-in Posko GKU)\nStatus: Aktif & Diantrikan ke Algoritma AI Matching.');
+        return;
+      }
+
+      // Modal Tutup Tiket Laporan (HL-88219)
+      if (action === 'open-modal-close-ticket') {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-tutup-laporan');
+        if (modal) modal.classList.remove('hidden');
+        return;
+      }
+
+      if (action === 'close-modal-close-ticket') {
+        e.preventDefault();
+        const modal = el.querySelector('#modal-tutup-laporan');
+        if (modal) modal.classList.add('hidden');
+        if (lowerText.includes('konfirmasi tutup laporan')) {
+          alert('Tiket HL-88219 Berhasil Ditutup!\n\nStatus laporan telah diarsipkan.');
+        }
+        return;
+      }
+
+      // Klik Baris Tabel / Tombol Detail di Laporan Kehilangan
+      if (
+        target.classList.contains('report-table-row') ||
+        target.closest('.report-table-row') ||
+        lowerText === 'detail'
+      ) {
+        e.preventDefault();
+        // If clicking inside table, select row and DO NOT navigate to matching
+        const row = target.classList.contains('report-table-row') ? target : target.closest('.report-table-row');
+        if (row) {
+          const allRows = el.querySelectorAll('.report-table-row');
+          allRows.forEach(r => {
+            r.classList.remove('bg-surface-container-high', 'shadow-sm');
+            r.classList.add('hover:bg-surface-container-low');
+          });
+          row.classList.add('bg-surface-container-high', 'shadow-sm');
+          row.classList.remove('hover:bg-surface-container-low');
+        }
+        return;
+      }
+
+      // =========================================================================
+      // 12. GENERAL WORKFLOW NAVIGATION
+      // =========================================================================
+      // Action: Detail Fisik Inventaris
       if (
         action === 'detail-inventaris' ||
         target.closest('[data-action="detail-inventaris"]') ||
@@ -101,9 +514,7 @@ export default function DaftarInventaris({ onNavigate }) {
         lowerText === 'visibility' ||
         lowerText.includes('tinjau detail') ||
         lowerText.includes('detail fisik') ||
-        lowerText.includes('detail barang') ||
-        lowerText.includes('rincian laporan') ||
-        lowerText.includes('periksa rincian') ||
+        lowerText.includes('detail item') ||
         (lowerText.startsWith('brg-2024-') && !lowerText.includes('status matching')) ||
         path === 'detail-inventaris'
       ) {
@@ -112,10 +523,8 @@ export default function DaftarInventaris({ onNavigate }) {
         return;
       }
 
-      // 5. Sidebar Nav: Barang / Daftar Inventaris
+      // Breadcrumb / Nav: Daftar Inventaris
       if (
-        (path === 'barang' && target.closest('nav')) ||
-        (lowerText === 'barang' && target.closest('nav')) ||
         lowerText.includes('daftar inventaris') ||
         lowerText.includes('kembali ke daftar inventaris') ||
         lowerText === 'inventaris barang'
@@ -125,7 +534,7 @@ export default function DaftarInventaris({ onNavigate }) {
         return;
       }
 
-      // 6. Action: Koreksi Data Inventaris (satpam_koreksi)
+      // Action: Koreksi Data Inventaris
       if (
         lowerText.includes('koreksi data') ||
         lowerText.includes('edit data') ||
@@ -141,7 +550,7 @@ export default function DaftarInventaris({ onNavigate }) {
       if (
         lowerText.includes('simpan koreksi') ||
         lowerText.includes('simpan perubahan') ||
-        (lowerText === 'batal' && (window.location.hash.includes('koreksi') || text.includes('Batal')))
+        lowerText === 'batal'
       ) {
         e.preventDefault();
         alert('Koreksi Data Inventaris Berhasil Disimpan!');
@@ -149,27 +558,23 @@ export default function DaftarInventaris({ onNavigate }) {
         return;
       }
 
-      // 7. Sidebar Nav & Actions: Hasil Matching (AI)
+      // Action: Hasil Matching AI
       if (
-        (path === 'hasil-matching' && target.closest('nav')) ||
         lowerText.includes('hasil matching') ||
         lowerText.includes('pencocokan ai') ||
-        lowerText.includes('lihat hasil ai') ||
         lowerText.includes('lihat semua 12 hasil matching') ||
         lowerText.includes('kandidat (94%)') ||
         lowerText.includes('kandidat (88%)') ||
         lowerText.includes('status matching') ||
-        (lowerText.includes('kandidat') && target.closest('a'))
+        lowerText.includes('lanjutkan ke verifikasi ai')
       ) {
         e.preventDefault();
         if (onNavigate) onNavigate('satpam_matching');
         return;
       }
 
-      // 8. Sidebar Nav & Actions: Verifikasi Kepemilikan
+      // Action: Mulai Verifikasi Klaim
       if (
-        (path === 'verifikasi' && target.closest('nav')) ||
-        (lowerText === 'verifikasi' && target.closest('nav')) ||
         lowerText.includes('verifikasi pengambilan') ||
         lowerText.includes('mulai verifikasi klaim') ||
         lowerText.includes('verifikasi kepemilikan')
@@ -179,37 +584,15 @@ export default function DaftarInventaris({ onNavigate }) {
         return;
       }
 
-      // Action: Lanjut ke Verifikasi Langkah 3 (Perbandingan Ciri & Rahasia)
+      // Action: Lanjut ke Verifikasi Langkah 3
       if (
-        lowerText.includes('langkah 2') ||
-        lowerText.includes('langkah 3') ||
         lowerText.includes('lihat perbandingan klaim') ||
         lowerText.includes('bandingkan ciri khusus') ||
         lowerText.includes('mulai verifikasi (lanjut') ||
-        (lowerText.includes('tinjau') && lowerText.includes('visibility'))
+        lowerText.includes('langkah 3')
       ) {
         e.preventDefault();
         if (onNavigate) onNavigate('satpam_verifikasi_3');
-        return;
-      }
-
-      // Action: Kembali ke Verifikasi Langkah 1
-      if (
-        lowerText.includes('kembali ke langkah 1') ||
-        lowerText.includes('kembali ke langkah 2')
-      ) {
-        e.preventDefault();
-        if (onNavigate) onNavigate('satpam_verifikasi_1');
-        return;
-      }
-
-      // 9. Sidebar Nav: Laporan Kehilangan
-      if (
-        (path === 'laporan-kehilangan' && target.closest('nav')) ||
-        lowerText.includes('laporan kehilangan')
-      ) {
-        e.preventDefault();
-        if (onNavigate) onNavigate('satpam_kehilangan');
         return;
       }
 
@@ -217,24 +600,10 @@ export default function DaftarInventaris({ onNavigate }) {
       if (
         lowerText.includes('terbitkan bast') ||
         lowerText.includes('serahkan barang') ||
-        lowerText.includes('cocok, lanjut serah terima') ||
-        lowerText.includes('konfirmasi penolakan klaim')
+        lowerText.includes('cocok, lanjut serah terima')
       ) {
         e.preventDefault();
-        alert('Berita Acara Serah Terima (BAST) Berhasil Diterbitkan!\n\nBarang resmi diserahkan kepada pemilik yang sah dan status inventaris telah diperbarui.');
-        if (onNavigate) onNavigate('satpam_inventaris');
-        return;
-      }
-
-      // Submit Form Penerimaan Fisik
-      if (
-        lowerText.includes('simpan & daftarkan') ||
-        lowerText.includes('simpan & buat item inventaris') ||
-        lowerText.includes('daftarkan ke inventaris') ||
-        lowerText.includes('konfirmasi penerimaan fisik')
-      ) {
-        e.preventDefault();
-        alert('Barang Temuan Berhasil Didaftarkan ke Inventaris!\n\nNomor Registrasi: BRG-2024-0143\nAlgoritma AI otomatis membandingkan dengan laporan kehilangan yang aktif.');
+        alert('Berita Acara Serah Terima (BAST) Berhasil Diterbitkan!\n\nNomor BAST: BAST-2024-1024-0089\nBarang resmi diserahkan kepada pemohon yang sah dan status inventaris telah diperbarui.');
         if (onNavigate) onNavigate('satpam_inventaris');
         return;
       }
