@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-tertiary-container":"#008ebf","on-secondary-fixed-variant":"#004b73","inverse-primary":"#bec6e0","surface-container-high":"#e6e8ea","error":"#ba1a1a","secondary":"#006398","on-primary-fixed":"#131b2e","tertiary-container":"#001e2c","on-secondary-container":"#00476e","secondary-container":"#5bb8fe","tertiary-fixed-dim":"#7bd0ff","surface-tint":"#565e74","tertiary":"#000000","secondary-fixed-dim":"#93ccff","on-background":"#191c1e","surface-bright":"#f7f9fb","surface-container-low":"#f2f4f6","surface-dim":"#d8dadc","outline":"#76777d","on-tertiary":"#ffffff","on-error":"#ffffff","surface":"#f7f9fb","secondary-fixed":"#cce5ff","background":"#f7f9fb","surface-container-lowest":"#ffffff","on-surface-variant":"#45464d","on-tertiary-fixed":"#001e2c","on-surface":"#191c1e","on-tertiary-fixed-variant":"#004c69","on-secondary":"#ffffff","primary-container":"#131b2e","primary":"#000000","on-error-container":"#93000a","surface-container-highest":"#e0e3e5","primary-fixed-dim":"#bec6e0","on-primary-container":"#7c839b","tertiary-fixed":"#c4e7ff","inverse-surface":"#2d3133","error-container":"#ffdad6","on-secondary-fixed":"#001d31","primary-fixed":"#dae2fd","surface-variant":"#e0e3e5","surface-container":"#eceef0","inverse-on-surface":"#eff1f3","on-primary":"#ffffff","outline-variant":"#c6c6cd","on-primary-fixed-variant":"#3f465c"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-lg":"2rem","gutter-mobile":"1rem","margin":"2rem","margin-mobile":"1rem","space-xs":"0.375rem","space-md":"1.25rem","gutter":"1.5rem","space-xl":"3rem","space-sm":"0.75rem"},"fontFamily":{"body-sm":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"display":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"display-mobile":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"]},"fontSize":{"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"display":["40px",{"lineHeight":"52px","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"600"}],"headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],"display-mobile":["28px",{"lineHeight":"36px","fontWeight":"700"}],"headline-lg":["30px",{"lineHeight":"38px","fontWeight":"700"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"headline-lg-mobile":["22px",{"lineHeight":"30px","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="px-space-md py-space-md flex items-center gap-3 bg-surface-container-low"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-secondary-fixed text-[24px]">verified_user</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">BSI • UII</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mt-1">Portal Administrator BSI</span></div></div><div class="px-space-md pt-space-md pb-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Menu Navigasi Audit</span></div><nav class="flex flex-col px-space-sm gap-1" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-xl shadow-[0_4px_12px_rgba(19,27,46,0.15)]"><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="beranda" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Beranda</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="penanda-anomali" href="#"><span class="material-symbols-outlined text-[20px]">warning</span><span>Penanda Anomali</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="insiden" href="#"><span class="material-symbols-outlined text-[20px]">security_update_warning</span><span>Insiden</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="audit-log" href="#"><span class="material-symbols-outlined text-[20px]">history_edu</span><span>Audit Log</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="akun-satpam" href="#"><span class="material-symbols-outlined text-[20px]">badge</span><span>Akun Satpam</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="barang-ditahan" href="#"><span class="material-symbols-outlined text-[20px]">lock_clock</span><span>Barang Ditahan</span></a><a class="flex items-center gap-3 px-space-md py-space-xs rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-body-md text-body-md" data-path="parameter" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span>Parameter</span></a></nav></div><div class="p-space-md m-space-sm rounded-xl bg-surface-container-low flex flex-col gap-2"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Keamanan Sesi</span><span class="flex h-2 w-2 rounded-full bg-secondary"></span></div><div class="font-label-md text-label-md text-on-surface font-semibold">Sesi Aktif: 07:42:15 tersisa</div><div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">vpn_lock</span>10.12.0.4 - VPN Terpadu</div><div class="flex items-center justify-between pt-1"><div class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">speed</span>Latensi: 14ms</div><a class="font-label-sm text-label-sm text-secondary hover:underline flex items-center gap-1" data-path="kontak-siaga" href="#"><span class="material-symbols-outlined text-[14px]">emergency</span>Kontak Siaga</a></div></div></aside><div class="pl-72 flex flex-col min-h-screen"><header class="fixed top-0 left-72 right-0 h-20 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight">BSI Admin Portal - Lost &amp; Found Kampus UII</span><div class="flex items-center gap-2 mt-1"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface"><span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>Sistem Operasional Normal - Gateway BSI Terhubung</span><span class="px-2 py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">Production v2.4-sec</span><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[13px]">key</span>MFA Aktif - Hardware Token</span></div></div></div><div class="flex items-center gap-space-md"><div class="relative w-72"><span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span><input class="w-full h-10 pl-9 pr-3 rounded-full bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Cari log / item / ID insiden..." type="text"/></div><div class="relative flex items-center justify-center"><button class="w-10 h-10 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><span class="absolute top-1 right-1 h-2 w-2 rounded-full bg-error"></span></div><div class="flex items-center gap-3 pl-2"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface">Ir. Ahmad Fauzi, M.T.</span><span class="font-label-sm text-label-sm text-on-surface-variant">Super Admin / Audit Officer</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><a class="ml-2 w-9 h-9 rounded-full hover:bg-error-container hover:text-on-error-container text-on-surface-variant flex items-center justify-center transition-colors" data-path="login" href="#" title="Keluar dari Portal"><span class="material-symbols-outlined text-[18px]">logout</span></a></div></div></header><main class="w-full pt-20 px-space-lg flex-1 bg-surface max-w-[1440px] mx-auto pb-space-lg"><div class="flex flex-col w-full">
+<!-- Top Breadcrumb & Metadata Strip -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">admin_panel_settings</span>
+        BSI Admin Portal
+      </span>
+<span class="text-outline-variant font-label-sm">/</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Akun Satpam</span>
+<span class="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span> Live Directory
+      </span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-outline">verified</span>
+<span>Sinkronisasi Terpadu: LDAP Satpam UII • Realtime via Gateway BSI</span>
+</div>
+</div>
+<!-- Main Section Header & Actions -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-md">
+<div class="flex flex-col max-w-3xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-tight">
+        Manajemen Akun Petugas Satpam
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        Pengelolaan kredensial personal, hak akses posko jaga, dan audit kepatuhan petugas satpam Lost &amp; Found Kampus Terpadu UII.
+      </p>
+</div>
+<div class="flex items-center gap-2.5 shrink-0">
+<button class="inline-flex items-center gap-2 px-space-sm py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors shadow-sm" onclick="downloadCSVLog()">
+<span class="material-symbols-outlined text-[18px] text-secondary">download</span>
+<span>Unduh Log Autentikasi (CSV)</span>
+</button>
+<button class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md hover:opacity-95 transition-all shadow-[0_4px_14px_rgba(19,27,46,0.18)]" onclick="openModal('modalTambahAkun')">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+<span>Tambah Akun Petugas</span>
+</button>
+</div>
+</div>
+<!-- KPI Quick Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-sm mb-space-md">
+<!-- Stat 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Akun Satpam</span>
+<div class="w-9 h-9 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-display text-[32px] leading-none text-on-surface font-bold">32</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Petugas Terdaftar</span>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between text-outline">
+<span class="font-body-sm text-body-sm flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-secondary">domain</span> 6 Posko Operasional
+        </span>
+<span class="font-label-sm text-label-sm font-semibold text-secondary">100% Terverifikasi</span>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Status Aktif Normal</span>
+<div class="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-display text-[32px] leading-none text-on-surface font-bold">28</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Petugas (87.5%)</span>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="h-2 w-2 rounded-full bg-secondary"></span> Terminal Pos Terhubung
+        </span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Siaga 24 Jam</span>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ditangguhkan / Cuti</span>
+<div class="w-9 h-9 rounded-xl bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-display text-[32px] leading-none text-error font-bold">4</span>
+<span class="font-label-sm text-label-sm text-on-error-container font-semibold">Petugas Dibatasi</span>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-error flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[15px]">report_problem</span> 2 Kasus Insiden Aktif
+        </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 Cuti Kedinasan</span>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Rerata Aksi Petugas</span>
+<div class="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">query_stats</span>
+</div>
+</div>
+<div class="mt-3 flex items-baseline gap-2">
+<span class="font-display text-[32px] leading-none text-on-surface font-bold">48</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Aksi / 30 Hari</span>
+</div>
+<div class="mt-2 pt-2 flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Kepatuhan Berita Acara:</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">99.4% SLA</span>
+</div>
+</div>
+</div>
+<!-- Search, Filter & Controls Panel -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm mb-space-md flex flex-col gap-3">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+<!-- Search Input -->
+<div class="md:col-span-5 relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">search</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" id="searchInput" oninput="filterTable()" placeholder="Cari nama petugas, NRP/ID Satpam, email resmi, atau pos jaga..." type="text"/>
+</div>
+<!-- Filter Dropdowns -->
+<div class="md:col-span-2">
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer" id="statusFilter" onchange="filterTable()">
+<option value="all">Semua Status (Aktif &amp; Nonaktif)</option>
+<option value="aktif">Aktif Saja</option>
+<option value="ditangguhkan">Ditangguhkan / Insiden</option>
+<option value="nonaktif">Nonaktif (Cuti / Rotasi)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="md:col-span-3">
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer" id="posFilter" onchange="filterTable()">
+<option value="all">Semua Pos Jaga (Induk, Gerbang, Lab, dll)</option>
+<option value="Pos Induk GKU">Pos Induk GKU</option>
+<option value="Pos Gerbang Utama">Pos Gerbang Utama</option>
+<option value="Pos Perpustakaan Pusat">Pos Perpustakaan Pusat</option>
+<option value="Pos Masjid Ulil Albab">Pos Masjid Ulil Albab</option>
+<option value="Pos Fakultas Teknik Sipil">Pos Fakultas Teknik Sipil</option>
+<option value="Pos Olahraga &amp; Parkir Barat">Pos Parkir Barat</option>
+<option value="Pos Gedung Rektorat">Pos Gedung Rektorat</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="md:col-span-2 flex items-center justify-end gap-2">
+<button class="h-10 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1.5 transition-colors" onclick="resetFilters()">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+<span>Reset Filter</span>
+</button>
+</div>
+</div>
+<!-- Active counter & pills -->
+<div class="flex flex-wrap items-center justify-between gap-2 pt-2">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Menampilkan:</span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-semibold" id="counterBadge">
+          7 Petugas Terdaftar
+        </span>
+<span class="font-body-sm text-body-sm text-outline">dari total 32 personel satpam kampus</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sortir Berdasarkan:</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold flex items-center gap-1 cursor-pointer">
+          Aktivitas Terakhir <span class="material-symbols-outlined text-[16px]">swap_vert</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Guard Accounts Dense Structured Table -->
+<div class="rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden mb-space-md">
+<div class="overflow-x-auto">
+<table class="w-full text-left" id="guardTable">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-space-md">Petugas / NRP</th>
+<th class="py-3 px-space-sm">Email Resmi &amp; Kontak</th>
+<th class="py-3 px-space-sm">Status Akun</th>
+<th class="py-3 px-space-sm">Terakhir Login / Terminal Pos</th>
+<th class="py-3 px-space-sm">Aktivitas 30 Hari</th>
+<th class="py-3 px-space-md text-right">Aksi &amp; Kontrol</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-sm text-body-sm">
+<!-- Row 1: Hendra Kurniawan -->
+<tr class="hover:bg-surface-container/50 transition-colors guard-row" data-name="Bripka Hendra Kurniawan" data-nrp="SEC-042" data-pos="Pos Induk GKU" data-status="aktif">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface font-bold shrink-0">
+                  HK
+                </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Bripka Hendra Kurniawan</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-[10px] text-on-surface-variant font-medium">Danru</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant mt-0.5">
+<span class="font-mono text-label-sm text-secondary font-semibold">NRP: SEC-042</span>
+<span class="text-outline">•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm text-outline truncate">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Pos Induk GKU
+                    </span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">hendra.kurniawan@staff.uii.ac.id</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono mt-0.5">+62 812-•••-9842 (Dinas)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+                Aktif
+              </span>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-medium">Hari ini, 07:15 WIB</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-outline">terminal</span>
+                  10.12.8.44 (Pos Induk GKU)
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 w-36">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="font-semibold text-on-surface">142 Aksi</span>
+<span class="text-on-surface-variant">Tinggi</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden flex">
+<div class="bg-secondary h-full" style="width: 65%;"></div>
+<div class="bg-primary-container h-full" style="width: 25%;"></div>
+<div class="bg-outline h-full" style="width: 10%;"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">48 Terima • 82 Verif • 12 BAST</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-error-container hover:text-on-error-container text-on-surface font-label-sm text-label-sm transition-colors" onclick="openModal('modalNonaktifkan')" title="Nonaktifkan Hak Akses Akun">
+                  Nonaktifkan
+                </button>
+<button class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors" onclick="openResetPasswordModal('Bripka Hendra Kurniawan', 'SEC-042')" title="Reset Kata Sandi Kredensial">
+<span class="material-symbols-outlined text-[16px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Agus Susanto -->
+<tr class="hover:bg-surface-container/50 transition-colors guard-row" data-name="Aipda Agus Susanto" data-nrp="SEC-019" data-pos="Pos Gerbang Utama" data-status="aktif">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface font-bold shrink-0">
+                  AS
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Aipda Agus Susanto</span>
+<div class="flex items-center gap-2 text-on-surface-variant mt-0.5">
+<span class="font-mono text-label-sm text-secondary font-semibold">NRP: SEC-019</span>
+<span class="text-outline">•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm text-outline truncate">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Pos Gerbang Utama
+                    </span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">agus.susanto@staff.uii.ac.id</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono mt-0.5">+62 856-•••-3310 (Dinas)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+                Aktif
+              </span>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-medium">Kemarin, 21:40 WIB</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-outline">terminal</span>
+                  10.12.8.12 (Pos Gerbang Utama)
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 w-36">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="font-semibold text-on-surface">98 Aksi</span>
+<span class="text-on-surface-variant">Normal</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden flex">
+<div class="bg-secondary h-full" style="width: 50%;"></div>
+<div class="bg-primary-container h-full" style="width: 40%;"></div>
+<div class="bg-outline h-full" style="width: 10%;"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">32 Terima • 60 Verif • 6 BAST</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-error-container hover:text-on-error-container text-on-surface font-label-sm text-label-sm transition-colors" onclick="openModal('modalNonaktifkan')">
+                  Nonaktifkan
+                </button>
+<button class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors" onclick="openResetPasswordModal('Aipda Agus Susanto', 'SEC-019')">
+<span class="material-symbols-outlined text-[16px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Joko Wahyono (DITANGGUHKAN - INSIDEN) -->
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors guard-row" data-name="Bripka Joko Wahyono" data-nrp="SEC-035" data-pos="Pos Perpustakaan Pusat" data-status="ditangguhkan">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center font-label-md text-label-md text-on-error-container font-bold shrink-0">
+                  JW
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Bripka Joko Wahyono</span>
+<div class="flex items-center gap-2 text-on-surface-variant mt-0.5">
+<span class="font-mono text-label-sm text-error font-semibold">NRP: SEC-035</span>
+<span class="text-outline">•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm text-outline truncate">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Pos Perpustakaan Pusat
+                    </span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">joko.wahyono@staff.uii.ac.id</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono mt-0.5">+62 813-•••-0192 (Dibekukan)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 items-start">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                  Ditangguhkan: Kasus Insiden
+                </span>
+<span class="inline-flex items-center gap-1 text-[11px] text-error font-semibold bg-surface-container-lowest px-2 py-0.5 rounded shadow-sm">
+                  Kasus INS-2024-0091: Indikasi Bypass Data Rahasia
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-error font-medium">21 Okt 2024, 14:10 WIB</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-error">lock_person</span>
+                  Dibekukan oleh Admin BSI (Audit)
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 w-36">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="font-semibold text-error">34 Aksi (Stagnan)</span>
+<span class="text-error font-bold">0 Active</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden flex">
+<div class="bg-error h-full" style="width: 100%;"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">Hak tulis dibatalkan BSI</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-secondary font-label-sm text-label-sm font-semibold flex items-center gap-1 transition-colors" onclick="alert('Membuka Berkas Investigasi Insiden INS-2024-0091...')">
+<span class="material-symbols-outlined text-[14px]">search_check</span>
+                  Lihat Berkas Insiden
+                </button>
+<button class="px-2.5 py-1 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm transition-colors" onclick="promptReactivate('SEC-035', 'Bripka Joko Wahyono')">
+                  Aktifkan Kembali
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Bambang Supriyadi -->
+<tr class="hover:bg-surface-container/50 transition-colors guard-row" data-name="Sertu Bambang Supriyadi" data-nrp="SEC-008" data-pos="Pos Masjid Ulil Albab" data-status="aktif">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface font-bold shrink-0">
+                  BS
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Sertu Bambang Supriyadi</span>
+<div class="flex items-center gap-2 text-on-surface-variant mt-0.5">
+<span class="font-mono text-label-sm text-secondary font-semibold">NRP: SEC-008</span>
+<span class="text-outline">•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm text-outline truncate">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Pos Masjid Ulil Albab
+                    </span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">bambang.supriyadi@staff.uii.ac.id</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono mt-0.5">+62 821-•••-4419 (Dinas)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+                Aktif
+              </span>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-medium">23 Okt 2024, 18:20 WIB</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-outline">terminal</span>
+                  10.12.8.61 (Pos Masjid Ulil)
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 w-36">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="font-semibold text-on-surface">115 Aksi</span>
+<span class="text-on-surface-variant">Tinggi</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden flex">
+<div class="bg-secondary h-full" style="width: 60%;"></div>
+<div class="bg-primary-container h-full" style="width: 30%;"></div>
+<div class="bg-outline h-full" style="width: 10%;"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">55 Terima • 50 Verif • 10 BAST</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-error-container hover:text-on-error-container text-on-surface font-label-sm text-label-sm transition-colors" onclick="openModal('modalNonaktifkan')">
+                  Nonaktifkan
+                </button>
+<button class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors" onclick="openResetPasswordModal('Sertu Bambang Supriyadi', 'SEC-008')">
+<span class="material-symbols-outlined text-[16px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Dedi Prasetyo (Nonaktif SOP Cuti/Rotasi) -->
+<tr class="hover:bg-surface-container/50 transition-colors guard-row" data-name="Bripka Dedi Prasetyo" data-nrp="SEC-051" data-pos="Pos Fakultas Teknik Sipil" data-status="nonaktif">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-label-md text-label-md text-on-surface-variant font-bold shrink-0">
+                  DP
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface-variant font-semibold truncate">Bripka Dedi Prasetyo</span>
+<div class="flex items-center gap-2 text-outline mt-0.5">
+<span class="font-mono text-label-sm">NRP: SEC-051</span>
+<span>•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm truncate">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Pos Fak. Teknik Sipil
+                    </span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium truncate">dedi.prasetyo@staff.uii.ac.id</span>
+<span class="font-label-sm text-label-sm text-outline font-mono mt-0.5">+62 878-•••-5021</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-outline"></span>
+                Nonaktif (Rotasi Tugas)
+              </span>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant">15 Okt 2024, 08:00 WIB</span>
+<span class="font-body-sm text-body-sm text-outline font-mono mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">history</span>
+                  Rotasi Shift Kampus
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 w-36">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="font-semibold text-on-surface-variant">12 Aksi</span>
+<span class="text-outline">Cuti</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden">
+<div class="bg-outline-variant h-full" style="width: 15%;"></div>
+</div>
+<span class="text-[10px] text-outline">Tidak aktif sejak 15 Okt</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors" onclick="alert('Mengaktifkan kembali sesi dinas Bripka Dedi Prasetyo...')">
+                  Aktifkan
+                </button>
+<button class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors" onclick="openResetPasswordModal('Bripka Dedi Prasetyo', 'SEC-051')">
+<span class="material-symbols-outlined text-[16px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Eko Rahardjo (DITANGGUHKAN - INSIDEN) -->
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors guard-row" data-name="Peltu Eko Rahardjo" data-nrp="SEC-012" data-pos="Pos Olahraga &amp; Parkir Barat" data-status="ditangguhkan">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center font-label-md text-label-md text-on-error-container font-bold shrink-0">
+                  ER
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Peltu Eko Rahardjo</span>
+<div class="flex items-center gap-2 text-on-surface-variant mt-0.5">
+<span class="font-mono text-label-sm text-error font-semibold">NRP: SEC-012</span>
+<span class="text-outline">•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm text-outline truncate">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Pos Olahraga &amp; Parkir
+                    </span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">eko.rahardjo@staff.uii.ac.id</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono mt-0.5">+62 811-•••-7729 (Dibekukan)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 items-start">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                  Ditangguhkan: Kasus Insiden
+                </span>
+<span class="inline-flex items-center gap-1 text-[11px] text-error font-semibold bg-surface-container-lowest px-2 py-0.5 rounded shadow-sm">
+                  Kasus INS-2024-0084: Kegagalan BAST 3x berturut
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-error font-medium">18 Okt 2024, 11:05 WIB</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-error">lock_person</span>
+                  Suspensi Otomatis Rule-Sec #04
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 w-36">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="font-semibold text-error">56 Aksi</span>
+<span class="text-error font-bold">Audit</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden flex">
+<div class="bg-error h-full" style="width: 100%;"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">Dalam Verifikasi Tim Audit</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-secondary font-label-sm text-label-sm font-semibold flex items-center gap-1 transition-colors" onclick="alert('Membuka Berkas Investigasi Insiden INS-2024-0084...')">
+<span class="material-symbols-outlined text-[14px]">search_check</span>
+                  Lihat Berkas Insiden
+                </button>
+<button class="px-2.5 py-1 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm transition-colors" onclick="promptReactivate('SEC-012', 'Peltu Eko Rahardjo')">
+                  Aktifkan Kembali
+                </button>
+</div>
+</td>
+</tr>
+<!-- Row 7: Fajar Nugroho -->
+<tr class="hover:bg-surface-container/50 transition-colors guard-row" data-name="Bripda Fajar Nugroho" data-nrp="SEC-064" data-pos="Pos Gedung Rektorat" data-status="aktif">
+<td class="py-3.5 px-space-md">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface font-bold shrink-0">
+                  FN
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Bripda Fajar Nugroho</span>
+<div class="flex items-center gap-2 text-on-surface-variant mt-0.5">
+<span class="font-mono text-label-sm text-secondary font-semibold">NRP: SEC-064</span>
+<span class="text-outline">•</span>
+<span class="flex items-center gap-1 font-body-sm text-body-sm text-outline truncate">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Pos Rektorat (GBPH)
+                    </span>
+</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface font-medium truncate">fajar.nugroho@staff.uii.ac.id</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono mt-0.5">+62 895-•••-1102 (Dinas)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+                Aktif
+              </span>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-medium">Hari ini, 06:30 WIB</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-mono mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-outline">terminal</span>
+                  10.12.8.05 (Pos Rektorat)
+                </span>
+</div>
+</td>
+<td class="py-3.5 px-space-sm">
+<div class="flex flex-col gap-1 w-36">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="font-semibold text-on-surface">76 Aksi</span>
+<span class="text-on-surface-variant">Stabil</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden flex">
+<div class="bg-secondary h-full" style="width: 45%;"></div>
+<div class="bg-primary-container h-full" style="width: 45%;"></div>
+<div class="bg-outline h-full" style="width: 10%;"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-medium">28 Terima • 42 Verif • 6 BAST</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-error-container hover:text-on-error-container text-on-surface font-label-sm text-label-sm transition-colors" onclick="openModal('modalNonaktifkan')">
+                  Nonaktifkan
+                </button>
+<button class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors" onclick="openResetPasswordModal('Bripda Fajar Nugroho', 'SEC-064')">
+<span class="material-symbols-outlined text-[16px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Audit Signature Footer -->
+<div class="px-space-md py-3 bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-outline">Baris per halaman:</span>
+<select class="h-8 px-2 rounded-lg bg-surface-container-lowest font-label-sm text-label-sm text-on-surface border-0 focus:outline-none">
+<option>10 Baris</option>
+<option>25 Baris</option>
+<option>50 Baris</option>
+</select>
+<span class="font-label-sm text-label-sm text-on-surface ml-2">1 - 7 dari 32 Petugas</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-outline flex items-center justify-center opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center font-bold">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center justify-center">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center justify-center">3</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center justify-center">4</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Security Callout & Audit Integrity Note -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">policy</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface leading-tight">Protokol Keamanan &amp; Integritas Akses BSI</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Setiap perubahan status akun (aktivasi, penonaktifan, reset kata sandi) dilindungi protokol MFA dan ditandatangani secara digital dalam log rantai pasok keamanan sistem informasi UII.
+        </p>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<span class="px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">encrypted</span> SHA-256 Signature Valid
+      </span>
+<button class="px-3 py-1 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors" onclick="alert('Log Audit Kredensial telah diverifikasi. Hash Ledger: 0x8f2a4b119c4d93e2')">
+        Verifikasi Ledger
+      </button>
+</div>
+</div>
+<!-- MODAL 1: Konfirmasi Penonaktifan Akun Petugas (Interactive) -->
+<div class="fixed inset-0 z-50 bg-primary/60 backdrop-blur-sm hidden items-center justify-center p-4" id="modalNonaktifkan">
+<div class="bg-surface-container-lowest rounded-xl max-w-xl w-full shadow-2xl overflow-hidden flex flex-col">
+<!-- Modal Header -->
+<div class="p-space-md bg-surface-container-low flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">block</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Konfirmasi Penonaktifan Akun Petugas</h3>
+<span class="font-label-sm text-label-sm text-error font-semibold mt-0.5">Petugas: Bripka Hendra Kurniawan (NRP: SEC-042)</span>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant" onclick="closeModal('modalNonaktifkan')">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Warning Alert -->
+<div class="p-space-md pb-0">
+<div class="p-3 rounded-xl bg-error-container/30 flex items-start gap-3 text-on-error-container">
+<span class="material-symbols-outlined text-[20px] text-error shrink-0 mt-0.5">report_problem</span>
+<div class="flex flex-col font-body-sm text-body-sm">
+<span class="font-semibold text-error">Tindakan Keamanan Sensitif!</span>
+<span>Tindakan ini akan mencabut akses petugas ke terminal pos jaga seketika, mengakhiri sesi aktif, dan tercatat permanen dalam Audit Log BSI.</span>
+</div>
+</div>
+</div>
+<!-- Form Body -->
+<form class="p-space-md flex flex-col gap-3.5" onsubmit="handleNonaktifSubmit(event)">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+            Kategori Alasan Penonaktifan <span class="text-error">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none" required="">
+<option value="">-- Pilih Alasan Resmi --</option>
+<option value="rotasi">Rotasi Pos Jaga / Pindah Tugas Terjadwal</option>
+<option value="investigasi">Pelanggaran SOP / Investigasi Keamanan Insiden</option>
+<option value="cuti">Cuti / Izin Kedinasan Resmi</option>
+<option value="pensiun">Pensiun / Terminasi Masa Tugas</option>
+<option value="lainnya">Lainnya (Perlu Persetujuan Kepala BSI)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+            Uraian Justifikasi Wajib (Min. 30 Karakter) <span class="text-error">*</span>
+</label>
+<textarea class="w-full p-3 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" minlength="30" placeholder="Wajib mencantumkan rujukan surat dinas keamanan atau nomor tiket penanda anomali (misal: Rujukan Surat No. 114/Dinas-Kamtib/UII/X/2024)..." required="" rows="3"></textarea>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+            Tautkan dengan Nomor Insiden Aktif (Opsional)
+          </label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">flag</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Contoh: INS-2024-0092" type="text"/>
+</div>
+</div>
+<div class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm text-on-surface font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">token</span>
+              Verifikasi Otoritas Super Admin (Token MFA Hardware)
+            </label>
+<span class="font-mono font-label-sm text-label-sm text-secondary">6-Digit OTP</span>
+</div>
+<input class="w-full h-10 px-3 text-center tracking-[0.5em] font-mono text-headline-sm rounded-xl bg-surface-container-lowest font-bold text-on-surface focus:outline-none" maxlength="6" pattern="[0-9]{6}" placeholder="••••••" required="" type="text"/>
+<span class="font-body-sm text-[11px] text-on-surface-variant text-center">Masukkan kode dari token YubiKey / Google Authenticator Anda</span>
+</div>
+<!-- Modal Footer Actions -->
+<div class="flex items-center justify-end gap-2.5 pt-2">
+<button class="px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" onclick="closeModal('modalNonaktifkan')" type="button">
+            Batal
+          </button>
+<button class="px-space-md py-2.5 rounded-xl bg-error hover:bg-error/90 text-on-error font-label-md text-label-md flex items-center gap-2 shadow-sm transition-colors" type="submit">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Nonaktifkan Akun &amp; Catat Audit Log</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- MODAL 2: Tambah Akun Petugas Satpam (Interactive) -->
+<div class="fixed inset-0 z-50 bg-primary/60 backdrop-blur-sm hidden items-center justify-center p-4" id="modalTambahAkun">
+<div class="bg-surface-container-lowest rounded-xl max-w-xl w-full shadow-2xl overflow-hidden flex flex-col">
+<!-- Modal Header -->
+<div class="p-space-md bg-surface-container-low flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">person_add</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Registrasi Akun Petugas Satpam Baru</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Sistem Integrasi Single Sign-On (SSO) Satpam UII</span>
+</div>
+</div>
+<button class="w-8 h-8 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant" onclick="closeModal('modalTambahAkun')">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Form Body -->
+<form class="p-space-md flex flex-col gap-3.5" onsubmit="handleTambahSubmit(event)">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+              Nama Lengkap &amp; Pangkat <span class="text-error">*</span>
+</label>
+<input class="w-full h-10 px-3 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="Contoh: Bripda Teguh Santoso" required="" type="text"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+              NRP / ID Satpam Resmi UII <span class="text-error">*</span>
+</label>
+<input class="w-full h-10 px-3 rounded-xl bg-surface-container-low font-mono text-body-sm text-on-surface placeholder:text-outline focus:outline-none" pattern="SEC-[0-9]{3}" placeholder="SEC-089" required="" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+              Email Dinas UII (@staff.uii.ac.id) <span class="text-error">*</span>
+</label>
+<input class="w-full h-10 px-3 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="teguh.santoso@staff.uii.ac.id" required="" type="email"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+              Nomor Ponsel Dinas WhatsApp <span class="text-error">*</span>
+</label>
+<input class="w-full h-10 px-3 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none" placeholder="0812xxxxxxxx" required="" type="tel"/>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+              Pos Jaga Penempatan Default <span class="text-error">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer" required="">
+<option value="">Pilih Pos Jaga</option>
+<option value="Pos Induk GKU">Pos Induk GKU</option>
+<option value="Pos Gerbang Utama">Pos Gerbang Utama</option>
+<option value="Pos Perpustakaan Pusat">Pos Perpustakaan Pusat</option>
+<option value="Pos Masjid Ulil Albab">Pos Masjid Ulil Albab</option>
+<option value="Pos Fakultas Teknik Sipil">Pos Fakultas Teknik Sipil</option>
+<option value="Pos Olahraga &amp; Parkir">Pos Olahraga &amp; Parkir</option>
+<option value="Pos Gedung Rektorat">Pos Gedung Rektorat (GBPH)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">
+              Hak Akses / Peran Pos <span class="text-error">*</span>
+</label>
+<div class="relative">
+<select class="w-full h-10 px-3 pr-8 rounded-xl bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none appearance-none cursor-pointer" required="">
+<option value="petugas">Petugas Loket Jaga (Standard)</option>
+<option value="danru">Komandan Regu (Danru - Approval BAST)</option>
+<option value="investigator">Petugas Khusus Penyelidikan Internal</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-outline text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Automated Password Delivery Notice -->
+<div class="p-3 rounded-xl bg-secondary-fixed/50 flex items-start gap-2.5 text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">mark_email_read</span>
+<span class="font-body-sm text-body-sm">
+            Sistem BSI akan otomatis meng-generate <strong>Kata Sandi Sementara Terenkripsi</strong> dan mengirimkan instruksi aktivasi MFA ke email dinas dan WhatsApp resmi petugas.
+          </span>
+</div>
+<!-- Modal Footer Actions -->
+<div class="flex items-center justify-end gap-2.5 pt-2">
+<button class="px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" onclick="closeModal('modalTambahAkun')" type="button">
+            Batalkan
+          </button>
+<button class="px-space-md py-2.5 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-2 hover:opacity-95 shadow-sm transition-all" type="submit">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Simpan &amp; Terbitkan Kredensial</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Inline Micro-interactions Script -->
+<script>
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function filterTable() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const status = document.getElementById('statusFilter').value;
+      const pos = document.getElementById('posFilter').value;
+      const rows = document.querySelectorAll('.guard-row');
+
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const textContent = row.innerText.toLowerCase();
+        const rowStatus = row.getAttribute('data-status');
+        const rowPos = row.getAttribute('data-pos');
+
+        const matchesSearch = textContent.includes(search);
+        const matchesStatus = (status === 'all') || (rowStatus === status);
+        const matchesPos = (pos === 'all') || (rowPos === pos);
+
+        if (matchesSearch && matchesStatus && matchesPos) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      const badge = document.getElementById('counterBadge');
+      if (badge) {
+        badge.innerText = `${visibleCount} Petugas Ditampilkan`;
+      }
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = 'all';
+      document.getElementById('posFilter').value = 'all';
+      filterTable();
+    }
+
+    function handleNonaktifSubmit(event) {
+      event.preventDefault();
+      alert('SUKSES: Akun petugas berhasil dinonaktifkan dari terminal pos jaga. Rantai audit hash telah dicatat ke Ledger BSI.');
+      closeModal('modalNonaktifkan');
+    }
+
+    function handleTambahSubmit(event) {
+      event.preventDefault();
+      alert('SUKSES: Akun petugas baru berhasil didaftarkan. Kredensial sementara telah dikirimkan via jalur resmi.');
+      closeModal('modalTambahAkun');
+    }
+
+    function openResetPasswordModal(name, nrp) {
+      if (confirm(`Apakah Anda yakin ingin me-reset kata sandi untuk ${name} (${nrp})? Tautan aktivasi baru akan di-generate dengan masa kedaluwarsa 15 menit.`)) {
+        alert(`Tautan reset sandi darurat berhasil dikirim ke email dinas ${name}. Catatan audit tercatat.`);
+      }
+    }
+
+    function promptReactivate(nrp, name) {
+      if (confirm(`Konfirmasi pencabutan penangguhan untuk ${name} (${nrp})? Memerlukan verifikasi status penutupan tiket investigasi.`)) {
+        alert(`Status akun ${name} telah dipulihkan menjadi Aktif. Log pembukaan blokir tercatat.`);
+      }
+    }
+
+    function downloadCSVLog() {
+      alert('Membuat ekspor CSV Log Autentikasi Satpam UII (30 Hari Terakhir). File otomatis terenkripsi PGP BSI.');
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest py-space-sm shadow-[0_-1px_8px_rgba(0,0,0,0.02)] mt-auto"><div class="max-w-[1440px] mx-auto px-space-lg flex items-center justify-between text-on-surface-variant"><div class="flex items-center gap-2 font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px] text-secondary">shield</span><span>Badan Sistem Informasi (BSI) Universitas Islam Indonesia • Kepatuhan ISO/IEC 27001 &amp; Audit Trail Terdistribusi</span></div><div class="font-label-sm text-label-sm text-outline">Setiap tindakan dipertanggungjawabkan dalam rantai audit.</div></div></footer></div></body></html>

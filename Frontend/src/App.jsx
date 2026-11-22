@@ -31,6 +31,17 @@ import VerifikasiLangkah3 from './pages/satpam/VerifikasiLangkah3';
 import KoreksiDataInventaris from './pages/satpam/KoreksiDataInventaris';
 import DaftarLaporanKehilangan from './pages/satpam/DaftarLaporanKehilangan';
 
+// =========================================================================
+// 3. PORTAL ADMINISTRATOR BSI (Badan Sistem Informasi Kampus UII)
+// =========================================================================
+import BerandaAdmin from './pages/admin/BerandaAdmin';
+import PenandaAnomali from './pages/admin/PenandaAnomali';
+import DetailInsiden from './pages/admin/DetailInsiden';
+import AuditLog from './pages/admin/AuditLog';
+import ManajemenSatpam from './pages/admin/ManajemenSatpam';
+import BarangDitahan from './pages/admin/BarangDitahan';
+import KonfigurasiSentinel from './pages/admin/KonfigurasiSentinel';
+
 const screens = {
   // === Alur Portal Publik ===
   landing: LandingPage,
@@ -59,6 +70,15 @@ const screens = {
   satpam_verifikasi_3: VerifikasiLangkah3,
   satpam_koreksi: KoreksiDataInventaris,
   satpam_kehilangan: DaftarLaporanKehilangan,
+
+  // === Alur Portal Administrator BSI ===
+  admin_dashboard: BerandaAdmin,
+  admin_anomali: PenandaAnomali,
+  admin_detail_insiden: DetailInsiden,
+  admin_audit: AuditLog,
+  admin_satpam: ManajemenSatpam,
+  admin_barang_ditahan: BarangDitahan,
+  admin_parameter: KonfigurasiSentinel,
 };
 
 export default function App() {
@@ -66,6 +86,8 @@ export default function App() {
 
   const CurrentScreenComponent = screens[activeScreen] || LandingPage;
   const isSatpamPortal = activeScreen.startsWith('satpam_');
+  const isAdminPortal = activeScreen.startsWith('admin_');
+  const isPublicPortal = !isSatpamPortal && !isAdminPortal;
 
   const handleNavigate = (target) => {
     if (screens[target]) {
@@ -74,35 +96,59 @@ export default function App() {
     }
   };
 
+  const getPortalLabel = () => {
+    if (isAdminPortal) return 'Portal Admin BSI';
+    if (isSatpamPortal) return 'Portal Satpam';
+    return 'Portal Publik';
+  };
+
   return (
     <div className="relative min-h-screen">
       <CurrentScreenComponent onNavigate={handleNavigate} />
 
-      {/* Floating Mode Switcher Button (Bisa beralih langsung antara Portal Publik & Portal Satpam) */}
+      {/* Floating 3-Way Portal Switcher (Publik, Satpam, Admin BSI) */}
       <aside aria-label="Portal Switcher" className="fixed bottom-4 right-4 z-50">
-        <div className="flex items-center gap-2 p-1.5 rounded-full bg-slate-900/90 text-white shadow-xl backdrop-blur-md border border-slate-700/60 text-xs font-semibold">
-          <span className="pl-3 pr-1 text-slate-300 hidden sm:inline">
-            Mode: <strong className="text-white">{isSatpamPortal ? 'Portal Satpam' : 'Portal Publik'}</strong>
-          </span>
-          {isSatpamPortal ? (
-            <button
-              onClick={() => handleNavigate('landing')}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-sm"
-              title="Kembali ke Portal Publik"
-            >
-              <span className="material-symbols-outlined text-[16px]">public</span>
-              <span>Buka Portal Publik</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => handleNavigate('satpam_dashboard')}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm"
-              title="Buka Portal Satpam Kampus UII"
-            >
-              <span className="material-symbols-outlined text-[16px]">local_police</span>
-              <span>Buka Portal Satpam</span>
-            </button>
-          )}
+        <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-slate-900/95 text-white shadow-2xl backdrop-blur-md border border-slate-700/80 text-xs font-semibold">
+          <div className="flex items-center gap-1.5 pl-3 pr-2 border-r border-slate-700/80">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-slate-300 hidden md:inline">Mode:</span>
+            <strong className="text-white font-medium">{getPortalLabel()}</strong>
+          </div>
+
+          <div className="flex items-center gap-1">
+            {!isPublicPortal && (
+              <button
+                onClick={() => handleNavigate('landing')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Buka Portal Publik Mahasiswa/Sivitas"
+              >
+                <span className="material-symbols-outlined text-[15px]">public</span>
+                <span className="hidden sm:inline">Publik</span>
+              </button>
+            )}
+
+            {!isSatpamPortal && (
+              <button
+                onClick={() => handleNavigate('satpam_dashboard')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Buka Portal Satpam Kampus UII"
+              >
+                <span className="material-symbols-outlined text-[15px]">local_police</span>
+                <span className="hidden sm:inline">Satpam</span>
+              </button>
+            )}
+
+            {!isAdminPortal && (
+              <button
+                onClick={() => handleNavigate('admin_dashboard')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Buka Portal Administrator BSI UII"
+              >
+                <span className="material-symbols-outlined text-[15px]">admin_panel_settings</span>
+                <span className="hidden sm:inline">Admin BSI</span>
+              </button>
+            )}
+          </div>
         </div>
       </aside>
     </div>
