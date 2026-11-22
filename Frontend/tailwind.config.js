@@ -6,10 +6,8 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-      },
       colors: {
+        // Landing & General Theme
         brand: {
           50: '#F0F6FF',
           100: '#E0EDFE',
@@ -23,6 +21,101 @@ export default {
         uiiDark: '#131F37',
         uiiBlue: '#2563EB',
         canvasBg: '#F8FAFC',
+
+        // Stitch Material Theme Tokens
+        "secondary": "#006398",
+        "on-primary-fixed": "#131b2e",
+        "on-primary-fixed-variant": "#3f465c",
+        "inverse-on-surface": "#eff1f3",
+        "surface-container": "#eceef0",
+        "outline-variant": "#c6c6cd",
+        "surface-container-high": "#e6e8ea",
+        "on-primary-container": "#7c839b",
+        "surface-variant": "#e0e3e5",
+        "on-surface-variant": "#45464d",
+        "primary-fixed-dim": "#bec6e0",
+        "surface-container-lowest": "#ffffff",
+        "inverse-surface": "#2d3133",
+        "primary-container": "#131b2e",
+        "tertiary": "#000000",
+        "on-error": "#ffffff",
+        "error": "#ba1a1a",
+        "on-background": "#191c1e",
+        "secondary-fixed-dim": "#93ccff",
+        "on-tertiary": "#ffffff",
+        "on-secondary-container": "#00476e",
+        "outline": "#76777d",
+        "on-primary": "#ffffff",
+        "secondary-fixed": "#cce5ff",
+        "on-tertiary-container": "#008ebf",
+        "on-tertiary-fixed-variant": "#004c69",
+        "surface-container-low": "#f2f4f6",
+        "inverse-primary": "#bec6e0",
+        "on-tertiary-fixed": "#001e2c",
+        "on-secondary": "#ffffff",
+        "surface-bright": "#f7f9fb",
+        "surface-dim": "#d8dadc",
+        "on-surface": "#191c1e",
+        "surface-container-highest": "#e0e3e5",
+        "primary": "#000000",
+        "on-error-container": "#93000a",
+        "tertiary-container": "#001e2c",
+        "on-secondary-fixed": "#001d31",
+        "background": "#f7f9fb",
+        "primary-fixed": "#dae2fd",
+        "surface-tint": "#565e74",
+        "surface": "#f7f9fb",
+        "tertiary-fixed": "#c4e7ff",
+        "on-secondary-fixed-variant": "#004b73",
+        "secondary-container": "#5bb8fe",
+        "error-container": "#ffdad6",
+        "tertiary-fixed-dim": "#7bd0ff"
+      },
+      borderRadius: {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      spacing: {
+        "space-xs": "0.375rem",
+        "space-sm": "0.75rem",
+        "space-md": "1.25rem",
+        "space-lg": "2rem",
+        "space-xl": "3rem",
+        "gutter": "1.5rem",
+        "gutter-mobile": "1rem",
+        "margin": "2rem",
+        "margin-mobile": "1rem"
+      },
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        "label-sm": ["Plus Jakarta Sans"],
+        "headline-lg-mobile": ["Plus Jakarta Sans"],
+        "body-md": ["Plus Jakarta Sans"],
+        "body-lg": ["Plus Jakarta Sans"],
+        "display": ["Plus Jakarta Sans"],
+        "headline-sm": ["Plus Jakarta Sans"],
+        "headline-md": ["Plus Jakarta Sans"],
+        "label-lg": ["Plus Jakarta Sans"],
+        "label-md": ["Plus Jakarta Sans"],
+        "display-mobile": ["Plus Jakarta Sans"],
+        "headline-lg": ["Plus Jakarta Sans"],
+        "body-sm": ["Plus Jakarta Sans"]
+      },
+      fontSize: {
+        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+        "headline-lg-mobile": ["22px", { "lineHeight": "30px", "fontWeight": "700" }],
+        "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+        "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+        "display": ["40px", { "lineHeight": "52px", "fontWeight": "700" }],
+        "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+        "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+        "display-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+        "headline-lg": ["30px", { "lineHeight": "38px", "fontWeight": "700" }],
+        "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }]
       },
       boxShadow: {
         'soft-card': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03)',
@@ -32,4 +125,3 @@ export default {
   },
   plugins: [],
 }
-
