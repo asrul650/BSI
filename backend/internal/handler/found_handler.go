@@ -7,24 +7,36 @@ import (
 	"strings"
 	"time"
 
+	"LostandFound/internal/core"
 	"LostandFound/internal/repo"
+	"LostandFound/internal/service"
 )
 
 type FoundHandler struct {
-	store *repo.Store
+	store      *repo.Store
+	otpService *service.OTPService
 }
 
-func NewFoundHandler(store *repo.Store) *FoundHandler {
-	return &FoundHandler{store: store}
+func NewFoundHandler(
+	store *repo.Store,
+	otpService *service.OTPService,
+) *FoundHandler {
+	return &FoundHandler{
+		store:      store,
+		otpService: otpService,
+	}
 }
 
 type foundReportRequest struct {
 	CategoryID       int    `json:"category_id"`
 	Color            string `json:"color"`
 	LocationID       int    `json:"location_id"`
+	ItemName         string `json:"item_name"`
 	Description      string `json:"description"`
 	FinderName       string `json:"finder_name"`
 	FinderWhatsApp   string `json:"finder_whatsapp"`
+	VerificationToken string `json:"verification_token"`
+	Consent          bool   `json:"consent"`
 }
 
 type createFoundRequest struct {
@@ -43,32 +55,118 @@ type receiveFoundRequest struct {
 
 func (h *FoundHandler) CreateFoundReport(w http.ResponseWriter, r *http.Request) {
 	var req foundReportRequest
+
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "JSON tidak valid"})
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "JSON tidak valid",
+		})
 		return
 	}
 
+	// Bersihkan input.
+	req.Color = strings.TrimSpace(req.Color)
+	req.ItemName = strings.TrimSpace(req.ItemName)
 	req.Description = strings.TrimSpace(req.Description)
+	req.FinderName = strings.TrimSpace(req.FinderName)
 	req.FinderWhatsApp = strings.TrimSpace(req.FinderWhatsApp)
+	req.VerificationToken = strings.TrimSpace(req.VerificationToken)
 
-	if req.CategoryID == 0 || req.LocationID == 0 || req.FinderWhatsApp == "" {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Data wajib belum lengkap"})
+	// Validasi data wajib.
+	if req.CategoryID <= 0 ||
+		req.LocationID <= 0 ||
+		req.Color == "" ||
+		req.ItemName == "" ||
+		req.FinderName == "" ||
+		req.FinderWhatsApp == "" ||
+		req.VerificationToken == "" {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "Data wajib belum lengkap",
+		})
 		return
 	}
-	if len(req.Description) < 10 {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Deskripsi minimal 10 karakter"})
+
+	if !req.Consent {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "Persetujuan penyimpanan data wajib diberikan",
+		})
 		return
 	}
 
-	saved := h.store.AddFoundReport(repo.FoundReport{
-		CategoryID:       req.CategoryID,
-		Color:            req.Color,
-		LocationID:       req.LocationID,
-		FoundAt:          time.Now(),
-		Description:      req.Description,
-		FinderName:       strings.TrimSpace(req.FinderName),
-		FinderWhatsApp:   req.FinderWhatsApp,
-	})
+	if len(req.FinderName) < 3 || len(req.FinderName) > 60 {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "Nama harus 3 sampai 60 karakter",
+		})
+		return
+	}
+
+	if len(req.ItemName) < 1 || len(req.ItemName) > 100 {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "Nama barang harus terdiri dari 1 sampai 100 karakter",
+		})
+		return
+	}
+
+	if len(req.Description) < 10 || len(req.Description) > 300 {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "Deskripsi harus 10 sampai 300 karakter",
+		})
+		return
+	}
+
+	// Buat ID laporan.
+	reportID, err := core.GenerateTicketID("TM")
+	if err != nil {
+		log.Printf("Gagal membuat ID laporan ditemukan: %v", err)
+		writeJSON(w, http.StatusInternalServerError, map[string]string{
+			"error": "Gagal membuat ID laporan",
+		})
+		return
+	}
+
+	now := time.Now()
+
+	// Simpan laporan menggunakan OTPService dan PostgreSQL.
+	err = h.otpService.CreateFoundReport(
+		r.Context(),
+		req.FinderWhatsApp,
+		req.VerificationToken,
+		repo.CreateFoundReportParams{
+			ReportID:       reportID,
+			CategoryID:     int64(req.CategoryID),
+			Color:          req.Color,
+			ItemName:       req.ItemName,
+			LocationID:     int64(req.LocationID),
+			FoundAt:        now,
+			Description:    req.Description,
+			FinderName:     req.FinderName,
+			FinderWhatsApp: req.FinderWhatsApp,
+			ConsentAt:      now,
+		},
+	)
+
+	if err != nil {
+		log.Printf("Gagal menyimpan laporan ditemukan: %v", err)
+
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// Respons setelah laporan berhasil disimpan.
+	saved := repo.FoundReport{
+		ReportID:       reportID,
+		Status:         "Menunggu Penyerahan",
+		CategoryID:     int64(req.CategoryID),
+		Color:          req.Color,
+		LocationID:     int64(req.LocationID),
+		FoundAt:        now,
+		ItemName:       req.ItemName,
+		Description:    req.Description,
+		FinderName:     req.FinderName,
+		FinderWhatsApp: req.FinderWhatsApp,
+	}
+
 	writeJSON(w, http.StatusCreated, saved)
 }
 

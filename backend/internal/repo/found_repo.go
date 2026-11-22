@@ -39,7 +39,7 @@ func (s *Store) ReceiveFoundReport(reportID, storageRack, postName string) (Item
 	fr.Status = "diterima"
 	s.foundReports[idx] = fr
 
-	cat := s.findCategory(fr.CategoryID)
+	cat := s.findCategory(int(fr.CategoryID))
 	col := s.findColor(fr.Color)
 	if postName == "" {
 		postName = "Pos Satpam Rektorat"
@@ -50,7 +50,7 @@ func (s *Store) ReceiveFoundReport(reportID, storageRack, postName string) (Item
 		Status:      "barang_ditemukan",
 		Category:    cat,
 		Color:       col,
-		LocationID:  fr.LocationID,
+		LocationID: int(fr.LocationID),
 		FoundAt:     fr.FoundAt,
 		PostName:    postName,
 		StorageRack: storageRack,

@@ -13,8 +13,8 @@ type ColorOption struct {
 }
 
 type LocationOption struct {
-	LocationID int    `json:"location_id"`
-	Name       string `json:"name"`
+	LocationID       int    `json:"location_id"`
+	Name             string `json:"name"`
 	ParentLocationID *int   `json:"parent_location_id,omitempty"`
 }
 
@@ -35,32 +35,73 @@ type ItemData struct {
 	PostName    string
 	StorageRack string
 	SecretNote  string
-	Claim    *ClaimInfo    `json:"claim,omitempty"`
-	Handover *HandoverInfo `json:"handover,omitempty"`
+	Claim       *ClaimInfo    `json:"claim,omitempty"`
+	Handover    *HandoverInfo `json:"handover,omitempty"`
+}
+
+type ReceivedItemParams struct {
+	ReportID    string
+	ItemID      string
+	StorageRack string
+	StaffID     int64
 }
 
 type FoundReport struct {
-	ReportID         string    `json:"report_id"`
-	Status           string    `json:"status"`
-	CategoryID       int       `json:"category_id"`
-	Color            string    `json:"color"`
-	LocationID       int       `json:"location_id"`
-	FoundAt          time.Time `json:"found_at"`
-	Description      string    `json:"description"`
-	FinderName       string    `json:"finder_name"`
-	FinderWhatsApp 	 string    `json:"finder_whatsapp"`
+	ReportID       string    `json:"report_id"`
+	Status         string    `json:"status"`
+	CategoryID     int64     `json:"category_id"`
+	Color          string    `json:"color"`
+	LocationID     int64     `json:"location_id"`
+	ItemName       string    `json:"item_name"`
+	FoundAt        time.Time `json:"found_at"`
+	Description    string    `json:"description"`
+	FinderName     string    `json:"finder_name"`
+	FinderWhatsApp string    `json:"finder_whatsapp"`
 }
 
 type LostReport struct {
 	ReportID         string    `json:"report_id"`
 	Status           string    `json:"status"`
-	CategoryID       int       `json:"category_id"`
+	CategoryID       int64     `json:"category_id"`
 	Color            string    `json:"color"`
-	LocationID       int       `json:"location_id"`
+	LocationID       int64     `json:"location_id"`
 	LostAt           time.Time `json:"lost_at"`
 	Description      string    `json:"description"`
 	ReporterName     string    `json:"reporter_name"`
 	ReporterWhatsApp string    `json:"reporter_whatsapp"`
+	ItemName         string    `json:"item_name"`
+}
+
+type CreateLostReportParams struct {
+	ReportID         string
+	CategoryID       int64
+	ItemName         string
+	Color            string
+	LocationID       int64
+	LostAt           time.Time
+	Description      string
+	ReporterName     string
+	ReporterWhatsApp string
+	ConsentAt        time.Time
+
+	PhoneHash string
+	TokenHash string
+}
+
+type CreateFoundReportParams struct {
+	ReportID       string
+	CategoryID     int64
+	Color          string
+	LocationID     int64
+	FoundAt        time.Time
+	Description    string
+	FinderName     string
+	FinderWhatsApp string
+	ItemName       string
+	ConsentAt      time.Time
+
+	PhoneHash string
+	TokenHash string
 }
 
 type MatchCandidate struct {
@@ -103,7 +144,8 @@ type FailedClaimRecord struct {
 	Reason       string    `json:"reason"`
 	RejectedAt   time.Time `json:"rejected_at"`
 }
-//staff stuff
+
+// staff stuff
 type AuditLog struct {
 	ID        string    `json:"id"`
 	Action    string    `json:"action"` // receive_found | start_verify | reject_claim | handover
@@ -112,4 +154,32 @@ type AuditLog struct {
 	Detail    string    `json:"detail"`
 	CreatedAt time.Time `json:"created_at"`
 	Anomalies []string  `json:"anomalies,omitempty"`
+}
+
+// OTP models
+const (
+	OTPPurposeLostReport  = "lost_report"
+	OTPPurposeFoundReport = "found_report"
+)
+
+type OTPRecord struct {
+	OTPId                 int64
+	PhoneHash             string
+	Purpose               string
+	CodeHash              string
+	ExpiresAt             time.Time
+	AttemptCount          int
+	UsedAt                *time.Time
+	IPHash                *string
+	VerificationTokenHash *string
+	TokenExpiresAt        *time.Time
+	TokenUsedAt           *time.Time
+}
+
+type CreateOTPParams struct {
+	PhoneHash string
+	Purpose   string
+	CodeHash  string
+	ExpiresAt time.Time
+	IPHash    *string
 }

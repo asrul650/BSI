@@ -1,65 +1,220 @@
-import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, Lock, Smartphone, Timer, AlertCircle } from 'lucide-react';
-import { categories } from '../../data/mockData';
+import React, { useState, useEffect } from "react";
+import { ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, Lock, Smartphone, Timer, AlertCircle } from "lucide-react";
+const API_BASE_URL = "http://localhost:8080";
 
 export default function LaporKehilangan({ setActivePage, onNewReport }) {
   const [step, setStep] = useState(1); // 1: Form, 2: OTP, 3: Success
   const [formData, setFormData] = useState({
-    category: '',
-    itemName: '',
-    color: '',
-    location: '',
-    date: new Date().toISOString().split('T')[0],
-    time: '12:00',
-    description: '',
-    reporterName: '',
-    whatsapp: ''
+    category: "",
+    itemName: "",
+    color: "",
+    location: "",
+    date: new Date().toISOString().split("T")[0],
+    time: "12:00",
+    description: "",
+    reporterName: "",
+    whatsapp: "",
+    consent: false,
   });
 
-  const [otpInput, setOtpInput] = useState('');
-  const [otpError, setOtpError] = useState('');
+  const [otpInput, setOtpInput] = useState("");
+  const [otpError, setOtpError] = useState("");
   const [timer, setTimer] = useState(180);
-  const [ticketId, setTicketId] = useState('');
+  useEffect(() => {
+    if (step !== 2 || timer <= 0) return;
 
-  const handleNextToOTP = (e) => {
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [step, timer]);
+  const [ticketId, setTicketId] = useState("");
+  const [verificationToken, setVerificationToken] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [formOptions, setFormOptions] = useState({
+    categories: [],
+    colors: [],
+    locations: [],
+  });
+
+  useEffect(() => {
+    const fetchFormOptions = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/v1/public/meta/form-options`);
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || "Gagal mengambil pilihan formulir");
+        }
+
+        setFormOptions({
+          categories: result.categories || [],
+          colors: result.colors || [],
+          locations: result.locations || [],
+        });
+      } catch (error) {
+        console.error("Gagal mengambil form options:", error);
+        alert(error.message);
+      }
+    };
+
+    fetchFormOptions();
+  }, []);
+
+  const handleNextToOTP = async (e) => {
     e.preventDefault();
-    if (!formData.category || !formData.itemName || !formData.description || !formData.whatsapp) {
-      alert('Mohon lengkapi seluruh field wajib (*)');
+
+    if (!formData.consent) {
+      alert("Mohon setujui penggunaan data sebelum melanjutkan.");
       return;
     }
+
+    if (!formData.category || !formData.itemName || !formData.color || !formData.location || !formData.description || !formData.reporterName || !formData.whatsapp) {
+      alert("Mohon lengkapi seluruh field wajib (*)");
+      return;
+    }
+
     if (formData.description.length < 10) {
-      alert('Deskripsi ciri-ciri khusus minimal 10 karakter!');
+      alert("Deskripsi ciri-ciri khusus minimal 10 karakter!");
       return;
     }
-    setStep(2);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/public/otp/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: formData.whatsapp,
+          purpose: "lost_report",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Gagal mengirim OTP");
+      }
+
+      setOtpInput("");
+      setOtpError("");
+      setTimer(180);
+      setStep(2);
+
+      alert("Kode OTP berhasil dikirim ke WhatsApp kamu.");
+    } catch (error) {
+      console.error("Gagal mengirim OTP:", error);
+      alert(error.message || "Tidak dapat terhubung ke server.");
+    }
   };
 
-  const handleVerifyOTP = () => {
-    if (otpInput.length !== 6) {
-      setOtpError('Kode OTP harus terdiri dari 6 digit angka');
+  const handleVerifyOTP = async () => {
+    if (timer <= 0) {
+      setOtpError("Kode OTP telah kedaluwarsa. Silakan minta kode baru.");
       return;
     }
-    // Simulate verification
-    const randomTicket = 'HL-' + Math.floor(10000 + Math.random() * 90000);
-    setTicketId(randomTicket);
-
-    if (onNewReport) {
-      onNewReport({
-        id: randomTicket,
-        name: formData.itemName,
-        category: formData.category,
-        color: formData.color,
-        lostLocation: formData.location,
-        lostDate: formData.date,
-        lostTime: formData.time + ' WIB',
-        description: formData.description,
-        reporterName: formData.reporterName,
-        reporterPhone: formData.whatsapp,
-        status: 'Aktif'
-      });
+    
+    if (otpInput.length !== 6) {
+      setOtpError("Kode OTP harus terdiri dari 6 digit angka");
+      return;
     }
 
-    setStep(3);
+    setIsSubmitting(true);
+    setOtpError("");
+
+    try {
+      // 1. Verifikasi OTP
+      const verifyResponse = await fetch(`${API_BASE_URL}/v1/public/otp/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: formData.whatsapp,
+          purpose: "lost_report",
+          code: otpInput,
+        }),
+      });
+
+      const verifyResult = await verifyResponse.json();
+
+      if (!verifyResponse.ok) {
+        throw new Error(verifyResult.error || "Verifikasi OTP gagal");
+      }
+
+      const token = verifyResult.verification_token;
+
+      if (!token) {
+        throw new Error("Token verifikasi tidak diterima dari server");
+      }
+
+      setVerificationToken(token);
+
+      // 2. Gabungkan tanggal dan waktu
+      const lostAt = new Date(`${formData.date}T${formData.time}:00+07:00`).toISOString();
+
+      // 3. Simpan laporan ke backend
+      const reportResponse = await fetch(`${API_BASE_URL}/v1/public/lost-reports`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category_id: Number(formData.category),
+          item_name: formData.itemName,
+          color: formData.color,
+          location_id: Number(formData.location),
+          lost_at: lostAt,
+          description: formData.description,
+          reporter_name: formData.reporterName,
+          reporter_whatsapp: formData.whatsapp,
+          verification_token: token,
+          consent: formData.consent,
+        }),
+      });
+
+      const reportResult = await reportResponse.json();
+
+      if (!reportResponse.ok) {
+        throw new Error(reportResult.error || "Gagal menyimpan laporan");
+      }
+
+      // 4. Gunakan ID asli dari backend
+      const realTicketId = reportResult.report?.report_id;
+
+      if (!realTicketId) {
+        throw new Error("Laporan tersimpan, tetapi ID tiket tidak ditemukan dalam respons");
+      }
+
+      setTicketId(realTicketId);
+
+      if (onNewReport) {
+        onNewReport({
+          id: realTicketId,
+          name: formData.itemName,
+          category: formData.category,
+          color: formData.color,
+          lostLocation: formData.location,
+          lostDate: formData.date,
+          lostTime: formData.time + " WIB",
+          description: formData.description,
+          reporterName: formData.reporterName,
+          reporterPhone: formData.whatsapp,
+          status: "Aktif",
+        });
+      }
+
+      setStep(3);
+    } catch (error) {
+      console.error("Proses laporan gagal:", error);
+      setOtpError(error.message || "Terjadi kesalahan pada server");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -67,22 +222,16 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
       {/* Stepper Header */}
       <div className="mb-8 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs">
         <div className="grid grid-cols-3 gap-2 text-center text-xs sm:text-sm font-semibold">
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 ${step >= 1 ? 'text-blue-700' : 'text-slate-400'}`}>
-            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
-              1
-            </span>
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 ${step >= 1 ? "text-blue-700" : "text-slate-400"}`}>
+            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step >= 1 ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500"}`}>1</span>
             <span>Detail Barang</span>
           </div>
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 ${step >= 2 ? 'text-blue-700' : 'text-slate-400'}`}>
-            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
-              2
-            </span>
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 ${step >= 2 ? "text-blue-700" : "text-slate-400"}`}>
+            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-500"}`}>2</span>
             <span>Verifikasi OTP</span>
           </div>
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 ${step === 3 ? 'text-emerald-700' : 'text-slate-400'}`}>
-            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step === 3 ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
-              3
-            </span>
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-2 ${step === 3 ? "text-emerald-700" : "text-slate-400"}`}>
+            <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${step === 3 ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-500"}`}>3</span>
             <span>Tiket Selesai</span>
           </div>
         </div>
@@ -92,40 +241,34 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
       {step === 1 && (
         <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-xs">
           <div className="mb-6">
-            <span className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">
-              Tanpa Perlu Login
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">
-              Formulir Laporan Kehilangan Barang
-            </h1>
-            <p className="text-sm text-slate-600 mt-1">
-              Data ini akan dicocokkan otomatis dengan barang temuan fisik yang dikelola oleh Satpam UII.
-            </p>
+            <span className="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full uppercase tracking-wider">Tanpa Perlu Login</span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">Formulir Laporan Kehilangan Barang</h1>
+            <p className="text-sm text-slate-600 mt-1">Data ini akan dicocokkan otomatis dengan barang temuan fisik yang dikelola oleh Satpam UII.</p>
           </div>
 
           <form onSubmit={handleNextToOTP} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Kategori Barang *
-                </label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Kategori Barang *</label>
                 <select
                   required
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   className="w-full px-4 py-2.5 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
                 >
-                  <option value="" disabled>Pilih Kategori Barang</option>
-                  {categories.filter(c => c !== 'Semua').map((c) => (
-                    <option key={c} value={c}>{c}</option>
+                  <option value="" disabled>
+                    Pilih Kategori Barang
+                  </option>
+                  {formOptions.categories.map((category) => (
+                    <option key={category.category_id} value={category.category_id}>
+                      {category.name}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Nama Barang *
-                </label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Barang *</label>
                 <input
                   type="text"
                   required
@@ -137,37 +280,43 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Warna Dominan *
-                </label>
-                <input
-                  type="text"
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Warna Dominan *</label>
+                <select
                   required
-                  placeholder="Cth: Hitam pekat"
                   value={formData.color}
                   onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                   className="w-full px-4 py-2.5 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-                />
+                >
+                  <option value="">Pilih Warna</option>
+
+                  {formOptions.colors.map((color) => (
+                    <option key={color.code} value={color.label}>
+                      {color.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Perkiraan Lokasi Kehilangan *
-                </label>
-                <input
-                  type="text"
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Perkiraan Lokasi Kehilangan *</label>
+                <select
                   required
-                  placeholder="Cth: Perpustakaan Pusat UII Lt. 2 meja baca timur"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   className="w-full px-4 py-2.5 text-sm bg-slate-50 rounded-xl border border-slate-200 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-600"
-                />
+                >
+                  <option value="">Pilih Lokasi Kehilangan</option>
+
+                  {formOptions.locations.map((location) => (
+                    <option key={location.location_id} value={location.location_id}>
+                      {location.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Tanggal Kehilangan *
-                </label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tanggal Kehilangan *</label>
                 <input
                   type="date"
                   required
@@ -178,9 +327,7 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Perkiraan Waktu (WIB) *
-                </label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Perkiraan Waktu (WIB) *</label>
                 <input
                   type="time"
                   required
@@ -192,12 +339,8 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
 
               <div className="sm:col-span-2">
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    Ciri-Ciri Khusus / Tanda Rahasia * (Min. 10 Karakter)
-                  </label>
-                  <span className="text-[11px] text-slate-400">
-                    {formData.description.length}/500
-                  </span>
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">Ciri-Ciri Khusus / Tanda Rahasia * (Min. 10 Karakter)</label>
+                  <span className="text-[11px] text-slate-400">{formData.description.length}/500</span>
                 </div>
                 <textarea
                   required
@@ -210,14 +353,14 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
                 ></textarea>
                 <div className="mt-1 flex items-center gap-1.5 text-xs text-blue-700">
                   <Lock className="w-3.5 h-3.5 shrink-0" />
-                  <span>Deskripsi rahasia ini <strong>tidak ditampilkan ke publik</strong> untuk mencegah klaim palsu.</span>
+                  <span>
+                    Deskripsi rahasia ini <strong>tidak ditampilkan ke publik</strong> untuk mencegah klaim palsu.
+                  </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Nama Lengkap Pemilik *
-                </label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nama Lengkap Pemilik *</label>
                 <input
                   type="text"
                   required
@@ -229,9 +372,7 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Nomor WhatsApp Aktif *
-                </label>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nomor WhatsApp Aktif *</label>
                 <input
                   type="tel"
                   required
@@ -243,18 +384,19 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
               </div>
             </div>
 
+            <div className="flex items-start gap-3">
+              <input type="checkbox" id="consent" checked={formData.consent} onChange={(e) => setFormData({ ...formData, consent: e.target.checked })} className="mt-1 w-4 h-4 accent-blue-600 cursor-pointer" />
+
+              <label htmlFor="consent" className="text-xs text-slate-600 leading-relaxed cursor-pointer">
+                Saya menyetujui penggunaan data pribadi dan informasi barang yang saya berikan untuk keperluan pengelolaan laporan kehilangan dan pencocokan barang oleh sistem Lost & Found UII.
+              </label>
+            </div>
+
             <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => setActivePage('home')}
-                className="text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 cursor-pointer"
-              >
+              <button type="button" onClick={() => setActivePage("home")} className="text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-800 cursor-pointer">
                 Batal
               </button>
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-uiiNavy text-white text-xs sm:text-sm font-semibold hover:bg-slate-800 transition shadow-xs cursor-pointer"
-              >
+              <button type="submit" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-uiiNavy text-white text-xs sm:text-sm font-semibold hover:bg-slate-800 transition shadow-xs cursor-pointer">
                 <span>Lanjut: Kirim OTP WhatsApp</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
@@ -269,12 +411,9 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
           <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center mx-auto mb-4">
             <Smartphone className="w-7 h-7" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900">
-            Verifikasi Nomor WhatsApp
-          </h2>
+          <h2 className="text-2xl font-extrabold text-slate-900">Verifikasi Nomor WhatsApp</h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-2 leading-relaxed">
-            Kode verifikasi OTP 6-digit telah dikirimkan ke nomor WhatsApp:{' '}
-            <strong className="text-slate-800">{formData.whatsapp}</strong>
+            Kode verifikasi OTP 6-digit telah dikirimkan ke nomor WhatsApp: <strong className="text-slate-800">{formData.whatsapp}</strong>
           </p>
 
           <div className="mt-8">
@@ -284,33 +423,33 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
               autoFocus
               value={otpInput}
               onChange={(e) => {
-                setOtpInput(e.target.value.replace(/\D/g, ''));
-                setOtpError('');
+                setOtpInput(e.target.value.replace(/\D/g, ""));
+                setOtpError("");
               }}
               placeholder="123456"
               className="text-center font-mono text-3xl font-extrabold tracking-widest px-4 py-3 bg-slate-50 rounded-2xl border-2 border-slate-200 focus:border-blue-600 focus:outline-none w-56 mx-auto block"
             />
-            {otpError && (
-              <p className="text-xs text-rose-600 mt-2 font-medium">{otpError}</p>
-            )}
+            {otpError && <p className="text-xs text-rose-600 mt-2 font-medium">{otpError}</p>}
 
-            <p className="text-xs text-slate-400 mt-4 flex items-center justify-center gap-1">
-              <Timer className="w-3.5 h-3.5" />
-              Kode berlaku selama 3 menit (Simulasi demo: masukkan 6 angka bebas)
-            </p>
+            <div className="mt-4 flex flex-col items-center gap-1">
+              <p className="text-xs text-slate-400 flex items-center justify-center gap-1">
+                <Timer className="w-3.5 h-3.5" />
+                Kode OTP berlaku selama 3 menit
+              </p>
+
+              <p className={`text-lg font-bold ${timer <= 30 ? "text-rose-600" : "text-blue-700"}`}>
+                {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
+              </p>
+
+              {timer === 0 && <p className="text-xs text-rose-600">Kode OTP telah kedaluwarsa. Silakan minta kode baru.</p>}
+            </div>
           </div>
 
           <div className="mt-8 space-y-3">
-            <button
-              onClick={handleVerifyOTP}
-              className="w-full py-3.5 bg-uiiNavy text-white rounded-full text-sm font-semibold hover:bg-slate-800 transition shadow-xs cursor-pointer"
-            >
+            <button onClick={handleVerifyOTP} className="w-full py-3.5 bg-uiiNavy text-white rounded-full text-sm font-semibold hover:bg-slate-800 transition shadow-xs cursor-pointer">
               Verifikasi &amp; Simpan Laporan
             </button>
-            <button
-              onClick={() => setStep(1)}
-              className="text-xs text-slate-500 hover:text-slate-800 cursor-pointer"
-            >
+            <button onClick={() => setStep(1)} className="text-xs text-slate-500 hover:text-slate-800 cursor-pointer">
               Ubah Nomor WhatsApp
             </button>
           </div>
@@ -323,15 +462,9 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
           <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="w-9 h-9" />
           </div>
-          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wider">
-            Laporan Berhasil Disimpan
-          </span>
-          <h2 className="text-2xl font-extrabold text-slate-900 mt-3">
-            Nomor Tiket: {ticketId}
-          </h2>
-          <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-            Laporan barang hilang Anda telah aktif di sistem. Sistem secara berkala akan mencocokkan data barang ini dengan temuan fisik di seluruh Pos Satpam UII.
-          </p>
+          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wider">Laporan Berhasil Disimpan</span>
+          <h2 className="text-2xl font-extrabold text-slate-900 mt-3">Nomor Tiket: {ticketId}</h2>
+          <p className="text-sm text-slate-600 mt-2 leading-relaxed">Laporan barang hilang Anda telah aktif di sistem. Sistem secara berkala akan mencocokkan data barang ini dengan temuan fisik di seluruh Pos Satpam UII.</p>
 
           <div className="mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs text-slate-600 space-y-2">
             <div className="flex justify-between">
@@ -353,16 +486,10 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <button
-              onClick={() => setActivePage('katalog')}
-              className="px-6 py-3 bg-uiiNavy text-white rounded-full text-xs sm:text-sm font-semibold hover:bg-slate-800 transition cursor-pointer"
-            >
+            <button onClick={() => setActivePage("katalog")} className="px-6 py-3 bg-uiiNavy text-white rounded-full text-xs sm:text-sm font-semibold hover:bg-slate-800 transition cursor-pointer">
               Lihat Daftar Barang Temuan
             </button>
-            <button
-              onClick={() => setActivePage('home')}
-              className="px-6 py-3 bg-slate-100 text-slate-700 rounded-full text-xs sm:text-sm font-semibold hover:bg-slate-200 transition cursor-pointer"
-            >
+            <button onClick={() => setActivePage("home")} className="px-6 py-3 bg-slate-100 text-slate-700 rounded-full text-xs sm:text-sm font-semibold hover:bg-slate-200 transition cursor-pointer">
               Kembali ke Beranda
             </button>
           </div>
@@ -371,4 +498,3 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
     </div>
   );
 }
-

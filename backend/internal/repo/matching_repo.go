@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Store) computeMatch(lr LostReport, it ItemData) (MatchResult, bool) {
-	if it.Status != "barang_ditemukan" || it.Category.CategoryID != lr.CategoryID {
+	if it.Status != "barang_ditemukan" || int64(it.Category.CategoryID) != lr.CategoryID {
 		return MatchResult{}, false
 	}
 	if it.FoundAt.Before(lr.LostAt.Add(-2 * time.Hour)) {
@@ -30,9 +30,9 @@ func (s *Store) computeMatch(lr LostReport, it ItemData) (MatchResult, bool) {
 
 	// 2. Lokasi (35%)
 	if lr.LocationID != 99 && it.LocationID != 99 {
-		if lr.LocationID == it.LocationID {
+		if lr.LocationID == int64(it.LocationID) {
 			locVal = 1.0
-		} else if s.sameParentLocation(lr.LocationID, it.LocationID) {
+		} else if s.sameParentLocation(int(lr.LocationID), it.LocationID) {
 			locVal = 0.5
 		}
 		sumWeighted += 0.35 * locVal
