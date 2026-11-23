@@ -45,29 +45,61 @@ export default function LaporKehilanganStep2OTP({ onNavigate }) {
       });
     });
 
+    // Countdown Timer logic
+    let totalSeconds = 180;
+    const timerEl = el.querySelector('#otp-timer') || el.querySelector('.text-on-surface.font-headline-sm.text-label-sm');
+    const cooldownBtn = el.querySelector('button[disabled]');
+    
+    const interval = setInterval(() => {
+      totalSeconds--;
+      if (totalSeconds >= 0) {
+        const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+        const secs = String(totalSeconds % 60).padStart(2, '0');
+        if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+      } else {
+        clearInterval(interval);
+        if (cooldownBtn) {
+          cooldownBtn.removeAttribute('disabled');
+          cooldownBtn.classList.remove('cursor-not-allowed', 'opacity-80', 'text-outline');
+          cooldownBtn.classList.add('text-secondary', 'font-bold', 'cursor-pointer');
+          cooldownBtn.textContent = 'Kirim Ulang Kode Sekarang';
+        }
+      }
+    }, 1000);
+
+    const showToast = (msg) => {
+      let toast = el.querySelector('#otp-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'otp-toast';
+        toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-sm font-semibold border border-slate-700 transition-all';
+        el.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span> <span>${msg}</span>`;
+      toast.classList.remove('hidden', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    };
+
+    // Resend trigger
+    const resendBtn = el.querySelector('button[type="button"]') || el.querySelector('button');
+    const handleResend = () => {
+      totalSeconds = 180;
+      otpBoxes.forEach((b) => (b.value = ''));
+      otpBoxes[0]?.focus();
+      showToast('Kode OTP baru (6 digit) telah dikirimkan ke WhatsApp Anda!');
+    };
+
     // Reset OTP Button simulation in demo card
     const resetLink = el.querySelector('a[href="#reset-otp"]');
     if (resetLink) {
       resetLink.addEventListener('click', (e) => {
         e.preventDefault();
-        otpBoxes.forEach((b) => (b.value = ''));
-        otpBoxes[0]?.focus();
+        handleResend();
       });
     }
-
-    // Countdown Timer simulation
-    let totalSeconds = 165;
-    const timerEl = el.querySelector('#otp-timer');
-    const interval = setInterval(() => {
-      totalSeconds--;
-      if (totalSeconds >= 0 && timerEl) {
-        const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-        const secs = String(totalSeconds % 60).padStart(2, '0');
-        timerEl.textContent = `${mins}:${secs}`;
-      } else if (totalSeconds < 0) {
-        clearInterval(interval);
-      }
-    }, 1000);
 
     // Global navigation event delegation
     const handleClick = (e) => {
@@ -77,7 +109,14 @@ export default function LaporKehilanganStep2OTP({ onNavigate }) {
       const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
       const text = (target.textContent || '').trim();
 
-      // "Kembali ke Detail Barang" or "Ubah Nomor WhatsApp" or Stepper Step 1
+      // Kirim ulang kode
+      if (text.includes('Kirim Ulang Kode') || text.includes('Kirim ulang dalam') || text.includes('Kirim ulang')) {
+        e.preventDefault();
+        handleResend();
+        return;
+      }
+
+      // "Kembali ke Detail Barang" or "Ubah Nomor WhatsApp"
       if (text.includes('Kembali ke Detail Barang') || text.includes('Ubah Nomor WhatsApp') || path === 'lapor_1' || path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
         e.preventDefault();
         if (onNavigate) onNavigate('lapor_1');

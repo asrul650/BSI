@@ -10,12 +10,43 @@ export default function LaporKehilanganSukses({ onNavigate }) {
     if (!containerRef.current) return;
     const el = containerRef.current;
 
+    const showToast = (msg) => {
+      let toast = el.querySelector('#sukses-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'sukses-toast';
+        toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-sm font-semibold border border-slate-700 transition-all';
+        el.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span> <span>${msg}</span>`;
+      toast.classList.remove('hidden', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    };
+
     const handleClick = (e) => {
       const target = e.target.closest('a, button, div.group, div[data-path]');
       if (!target) return;
 
       const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
       const text = (target.textContent || '').trim();
+
+      // Salin Nomor Laporan
+      if (text.includes('Salin Nomor Laporan') || text.includes('Salin') || target.closest('#btnCopyReportId')) {
+        e.preventDefault();
+        navigator.clipboard?.writeText('HL-8K2M4Q');
+        showToast('Nomor Tiket HL-8K2M4Q berhasil disalin ke clipboard!');
+        return;
+      }
+
+      // Cetak Bukti / Simpan PDF
+      if (text.includes('Cetak Bukti') || text.includes('Simpan PDF')) {
+        e.preventDefault();
+        window.print();
+        return;
+      }
 
       // Lihat Daftar Barang Temuan
       if (text.includes('Lihat Daftar') || text.includes('Cari Barang') || text.includes('Barang Temuan') || path === '#barang-temuan' || path === 'barang-temuan') {
@@ -53,7 +84,7 @@ export default function LaporKehilanganSukses({ onNavigate }) {
       }
 
       // Saya Menemukan
-      if (text.includes('Saya Menemukan') || path === '#lapor-temuan' || path === 'saya-menemukan') {
+      if (text.includes('Saya Menemukan') || path === '#lapor-temuan') {
         e.preventDefault();
         if (onNavigate) onNavigate('pilihan_penyerahan');
         return;

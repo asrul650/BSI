@@ -8,14 +8,73 @@ export default function LandingPage({ onNavigate }) {
 
   useEffect(() => {
     if (!containerRef.current) return;
-    
-    // Intercept clicks on links or buttons with data-path, href, or text
+    const el = containerRef.current;
+
+    // 1. Category Pills Toggle & Filtering on Landing Page
+    const pills = el.querySelectorAll('.custom-pill-active, .custom-pill-idle');
+    const cards = el.querySelectorAll('#barang-temuan .grid > .group');
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', (e) => {
+        e.preventDefault();
+        pills.forEach((p) => {
+          p.classList.remove('custom-pill-active', 'shadow-sm', 'font-semibold');
+          p.classList.add('custom-pill-idle', 'font-medium');
+        });
+        pill.classList.remove('custom-pill-idle', 'font-medium');
+        pill.classList.add('custom-pill-active', 'shadow-sm', 'font-semibold');
+
+        const catText = pill.textContent.trim().toLowerCase();
+        cards.forEach((card) => {
+          const cardText = card.textContent.toLowerCase();
+          if (catText === 'semua' || cardText.includes(catText)) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // 2. Search Input & Button
+    const searchInput = el.querySelector('input[placeholder*="Cari nama barang"]');
+    const searchBtn = el.querySelector('button:has(svg + span), button:contains("Cari")') || Array.from(el.querySelectorAll('button')).find(b => b.textContent.trim() === 'Cari');
+
+    const handleSearch = () => {
+      if (onNavigate) onNavigate('temuan_enhanced');
+    };
+
+    if (searchInput) {
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleSearch();
+        }
+      });
+    }
+
+    // 3. General Click Handling
     const handleClick = (e) => {
       const target = e.target.closest('a, button, div.group');
       if (!target) return;
 
       const path = target.getAttribute('data-path') || target.getAttribute('href') || '';
       const text = (target.textContent || '').trim();
+
+      // "Cari" button
+      if (text === 'Cari') {
+        e.preventDefault();
+        handleSearch();
+        return;
+      }
+
+      // "Tanya Satpam Sekarang"
+      if (text.includes('Tanya Satpam')) {
+        e.preventDefault();
+        const posSection = el.querySelector('#pos-satpam');
+        if (posSection) posSection.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
 
       // "Saya Kehilangan"
       if (text.includes('Saya Kehilangan') || path === '#lapor-kehilangan' || path === 'lapor-kehilangan') {
@@ -34,7 +93,10 @@ export default function LandingPage({ onNavigate }) {
       // "Cara Kerja" or "FAQ"
       if (text.includes('Cara Kerja') || text.includes('FAQ') || path === '#cara-kerja' || path === '#faq') {
         e.preventDefault();
-        if (onNavigate) { if (text.includes('FAQ') || path.includes('faq')) onNavigate('faq'); else onNavigate('cara_kerja'); }
+        if (onNavigate) {
+          if (text.includes('FAQ') || path.includes('faq')) onNavigate('faq');
+          else onNavigate('cara_kerja');
+        }
         return;
       }
 
@@ -67,7 +129,6 @@ export default function LandingPage({ onNavigate }) {
       }
     };
 
-    const el = containerRef.current;
     el.addEventListener('click', handleClick);
     return () => el.removeEventListener('click', handleClick);
   }, [onNavigate]);
