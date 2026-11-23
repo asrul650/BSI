@@ -1,0 +1,13 @@
+{
+  "name": "lost-and-found-uii-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root workspace proxy for Lost & Found UII",
+  "scripts": {
+    "dev": "npm --prefix Frontend run dev",
+    "build": "npm --prefix Frontend run build",
+    "dev:frontend": "npm --prefix Frontend run dev",
+    "build:frontend": "npm --prefix Frontend run build"
+  }
+}
+

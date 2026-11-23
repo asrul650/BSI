@@ -10,7 +10,7 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
     if (!containerRef.current) return;
     const el = containerRef.current;
 
-    const cards = el.querySelectorAll('.grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-4.gap-6 > .group');
+    const cards = el.querySelectorAll('.grid > .group');
     const searchInput = el.querySelector('#searchInput');
     const chips = el.querySelectorAll('.category-chip');
     const resetBtn = Array.from(el.querySelectorAll('button')).find(b => b.textContent.includes('Reset Semua Filter'));

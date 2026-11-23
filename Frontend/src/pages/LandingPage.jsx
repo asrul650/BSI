@@ -38,11 +38,18 @@ export default function LandingPage({ onNavigate }) {
 
     // 2. Search Input & Button
     const searchInput = el.querySelector('input[placeholder*="Cari nama barang"]');
-    const searchBtn = el.querySelector('button:has(svg + span), button:contains("Cari")') || Array.from(el.querySelectorAll('button')).find(b => b.textContent.trim() === 'Cari');
+    const searchBtn = Array.from(el.querySelectorAll('button')).find(b => b.textContent.trim() === 'Cari');
 
     const handleSearch = () => {
       if (onNavigate) onNavigate('temuan_enhanced');
     };
+
+    if (searchBtn) {
+      searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleSearch();
+      });
+    }
 
     if (searchInput) {
       searchInput.addEventListener('keydown', (e) => {
