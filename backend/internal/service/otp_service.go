@@ -207,6 +207,23 @@ func (s *OTPService) SendOTP(
 	return nil
 }
 
+func (s *OTPService) SendWhatsAppMessage(ctx context.Context, phone, message string) error {
+	if s.fonnteToken == "" ||
+		strings.Contains(strings.ToUpper(s.fonnteToken), "ISI_TOKEN") {
+		return errors.New("FONNTE_TOKEN belum dikonfigurasi dengan token asli")
+	}
+
+	phone, err := NormalizePhone(phone)
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(message) == "" {
+		return errors.New("pesan WhatsApp tidak boleh kosong")
+	}
+
+	return s.sendWhatsApp(ctx, phone, message)
+}
+
 func (s *OTPService) sendWhatsApp(
 	ctx context.Context,
 	phone string,
@@ -320,7 +337,6 @@ func (s *OTPService) VerifyOTP(
 	// Token mentah hanya dikembalikan setelah OTP valid
 	return token, nil
 }
-
 
 func (s *OTPService) CreateLostReport(
 	ctx context.Context,

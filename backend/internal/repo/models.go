@@ -19,24 +19,28 @@ type LocationOption struct {
 }
 
 type PublicItem struct {
-	ItemID   string         `json:"item_id"`
-	Category CategoryOption `json:"category"`
-	Color    ColorOption    `json:"color"`
-	PostName string         `json:"post_name"`
+	ItemID       string         `json:"item_id"`
+	ItemName     string         `json:"item_name"`
+	Category     CategoryOption `json:"category"`
+	Color        ColorOption    `json:"color"`
+	LocationName string         `json:"location_name"`
+	FoundAt      time.Time      `json:"found_at"`
+	Status       string         `json:"status"`
 }
 
 type ItemData struct {
-	ItemID      string
-	Status      string
-	Category    CategoryOption
-	Color       ColorOption
-	LocationID  int
-	FoundAt     time.Time
-	PostName    string
-	StorageRack string
-	SecretNote  string
-	Claim       *ClaimInfo    `json:"claim,omitempty"`
-	Handover    *HandoverInfo `json:"handover,omitempty"`
+	ItemID         string
+	Status         string
+	ReceivedByName string
+	Category       CategoryOption
+	Color          ColorOption
+	LocationID     int
+	FoundAt        time.Time
+	PostName       string
+	StorageRack    string
+	SecretNote     string
+	Claim          *ClaimInfo    `json:"claim,omitempty"`
+	Handover       *HandoverInfo `json:"handover,omitempty"`
 }
 
 type ReceivedItemParams struct {
@@ -57,6 +61,26 @@ type FoundReport struct {
 	Description    string    `json:"description"`
 	FinderName     string    `json:"finder_name"`
 	FinderWhatsApp string    `json:"finder_whatsapp"`
+	PhotoKey       *string   `json:"photo_key,omitempty"`
+	Source         string    `json:"source"`
+	CreatedAt      time.Time `json:"created_at"`
+	ExpiresAt      time.Time `json:"expires_at"`
+}
+
+type FoundReceipt struct {
+	ReportID       string
+	ItemID         string
+	FinderName     string
+	FinderWhatsApp string
+	ReceivedByName string
+	ReceivedAt     time.Time
+}
+
+type FoundIntakeStats struct {
+	ExpiringSoon  int64 `json:"expiring_soon"`
+	PendingTotal  int64 `json:"pending_total"`
+	ReceivedToday int64 `json:"received_today"`
+	ActiveItems   int64 `json:"active_items"`
 }
 
 type LostReport struct {

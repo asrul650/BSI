@@ -1,91 +1,285 @@
 package repo
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"math/rand"
-	"strings"
+	"time"
+
+	"LostandFound/internal/core"
+
+	"github.com/jackc/pgx/v5"
 )
 
-func (s *Store) AddFoundReport(r FoundReport) FoundReport {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+var ErrFoundReceiptNotAvailable = errors.New("bukti penerimaan belum tersedia")
 
-	r.ReportID = fmt.Sprintf("TM-%04d", rand.Intn(9000)+1000)
-	r.Status = "menunggu_penyerahan"
-	s.foundReports = append(s.foundReports, r)
-	return r
+func (s *Store) ReceiveFoundReport(
+	ctx context.Context,
+	reportID, storageRack, condition string,
+	intakePhoto []byte,
+	intakePhotoMimeType string,
+) (ItemData, error) {
+	tx, err := s.db.Begin(ctx)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("memulai penerimaan barang: %w", err)
+	}
+	defer tx.Rollback(ctx)
+
+	var report FoundReport
+	var expiresAt time.Time
+	err = tx.QueryRow(ctx, `
+		SELECT
+			found_report_id,
+			status,
+			category_id,
+			color,
+			location_id,
+			found_at,
+			description,
+			photo_key,
+			COALESCE(NULLIF(BTRIM(item_name), ''), description),
+			expires_at
+		FROM found_report
+		WHERE found_report_id = $1
+		FOR UPDATE
+	`, reportID).Scan(
+		&report.ReportID,
+		&report.Status,
+		&report.CategoryID,
+		&report.Color,
+		&report.LocationID,
+		&report.FoundAt,
+		&report.Description,
+		&report.PhotoKey,
+		&report.ItemName,
+		&expiresAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ItemData{}, fmt.Errorf("laporan temuan tidak ditemukan")
+		}
+		return ItemData{}, fmt.Errorf("mengambil laporan temuan: %w", err)
+	}
+	if report.Status != "Menunggu Penyerahan" {
+		return ItemData{}, fmt.Errorf("status laporan tidak bisa diterima")
+	}
+	if !time.Now().Before(expiresAt) {
+		return ItemData{}, fmt.Errorf("masa berlaku laporan temuan telah habis")
+	}
+
+	var staffID int64
+	var staffName string
+	err = tx.QueryRow(ctx, `
+		SELECT staff_id, name
+		FROM staff
+		WHERE role = 'satpam' AND is_active = TRUE
+		ORDER BY staff_id
+		LIMIT 1
+	`).Scan(&staffID, &staffName)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("mengambil petugas satpam aktif: %w", err)
+	}
+
+	itemID, err := core.GenerateTicketID("BRG")
+	if err != nil {
+		return ItemData{}, fmt.Errorf("membuat ID barang: %w", err)
+	}
+
+	var savedItem ItemData
+	savedItem.ItemID = itemID
+	savedItem.Status = "Barang Ditemukan"
+	savedItem.ReceivedByName = staffName
+	savedItem.Category = CategoryOption{
+		CategoryID: int(report.CategoryID),
+	}
+	savedItem.Color = ColorOption{Code: report.Color, Label: report.Color}
+	savedItem.LocationID = int(report.LocationID)
+	savedItem.FoundAt = report.FoundAt
+	savedItem.StorageRack = storageRack
+	savedItem.SecretNote = report.Description
+	var intakePhotoValue any
+	var intakePhotoMimeTypeValue any
+	if len(intakePhoto) > 0 {
+		intakePhotoValue = intakePhoto
+		intakePhotoMimeTypeValue = intakePhotoMimeType
+	}
+
+	_, err = tx.Exec(ctx, `
+		INSERT INTO item (
+			item_id,
+			found_report_id,
+			category_id,
+			color,
+			condition,
+			storage_rack,
+			intake_photo_key,
+			intake_photo_data,
+			intake_photo_mime_type,
+			received_by_staff_id,
+			status
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, '', $7, $8, $9, 'Barang Ditemukan')
+	`, itemID, reportID, report.CategoryID, report.Color, condition, storageRack, intakePhotoValue, intakePhotoMimeTypeValue, staffID)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("menyimpan barang inventaris: %w", err)
+	}
+
+	_, err = tx.Exec(ctx, `
+		UPDATE found_report
+		SET status = 'Diterima'
+		WHERE found_report_id = $1
+	`, reportID)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("memperbarui status laporan temuan: %w", err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return ItemData{}, fmt.Errorf("menyelesaikan penerimaan barang: %w", err)
+	}
+
+	return savedItem, nil
 }
 
-func (s *Store) ReceiveFoundReport(reportID, storageRack, postName string) (ItemData, []MatchResult, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+func (s *Store) GetPendingFoundReports(ctx context.Context) ([]FoundReport, error) {
+	reports := make([]FoundReport, 0)
 
-	idx := -1
-	for i := range s.foundReports {
-		if s.foundReports[i].ReportID == reportID {
-			idx = i
-			break
+	rows, err := s.db.Query(ctx, `
+		SELECT
+			found_report_id,
+			status,
+			category_id,
+			color,
+			location_id,
+			found_at,
+			COALESCE(NULLIF(BTRIM(item_name), ''), description),
+			description,
+			finder_name,
+			finder_whatsapp,
+			photo_key,
+			source,
+			created_at,
+			expires_at
+		FROM found_report
+		WHERE status = $1
+		  AND expires_at > NOW()
+		ORDER BY created_at ASC
+	`, "Menunggu Penyerahan")
+	if err != nil {
+		return nil, fmt.Errorf("mengambil antrean laporan temuan: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var report FoundReport
+
+		err := rows.Scan(
+			&report.ReportID,
+			&report.Status,
+			&report.CategoryID,
+			&report.Color,
+			&report.LocationID,
+			&report.FoundAt,
+			&report.ItemName,
+			&report.Description,
+			&report.FinderName,
+			&report.FinderWhatsApp,
+			&report.PhotoKey,
+			&report.Source,
+			&report.CreatedAt,
+			&report.ExpiresAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("membaca antrean laporan temuan: %w", err)
 		}
-	}
-	if idx == -1 {
-		return ItemData{}, nil, errors.New("laporan temuan tidak ditemukan")
-	}
-	if s.foundReports[idx].Status != "menunggu_penyerahan" {
-		return ItemData{}, nil, errors.New("status laporan tidak bisa diterima")
+
+		reports = append(reports, report)
 	}
 
-	fr := s.foundReports[idx]
-	fr.Status = "diterima"
-	s.foundReports[idx] = fr
-
-	cat := s.findCategory(int(fr.CategoryID))
-	col := s.findColor(fr.Color)
-	if postName == "" {
-		postName = "Pos Satpam Rektorat"
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("membaca hasil antrean: %w", err)
 	}
 
-	newItem := ItemData{
-		ItemID:      fmt.Sprintf("B-%04d", rand.Intn(9000)+1000),
-		Status:      "barang_ditemukan",
-		Category:    cat,
-		Color:       col,
-		LocationID: int(fr.LocationID),
-		FoundAt:     fr.FoundAt,
-		PostName:    postName,
-		StorageRack: storageRack,
-		SecretNote:  fr.Description,
-	}
-	s.items = append(s.items, newItem)
-	return newItem, s.matchItemToLostReports(newItem), nil
+	return reports, nil
 }
 
-func (s *Store) findCategory(id int) CategoryOption {
-	for _, c := range s.categories {
-		if c.CategoryID == id {
-			return c
+func (s *Store) GetFoundReceipt(ctx context.Context, reportID string) (FoundReceipt, error) {
+	var receipt FoundReceipt
+	err := s.db.QueryRow(ctx, `
+		SELECT
+			fr.found_report_id,
+			i.item_id,
+			COALESCE(fr.finder_name, ''),
+			fr.finder_whatsapp,
+			staff.name,
+			i.received_at
+		FROM found_report fr
+		JOIN item i
+			ON i.found_report_id = fr.found_report_id
+		JOIN staff
+			ON staff.staff_id = i.received_by_staff_id
+		WHERE fr.found_report_id = $1
+		  AND fr.status = 'Diterima'
+	`, reportID).Scan(
+		&receipt.ReportID,
+		&receipt.ItemID,
+		&receipt.FinderName,
+		&receipt.FinderWhatsApp,
+		&receipt.ReceivedByName,
+		&receipt.ReceivedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return FoundReceipt{}, ErrFoundReceiptNotAvailable
 		}
+		return FoundReceipt{}, fmt.Errorf("mengambil bukti penerimaan: %w", err)
 	}
-	return CategoryOption{CategoryID: id, Name: "Lainnya"}
+
+	return receipt, nil
 }
 
-func (s *Store) findColor(code string) ColorOption {
-	for _, cl := range s.colors {
-		if strings.EqualFold(cl.Code, code) {
-			return cl
-		}
+func (s *Store) GetFoundIntakeStats(ctx context.Context) (FoundIntakeStats, error) {
+	var stats FoundIntakeStats
+	err := s.db.QueryRow(ctx, `
+		WITH jakarta_day AS (
+			SELECT
+				date_trunc('day', NOW() AT TIME ZONE 'Asia/Jakarta')
+					AT TIME ZONE 'Asia/Jakarta' AS start_at
+		)
+		SELECT
+			(
+				SELECT COUNT(*)
+				FROM found_report
+				WHERE status = $1
+				  AND expires_at > NOW()
+				  AND expires_at <= NOW() + INTERVAL '3 hours'
+			),
+			(
+				SELECT COUNT(*)
+				FROM found_report
+				WHERE status = $1
+				  AND expires_at > NOW()
+			),
+			(
+				SELECT COUNT(*)
+				FROM item
+				CROSS JOIN jakarta_day
+				WHERE received_at >= jakarta_day.start_at
+				  AND received_at < jakarta_day.start_at + INTERVAL '1 day'
+			),
+			(
+				SELECT COUNT(*)
+				FROM item
+				WHERE status = $2
+			)
+	`, "Menunggu Penyerahan", "Barang Ditemukan").Scan(
+		&stats.ExpiringSoon,
+		&stats.PendingTotal,
+		&stats.ReceivedToday,
+		&stats.ActiveItems,
+	)
+	if err != nil {
+		return FoundIntakeStats{}, fmt.Errorf("mengambil statistik antrean penerimaan: %w", err)
 	}
-	return ColorOption{Code: code, Label: code}
-}
 
-func (s *Store) matchItemToLostReports(it ItemData) []MatchResult {
-	var matches []MatchResult
-	for _, lr := range s.lostReports {
-		res, ok := s.computeMatch(lr, it)
-		if !ok {
-			continue
-		}
-		matches = append(matches, res)
-	}
-	return matches
+	return stats, nil
 }

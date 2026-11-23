@@ -101,12 +101,18 @@ func (s *Store) PublicItems(ctx context.Context) ([]PublicItem, error) {
 			i.item_id,
 			c.category_id,
 			c.name,
-			i.color
+			i.color,
+			COALESCE(NULLIF(BTRIM(fr.item_name), ''), fr.description),
+			l.name,
+			fr.found_at,
+			i.status
 		FROM item i
 		JOIN found_report fr
 			ON fr.found_report_id = i.found_report_id
 		JOIN category c
 			ON c.category_id = i.category_id
+		JOIN location l
+			ON l.location_id = fr.location_id
 		WHERE i.status = $1
 		ORDER BY i.received_at DESC
 	`, "Barang Ditemukan")
@@ -123,6 +129,10 @@ func (s *Store) PublicItems(ctx context.Context) ([]PublicItem, error) {
 			&item.Category.CategoryID,
 			&item.Category.Name,
 			&item.Color.Code,
+			&item.ItemName,
+			&item.LocationName,
+			&item.FoundAt,
+			&item.Status,
 		); err != nil {
 			return nil, fmt.Errorf("membaca daftar barang publik: %w", err)
 		}

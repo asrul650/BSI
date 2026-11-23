@@ -93,6 +93,7 @@ export default function App() {
   const [otpPhone, setOtpPhone] = useState("");
   const [lostVerificationToken, setLostVerificationToken] = useState("");
   const [lostReportResult, setLostReportResult] = useState(null);
+  const [selectedFoundReport, setSelectedFoundReport] = useState(null);
 
   const CurrentScreenComponent = screens[activeScreen] || LandingPage;
 
@@ -101,8 +102,11 @@ export default function App() {
   const isPublicPortal = !isSatpamPortal && !isAdminPortal;
 
   const handleNavigate = (target) => {
-    if (screens[target]) {
-      setActiveScreen(target);
+    const destination =
+      target === "satpam_penerimaan" && !selectedFoundReport ? "satpam_antrean" : target;
+    if (screens[destination]) {
+      if (destination === "satpam_antrean") setSelectedFoundReport(null);
+      setActiveScreen(destination);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
@@ -125,6 +129,18 @@ export default function App() {
   const screenProps = {
     onNavigate: handleNavigate,
   };
+
+  if (activeScreen === "satpam_antrean") {
+    screenProps.onSelectFoundReport = (report) => {
+      setSelectedFoundReport(report);
+      setActiveScreen("satpam_penerimaan");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  }
+
+  if (activeScreen === "satpam_penerimaan") {
+    screenProps.foundReport = selectedFoundReport;
+  }
 
   if (activeScreen === "lapor_1") {
     Object.assign(screenProps, {

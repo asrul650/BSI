@@ -406,16 +406,66 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
 
+  /staff/found-reports/pending:
+    get:
+      tags: [staff-intake]
+      summary: Ambil antrean penerimaan dan statistik
+      description: Role `satpam`. Statistik dihitung dari data penerimaan di database; hari mengikuti WIB.
+      operationId: listPendingFoundReports
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Antrean laporan menunggu penyerahan dan statistik penerimaan.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, total, stats]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        report_id: { type: string }
+                        status: { type: string }
+                        category_id: { type: integer, format: int64 }
+                        color: { type: string }
+                        location_id: { type: integer, format: int64 }
+                        item_name: { type: string }
+                        found_at: { type: string, format: date-time }
+                        description: { type: string }
+                        finder_name: { type: string }
+                        finder_whatsapp: { type: string }
+                        source: { type: string }
+                        created_at: { type: string, format: date-time }
+                        expires_at: { type: string, format: date-time }
+                  total: { type: integer }
+                  stats:
+                    type: object
+                    required: [expiring_soon, pending_total, received_today, active_items]
+                    properties:
+                      expiring_soon:
+                        type: integer
+                        description: Laporan aktif yang kedaluwarsa dalam 3 jam ke depan.
+                      pending_total: { type: integer, description: Total laporan aktif menunggu penyerahan. }
+                      received_today: { type: integer, description: Barang diterima hari ini menurut WIB. }
+                      active_items: { type: integer, description: Item dengan status Barang Ditemukan. }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500':
+          description: Gagal mengambil antrean atau statistik.
+
   /staff/found-reports/{report_id}/receive:
     post:
       tags: [staff-intake]
       summary: Terima barang dari laporan temuan (FR-06)
       description: |
-        Role `satpam`. Foto barang **wajib** (BR-11), tanpa foto -> `400 PHOTO_REQUIRED` (AC-06).
-        Dalam satu transaksi: buat `item` (Item ID berurutan untuk label rak), laporan -> `diterima`, item -> `barang_ditemukan`,
-        tulis `item_history` + `audit_log`. Data asli penemu (category/color/description di found_report) tidak berubah;
-        penyesuaian kategori/warna oleh satpam disimpan di `item` dan tercatat (penanda A4).
-        Setelah commit: antre WhatsApp ke penemu dan jalankan matching (di luar transaksi, gagalnya WA tidak membatalkan penerimaan, NFR-05).
+        Role `satpam`. Foto dokumentasi opsional; penerimaan tetap dapat disimpan tanpa foto.
+        Jika disertakan, foto disimpan bersama data item dengan ukuran maksimal 4 MB.
+        Dalam satu transaksi: buat `item` berstatus `barang_ditemukan` dan ubah status laporan menjadi `diterima`.
+        Setelah transaksi berhasil, catat penerimaan ke `audit_log`.
         Hanya laporan `menunggu_penyerahan` yang belum kedaluwarsa yang bisa diterima.
       operationId: receiveFoundReport
       security:
@@ -426,11 +476,8 @@ paths:
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema: { $ref: '#/components/schemas/ReceiveItemForm' }
-            encoding:
-              photo:
-                contentType: image/jpeg, image/png, image/webp
       responses:
         '201':
           description: Barang diterima.
@@ -442,6 +489,47 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
         '409': { $ref: '#/components/responses/Conflict' }
+
+  /staff/found-reports/{report_id}/receipt/send:
+    post:
+      tags: [staff-intake]
+      summary: Kirim bukti penerimaan melalui WhatsApp
+      description: Mengirim pesan bukti kepada nomor WhatsApp penemu setelah barang tersimpan.
+      operationId: sendFoundReceipt
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/FoundReportId'
+      responses:
+        '200':
+          description: Pesan bukti berhasil dikirim ke provider WhatsApp.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, report_id, item_id]
+                properties:
+                  status: { type: string, enum: [sent] }
+                  report_id: { type: string }
+                  item_id: { type: string }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '500':
+          description: Gagal mengambil data penerimaan dari database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
+        '502':
+          description: Provider WhatsApp gagal mengirim pesan.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: { type: string }
 
   /staff/found-reports/{report_id}/reject:
     post:
@@ -1971,13 +2059,13 @@ components:
 
     ReceiveItemForm:
       type: object
-      required: [category_id, color, condition, storage_rack, photo]
+      required: [condition, storage_rack]
       properties:
-        category_id: { type: integer, description: "Boleh berbeda dari laporan penemu; perbedaan dicatat (A4)." }
-        color: { type: string }
         condition: { type: string, example: baik }
         storage_rack: { type: string, maxLength: 30 }
-        photo: { type: string, format: binary }
+        intake_photo:
+          type: string
+          description: Data URL base64 foto JPG/PNG/WEBP opsional; maksimal 4 MB sebelum encoding.
     WalkInForm:
       type: object
       required: [category_id, color, location_id, found_at, description, finder_whatsapp, condition, storage_rack, photo]
@@ -2000,6 +2088,7 @@ components:
         item_id: { type: string, example: B-0462 }
         status: { type: string, enum: [barang_ditemukan] }
         storage_rack: { type: string }
+        photo_saved: { type: boolean }
         received_at: { type: string, format: date-time }
         label_to_print: { type: string, description: Teks label rak (Item ID). }
     ItemCorrection:

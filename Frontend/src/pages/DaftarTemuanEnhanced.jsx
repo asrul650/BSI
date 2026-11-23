@@ -37,7 +37,10 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
 
     // Tampilkan data backend pada kartu
     const renderItems = (data) => {
-      const cards = el.querySelectorAll(".grid .group");
+      el.querySelectorAll(".grid [data-api-generated='true']").forEach((card) => card.remove());
+      const templateCard = el.querySelector(".grid .group");
+      const cardGrid = templateCard?.closest(".grid");
+      const cards = cardGrid ? Array.from(cardGrid.querySelectorAll(".group")) : [];
       const count = el.querySelector("strong.text-white.font-bold.text-sm");
 
       if (count) count.textContent = data.length;
@@ -48,8 +51,13 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
         return;
       }
 
-      // Untuk sementara gunakan kartu Stitch yang tersedia.
-      // Isi kartu akan disesuaikan dengan data backend.
+      while (cardGrid && templateCard && cards.length < data.length) {
+        const clone = templateCard.cloneNode(true);
+        clone.setAttribute("data-api-generated", "true");
+        cardGrid.appendChild(clone);
+        cards.push(clone);
+      }
+
       cards.forEach((card, index) => {
         const item = data[index];
 
@@ -65,7 +73,8 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
         const id = card.querySelector(".font-mono");
 
         if (title) {
-          title.textContent = item.item_name || item.name || item.title || "Barang Temuan";
+          title.textContent =
+            item.item_name || item.name || item.title || item.category?.name || "Barang Temuan";
         }
 
         if (id) {
@@ -74,7 +83,14 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
 
         // Isi lokasi dan tanggal jika tersedia
         const locationText = item.location_name || item.location || "-";
-        const dateText = item.found_at || item.created_at || "-";
+        const foundDate = new Date(item.found_at || item.created_at || "");
+        const dateText = Number.isNaN(foundDate.getTime())
+          ? "-"
+          : foundDate.toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            });
 
         const detailRows = card.querySelectorAll(".space-y-1\\.5.text-xs.text-slate-600 > div");
 
