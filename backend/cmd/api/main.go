@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"net/url"
+	"strconv"
 
 	"LostandFound/internal/core"
 	"LostandFound/internal/handler"
@@ -42,6 +44,7 @@ func main() {
 	inventory := handler.NewInventoryHandler(store)
 	matching := handler.NewMatchingHandler(store)
 	otpHandler := handler.NewOTPHandler(otpService)
+	lostReports := handler.NewLostReportHandler(store)
 
 	mux := http.NewServeMux()
 
@@ -57,6 +60,8 @@ func main() {
 	mux.HandleFunc("POST /v1/staff/found-reports/{report_id}/receipt/send", found.SendFoundReceipt)
 	mux.HandleFunc("GET /v1/staff/items", inventory.ListItems)
 	mux.HandleFunc("GET /v1/staff/matches", matching.ListMatches)
+	mux.HandleFunc("GET /v1/staff/lost-reports", lostReports.ListLostReports)
+	mux.HandleFunc("POST /v1/staff/lost-reports/{report_id}/close", lostReports.CloseLostReport)
 
 	mux.HandleFunc("POST /v1/staff/items/{item_id}/start-verify", ho.StartVerification)
 	mux.HandleFunc("POST /v1/staff/items/{item_id}/reject-claim", ho.RejectClaim)
@@ -76,7 +81,11 @@ func main() {
 
 func corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		origin := r.Header.Get("Origin")
+		if isAllowedFrontendOrigin(origin) {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Add("Vary", "Origin")
+		}
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
@@ -87,4 +96,20 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func isAllowedFrontendOrigin(origin string) bool {
+	parsed, err := url.Parse(origin)
+	if err != nil || parsed.Scheme != "http" || parsed.User != nil ||
+		parsed.Path != "" || parsed.RawQuery != "" || parsed.Fragment != "" {
+		return false
+	}
+
+	host := parsed.Hostname()
+	if host != "localhost" && host != "127.0.0.1" && host != "::1" {
+		return false
+	}
+
+	port, err := strconv.Atoi(parsed.Port())
+	return err == nil && port >= 5173 && port <= 5199
 }

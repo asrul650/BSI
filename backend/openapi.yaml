@@ -805,7 +805,7 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, page, page_size, total]
+                required: [data, page, page_size, total, summary]
                 properties:
                   data:
                     type: array
@@ -813,6 +813,14 @@ paths:
                   page: { type: integer }
                   page_size: { type: integer }
                   total: { type: integer }
+                  summary:
+                    type: object
+                    required: [aktif, memiliki_kandidat, selesai, ditutup]
+                    properties:
+                      aktif: { type: integer }
+                      memiliki_kandidat: { type: integer }
+                      selesai: { type: integer }
+                      ditutup: { type: integer }
         '401': { $ref: '#/components/responses/Unauthenticated' }
         '403': { $ref: '#/components/responses/Forbidden' }
 
@@ -1783,8 +1791,8 @@ components:
 
     LostReportCode:
       type: string
-      pattern: '^HL-[A-Z0-9]{4}-[A-Z0-9]{4}$'
-      example: HL-3M7R-9DQ2
+      pattern: '^HL-[A-Za-z0-9]{8}$'
+      example: HL-3M7R9DQ2
     FoundReportCode:
       type: string
       pattern: '^TM-[A-Z0-9]{4}-[A-Z0-9]{4}$'
