@@ -38,6 +38,7 @@ func main() {
 
 	found := handler.NewFoundHandler(store, otpService)
 	pub := handler.NewPublicHandler(store, otpService)
+	inventory := handler.NewInventoryHandler(store)
 	otpHandler := handler.NewOTPHandler(otpService)
 
 	mux := http.NewServeMux()
@@ -51,6 +52,7 @@ func main() {
 	mux.HandleFunc("GET /v1/staff/found-reports/pending", found.GetPendingFoundReports)
 	mux.HandleFunc("POST /v1/staff/found-reports/{report_id}/receive", found.ReceiveFoundReport)
 	mux.HandleFunc("POST /v1/staff/found-reports/{report_id}/receipt/send", found.SendFoundReceipt)
+	mux.HandleFunc("GET /v1/staff/items", inventory.ListItems)
 
 	mux.HandleFunc("POST /v1/staff/items/{item_id}/start-verify", ho.StartVerification)
 	mux.HandleFunc("POST /v1/staff/items/{item_id}/reject-claim", ho.RejectClaim)

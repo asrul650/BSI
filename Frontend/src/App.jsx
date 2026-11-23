@@ -94,6 +94,7 @@ export default function App() {
   const [lostVerificationToken, setLostVerificationToken] = useState("");
   const [lostReportResult, setLostReportResult] = useState(null);
   const [selectedFoundReport, setSelectedFoundReport] = useState(null);
+  const [selectedPublicItem, setSelectedPublicItem] = useState(null);
 
   const CurrentScreenComponent = screens[activeScreen] || LandingPage;
 
@@ -106,6 +107,7 @@ export default function App() {
       target === "satpam_penerimaan" && !selectedFoundReport ? "satpam_antrean" : target;
     if (screens[destination]) {
       if (destination === "satpam_antrean") setSelectedFoundReport(null);
+      if (destination === "detail") setSelectedPublicItem(null);
       setActiveScreen(destination);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -129,6 +131,18 @@ export default function App() {
   const screenProps = {
     onNavigate: handleNavigate,
   };
+
+  if (activeScreen === "temuan_enhanced") {
+    screenProps.onSelectFoundItem = (item) => {
+      setSelectedPublicItem(item);
+      setActiveScreen("detail");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  }
+
+  if (activeScreen === "detail") {
+    screenProps.item = selectedPublicItem;
+  }
 
   if (activeScreen === "satpam_antrean") {
     screenProps.onSelectFoundReport = (report) => {

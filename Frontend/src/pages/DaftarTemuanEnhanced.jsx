@@ -6,7 +6,7 @@ const rawHTML =
 
 const API_BASE_URL = "http://localhost:8080";
 
-export default function DaftarTemuanEnhanced({ onNavigate }) {
+export default function DaftarTemuanEnhanced({ onNavigate, onSelectFoundItem }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -63,19 +63,52 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
 
         if (!item) {
           card.style.display = "none";
+          delete card.dataset.itemId;
           return;
         }
 
         card.style.display = "";
+        card.dataset.itemId = item.item_id || item.id || "";
 
+        const categoryName =
+          typeof item.category === "string" ? item.category : item.category?.name || "Kategori tidak tersedia";
+        const colorName =
+          typeof item.color === "string" ? item.color : item.color?.label || item.color?.code || "-";
         const title = card.querySelector("h3");
         const spans = card.querySelectorAll(".space-y-1\\.5 span");
         const id = card.querySelector(".font-mono");
+        const category = card.querySelector(".absolute.top-3.left-3 span:first-child");
+        const newBadge = card.querySelector(".absolute.top-3.left-3 span:nth-child(2)");
+        const status = card.querySelector(".absolute.top-3.right-3 span:last-child");
+        const color = card.querySelector(".flex.items-center.justify-between .flex span:last-child");
+        const image = card.querySelector("img");
+
+        if (image) {
+          const imageContainer = image.parentElement;
+          image.remove();
+          imageContainer?.querySelector(".pointer-events-none")?.remove();
+
+          if (imageContainer && !imageContainer.querySelector("[data-photo-placeholder]")) {
+            const placeholder = document.createElement("div");
+            placeholder.dataset.photoPlaceholder = "true";
+            placeholder.className = "absolute inset-0 flex items-center justify-center text-sm text-slate-500";
+            placeholder.textContent = "Foto belum tersedia";
+            imageContainer.prepend(placeholder);
+          }
+        }
 
         if (title) {
           title.textContent =
-            item.item_name || item.name || item.title || item.category?.name || "Barang Temuan";
+            item.item_name || item.name || item.title || categoryName || "Barang Temuan";
         }
+
+        if (category) {
+          category.textContent = categoryName;
+        }
+
+        if (newBadge) newBadge.hidden = true;
+        if (status) status.textContent = item.status || "Status tidak tersedia";
+        if (color) color.textContent = colorName;
 
         if (id) {
           id.textContent = `ID: ${item.item_id || item.id || "-"}`;
@@ -113,6 +146,7 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
 
       const path = target.getAttribute("data-path") || target.getAttribute("href") || "";
       const text = (target.textContent || "").trim();
+      const itemCard = target.closest(".grid .group[data-item-id]");
 
       if (text.includes("Saya Kehilangan") || text.includes("Lapor Kehilangan") || text.includes("Buat Laporan Kehilangan")) {
         e.preventDefault();
@@ -144,9 +178,10 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
         return;
       }
 
-      if (text.includes("Klaim di Pos Satpam") || target.matches("div.group")) {
+      if (itemCard) {
         e.preventDefault();
-        onNavigate?.("detail");
+        const item = items.find((entry) => (entry.item_id || entry.id) === itemCard.dataset.itemId);
+        if (item) onSelectFoundItem?.(item);
         return;
       }
 
@@ -167,7 +202,7 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
     return () => {
       el.removeEventListener("click", handleClick);
     };
-  }, [onNavigate]);
+  }, [onNavigate, onSelectFoundItem]);
 
   return <div ref={containerRef} className="min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900 bg-[#F8FAFC]" dangerouslySetInnerHTML={{ __html: rawHTML }} />;
 }

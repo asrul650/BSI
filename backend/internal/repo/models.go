@@ -28,6 +28,20 @@ type PublicItem struct {
 	Status       string         `json:"status"`
 }
 
+type InventoryItem struct {
+	ItemID             string    `json:"item_id"`
+	ItemName           string    `json:"item_name"`
+	CategoryName       string    `json:"category_name"`
+	Color              string    `json:"color"`
+	Condition          string    `json:"condition"`
+	StorageRack        string    `json:"storage_rack"`
+	ReceivedAt         time.Time `json:"received_at"`
+	ReceivedByName     string    `json:"received_by_name"`
+	ReceivedByUsername string    `json:"received_by_username"`
+	Status             string    `json:"status"`
+	HasPhoto           bool      `json:"has_photo"`
+}
+
 type ItemData struct {
 	ItemID         string
 	Status         string

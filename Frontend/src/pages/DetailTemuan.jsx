@@ -3,13 +3,215 @@ import React, { useEffect, useRef } from 'react';
 // Layar Stitch: Detail Barang Temuan
 const rawHTML = "<!-- BEGIN: MainHeader -->\n<header class=\"sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all duration-200 shadow-sm\">\n<div class=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between\">\n<!-- Brand Logo & Identity -->\n<a class=\"flex items-center space-x-3.5 group\" href=\"#\">\n<div class=\"w-11 h-11 rounded-xl bg-uiiNavy text-white flex items-center justify-center shadow-md group-hover:bg-blue-700 transition\">\n<svg class=\"w-6 h-6\" fill=\"none\" stroke=\"currentColor\" viewbox=\"0 0 24 24\">\n<path d=\"M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\"></path>\n</svg>\n</div>\n<div>\n<span class=\"block text-lg font-bold text-slate-900 tracking-tight leading-tight\">Lost &amp; Found UII</span>\n<span class=\"block text-xs font-medium text-slate-500\">Kampus Terpadu \u2022 Temukan kembali barangmu</span>\n</div>\n</a>\n<!-- Desktop Navigation Links -->\n<nav class=\"hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600\">\n<a class=\"hover:text-uiiNavy transition\" href=\"#beranda\">Beranda</a>\n<a class=\"text-uiiNavy font-bold relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-0.5 after:bg-uiiNavy\" href=\"#barang-temuan\">Barang Temuan</a>\n<a class=\"hover:text-uiiNavy transition\" href=\"#cara-kerja\">Cara Kerja</a>\n<a class=\"hover:text-uiiNavy transition\" href=\"#pos-satpam\">Pos Satpam</a>\n<a class=\"hover:text-uiiNavy transition\" href=\"#faq\">FAQ</a>\n</nav>\n<!-- Action Buttons (No Login Required) -->\n<div class=\"flex items-center space-x-3\">\n<button class=\"hidden sm:inline-flex items-center justify-center px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-full hover:bg-slate-50 hover:border-slate-400 shadow-sm transition\" type=\"button\">\n          Saya Kehilangan\n        </button>\n<button class=\"inline-flex items-center justify-center px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-uiiNavy hover:bg-slate-800 rounded-full shadow-sm hover:shadow transition\" type=\"button\">\n          Saya Menemukan\n        </button>\n</div>\n</div>\n</header>\n<!-- END: MainHeader -->\n<main class=\"flex-grow\"><div class=\"flex flex-col w-full\">\n<!-- Interactive Toast Notification Container -->\n<div class=\"fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 bg-primary text-on-primary px-5 py-3 rounded-lg shadow-xl\" id=\"copy-toast\">\n<span class=\"material-symbols-outlined text-secondary-fixed text-headline-sm\" style=\"font-variation-settings: 'FILL' 1;\">check_circle</span>\n<span class=\"font-body-md text-body-md text-on-primary\">Kode Item ID <strong class=\"font-label-lg\">LF-0248</strong> berhasil disalin!</span>\n</div>\n<!-- Breadcrumbs & Quick Return Bar -->\n<section class=\"max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6 pb-4\">\n<div class=\"flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3\">\n<nav aria-label=\"Breadcrumb\" class=\"flex items-center space-x-2 text-surface-tint\">\n<a class=\"font-body-sm text-body-sm hover:text-primary transition flex items-center gap-1\" href=\"#beranda\">\n<span class=\"material-symbols-outlined text-headline-sm leading-none\">home</span>\n<span>Beranda</span>\n</a>\n<span class=\"text-surface-tint opacity-40 font-body-sm\">/</span>\n<a class=\"font-body-sm text-body-sm hover:text-primary transition\" href=\"#barang-temuan\">Barang Temuan</a>\n<span class=\"text-surface-tint opacity-40 font-body-sm\">/</span>\n<span class=\"font-label-md text-label-md text-on-background bg-surface-container px-2 py-0.5 rounded\">LF-0248</span>\n</nav>\n<a class=\"inline-flex items-center gap-1.5 font-label-md text-label-md text-surface-tint hover:text-primary transition self-start sm:self-auto group\" href=\"#barang-temuan\">\n<span class=\"material-symbols-outlined text-headline-sm group-hover:-translate-x-1 transition-transform\">arrow_back</span>\n<span>Kembali ke Daftar Barang</span>\n</a>\n</div>\n</section>\n<!-- Main Showcase & Detail Layout -->\n<section class=\"max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12\">\n<div class=\"grid grid-cols-1 lg:grid-cols-12 gap-8 items-start\">\n<!-- LEFT COLUMN: Visuals & Multi-Angle Gallery (5 Cols) -->\n<div class=\"lg:col-span-5 flex flex-col gap-4\">\n<!-- Main Image Card -->\n<div class=\"bg-surface-container-lowest rounded-xl p-3 shadow-sm relative overflow-hidden group\">\n<div class=\"relative w-full aspect-[4/3] rounded-lg overflow-hidden bg-surface-container\">\n<img alt=\"Dompet Kulit Pria Lipat LF-0248\" class=\"w-full h-full object-cover transition duration-300 group-hover:scale-[1.02]\" data-alt=\"High-resolution authentic photograph of a folded dark brown and black leather men's wallet found on a clean library oak desk at UII central library, soft ambient indoor daylight, sharp edge details, subtle grain texture, genuine university archive record aesthetic.\" id=\"main-product-image\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuAx1EASOAnfaOvpaB3CFIsKsmG1pTT4jisvrePXP_jhY3vvx8dVRDcUYweqRGQBXCr4hUFsHXjElNmO96FrKzqtL7mv4LXq1l2E5pyrvvvnN4fcKImTkgIjek7uSaTkJy4HE6qv5bph_7MfcnuBmroGRqjslMxxm0FMaBwD5EtCx42pHHqAGuWDGKRvtv4HPIV8aCVINR3amHDMSmqJtll36kJpEdyEVDkYLkvilN4\"/>\n<!-- Security Tag Overlay -->\n<div class=\"absolute top-3 left-3 flex items-center gap-1.5 bg-primary/80 backdrop-blur-md text-on-primary px-3 py-1 rounded-full shadow-sm\">\n<span class=\"material-symbols-outlined text-label-sm\" style=\"font-variation-settings: 'FILL' 1;\">verified_user</span>\n<span class=\"font-label-sm text-label-sm tracking-wide\">Fisik Disimpan Satpam</span>\n</div>\n<div class=\"absolute bottom-3 right-3 bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface px-2.5 py-1 rounded font-label-sm text-label-sm flex items-center gap-1 shadow-sm\">\n<span class=\"material-symbols-outlined text-label-sm\">photo_camera</span>\n<span>Sudut Depan</span>\n</div>\n</div>\n<!-- Official Verification Notice Tag -->\n<div class=\"mt-3 flex items-start gap-2.5 p-3 bg-surface-container-low rounded-lg text-surface-tint\">\n<span class=\"material-symbols-outlined text-headline-sm text-secondary flex-shrink-0 mt-0.5\" style=\"font-variation-settings: 'FILL' 1;\">shield</span>\n<p class=\"font-body-sm text-body-sm text-on-surface-variant leading-relaxed\">\n              Foto diperiksa, didokumentasikan, dan diverifikasi resmi oleh Satuan Pengamanan (Satpam) UII sesuai Berita Acara Temuan.\n            </p>\n</div>\n</div>\n<!-- Multi-Angle Thumbnail Gallery Strip -->\n<div class=\"grid grid-cols-4 gap-2.5\">\n<button class=\"thumbnail-btn active-thumb relative aspect-square rounded-lg overflow-hidden bg-surface-container p-0.5 focus:outline-none focus:ring-2 focus:ring-secondary transition\" onclick=\"switchPreview(this, 'placeholder', 'Sudut Depan')\" type=\"button\">\n<img alt=\"Sudut Depan\" class=\"w-full h-full object-cover rounded\" data-alt=\"Close up photograph front view of folded dark leather bifold wallet with minimalist neat stitching, neutral soft lighting on student registration desk.\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuDq7cCTNzeqbsEjOoh7HzD_QlanKmMn0ES-mLTlYDlQC-natrMA96r0zdq6oDheCG3uxbUoufiO_TMJMm7-7URWZ1WSAOteTF03ffbV6l3ZZP0c1SjtBdgG3lGnSmRbz4str33tvBPqbHDlp_74UJMI55Mudbxjp3vGHeDwelvtqmTWCzMRac3EMy36JiJ4HfOLyfQ_2Cbu7UW1bdqGP75x4VLDUZ5lPujchG_Ge1I\"/>\n<div class=\"absolute inset-0 bg-primary/20 opacity-0 hover:opacity-100 transition\"></div>\n</button>\n<button class=\"thumbnail-btn relative aspect-square rounded-lg overflow-hidden bg-surface-container p-0.5 focus:outline-none focus:ring-2 focus:ring-secondary transition\" onclick=\"switchPreview(this, 'placeholder', 'Sudut Lipatan Samping')\" type=\"button\">\n<img alt=\"Sudut Samping\" class=\"w-full h-full object-cover rounded\" data-alt=\"Detailed macro side shot showing thickness, dual stitch edge, and spine fold of dark brown textured leather wallet.\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuDnvf8Ix7KWs9DtwpE_xQE2NeW7pDRFhnt3ppsBXp5oZMoABoeWuyEtqU-WdNziew_uqalqI5P27VzQJ2jD-2V4drjMRxjdyAqkwm5Q4mxOxbJL9XEmAVNyhCGahu3lOmEJAjbmXLKJwXBo2I1GRGGv458YVQUg5vw1I8wteTKoYvFd_hLPV-HBQqOBBtetrWDMi9XH1tgCbL7XhR2DMiVEhHjnZGbNm88-rebKCuM\"/>\n<div class=\"absolute inset-0 bg-primary/20 opacity-0 hover:opacity-100 transition\"></div>\n</button>\n<button class=\"thumbnail-btn relative aspect-square rounded-lg overflow-hidden bg-surface-container p-0.5 focus:outline-none focus:ring-2 focus:ring-secondary transition\" onclick=\"switchPreview(this, 'placeholder', 'Tekstur Bahan Kulit')\" type=\"button\">\n<img alt=\"Detail Tekstur\" class=\"w-full h-full object-cover rounded\" data-alt=\"High detail macro texture photograph showing fine natural leather grain pattern and discreet metallic fastener.\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuB9QLdzGx3WBTLZWRtuD1UN383RBjKV0gIqwFjJ6VA2GFxWekTI5NklE52BycGS5Ky5xKjbgD7FixVNbSUDM23Vds5fKq_yBSoKcq7nENK_QdDEm8wq3XIvGgYQCD0NIovkcFG5DJzcV3_Ii7yyNZgdulif3cd8g5HAdOrd7VZP8y-XuFLOgIzlgPE2BjpHUyBdyqdpNqnB6qXeye1vG8NfBcnB-EAYXfjL81s_RFc\"/>\n<div class=\"absolute inset-0 bg-primary/20 opacity-0 hover:opacity-100 transition\"></div>\n</button>\n<button class=\"thumbnail-btn relative aspect-square rounded-lg overflow-hidden bg-surface-container p-0.5 focus:outline-none focus:ring-2 focus:ring-secondary transition\" onclick=\"switchPreview(this, 'placeholder', 'Kantung Belakang Terlipat')\" type=\"button\">\n<img alt=\"Tampak Belakang\" class=\"w-full h-full object-cover rounded\" data-alt=\"Rear angle photograph of closed leather wallet lying flat with subtle patina on edge.\" src=\"https://lh3.googleusercontent.com/aida-public/AB6AXuC3lIeIO7NK2MzbT0s1OgkAU2KV8UgtsPD_NSyrDuxupCqGYTj0YT6NBH89bTYUfX2en2r5mbPcCoYyXtnrjDL4gey-NgCCGNUq2aGEgPCBBE9NsSbthsjgrQN4cPcExSyTXj8ZhEaeSZobfAxf5bUQGjs7pt7J1-zq0axGykJWDVGiDc--otO2r1VUuBok6rAnKNMXz_6JMIAXZgxzDH7kUtLfHrBcPCzrc0osid4\"/>\n<div class=\"absolute inset-0 bg-primary/20 opacity-0 hover:opacity-100 transition\"></div>\n</button>\n</div>\n<!-- Evidence Safeguard Callout -->\n<div class=\"p-4 bg-surface-container-low rounded-xl flex items-center justify-between\">\n<div class=\"flex items-center gap-3\">\n<div class=\"w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary\">\n<span class=\"material-symbols-outlined text-headline-sm\">lock</span>\n</div>\n<div>\n<div class=\"font-label-md text-label-md text-on-surface\">Data Sensitif Dikaburkan</div>\n<div class=\"font-body-sm text-body-sm text-surface-tint\">Isi kartu identitas dirahasiakan</div>\n</div>\n</div>\n<span class=\"font-label-sm text-label-sm text-secondary bg-surface-container px-2.5 py-1 rounded-full\">SOP Keamanan</span>\n</div>\n</div>\n<!-- RIGHT COLUMN: Essential Item Details & Claim Protocol (7 Cols) -->\n<div class=\"lg:col-span-7 flex flex-col gap-6\">\n<!-- Header Info Pod -->\n<div class=\"bg-surface-container-lowest rounded-xl p-6 sm:p-8 shadow-sm flex flex-col gap-5\">\n<!-- Top Row Status Pill & Item ID -->\n<div class=\"flex flex-wrap items-center justify-between gap-3\">\n<!-- Emerald Status Badge -->\n<div class=\"inline-flex items-center gap-2 bg-[#dcfce7] text-[#14532d] px-3.5 py-1.5 rounded-full\">\n<span class=\"w-2.5 h-2.5 rounded-full bg-[#16a34a] animate-pulse\"></span>\n<span class=\"font-label-md text-label-md font-bold tracking-tight\">Barang Ditemukan \u2014 Siap Diklaim di Pos Satpam</span>\n</div>\n<!-- Item ID Bar with One-Click Copy -->\n<div class=\"inline-flex items-center gap-2 bg-surface-container-low px-3 py-1 rounded-lg\">\n<span class=\"font-label-sm text-label-sm text-surface-tint uppercase tracking-wider\">Item ID:</span>\n<span class=\"font-label-lg text-label-lg font-bold text-on-surface tracking-mono\" id=\"target-item-id\">LF-0248</span>\n<button class=\"ml-1 text-primary hover:text-secondary p-1 rounded transition flex items-center justify-center\" onclick=\"copyItemId('LF-0248')\" title=\"Salin Kode Item\" type=\"button\">\n<span class=\"material-symbols-outlined text-headline-sm\">content_copy</span>\n</button>\n</div>\n</div>\n<!-- Item Title -->\n<div>\n<h1 class=\"font-headline-lg text-headline-lg text-on-surface tracking-tight leading-snug\">\n              Dompet Kulit Pria Lipat (Cokelat Gelap / Hitam)\n            </h1>\n<p class=\"font-body-md text-body-md text-surface-tint mt-1\">\n              Didaftarkan ke Sistem Sentral Keamanan UII pada hari ini, tercatat resmi dalam arsip Satpam.\n            </p>\n</div>\n<!-- Structured Specifications Grid -->\n<div class=\"grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2\">\n<div class=\"p-3.5 bg-surface rounded-lg\">\n<span class=\"font-label-sm text-label-sm text-surface-tint block mb-1\">Kategori</span>\n<div class=\"flex items-center gap-2 font-headline-sm text-headline-sm text-on-surface\">\n<span class=\"material-symbols-outlined text-secondary text-headline-sm\">wallet</span>\n<span>Dompet &amp; Kartu</span>\n</div>\n</div>\n<div class=\"p-3.5 bg-surface rounded-lg\">\n<span class=\"font-label-sm text-label-sm text-surface-tint block mb-1\">Warna Dominan</span>\n<div class=\"flex items-center gap-2 font-headline-sm text-headline-sm text-on-surface\">\n<span class=\"w-4 h-4 rounded-full bg-[#1c1917] shadow-sm\"></span>\n<span>Hitam / Cokelat Gelap</span>\n</div>\n</div>\n<div class=\"p-3.5 bg-surface rounded-lg\">\n<span class=\"font-label-sm text-label-sm text-surface-tint block mb-1\">Lokasi Ditemukan</span>\n<div class=\"flex items-start gap-2 font-label-lg text-label-lg text-on-surface\">\n<span class=\"material-symbols-outlined text-secondary text-headline-sm mt-0.5\">location_on</span>\n<span>Meja Baca Perpustakaan Pusat Lt. 2, Kampus Terpadu UII</span>\n</div>\n</div>\n<div class=\"p-3.5 bg-surface rounded-lg\">\n<span class=\"font-label-sm text-label-sm text-surface-tint block mb-1\">Waktu Temuan</span>\n<div class=\"flex items-center gap-2 font-label-lg text-label-lg text-on-surface\">\n<span class=\"material-symbols-outlined text-secondary text-headline-sm\">schedule</span>\n<span>Hari ini (19 Nov 2024), 09:30 WIB</span>\n</div>\n</div>\n<div class=\"p-3.5 bg-surface rounded-lg\">\n<span class=\"font-label-sm text-label-sm text-surface-tint block mb-1\">Pos Penyimpanan Saat Ini</span>\n<div class=\"flex items-start gap-2 font-label-lg text-label-lg text-on-surface\">\n<span class=\"material-symbols-outlined text-secondary text-headline-sm mt-0.5\">local_police</span>\n<span class=\"font-bold\">Pos Satpam GKU / Gerbang Utama</span>\n</div>\n</div>\n<div class=\"p-3.5 bg-surface rounded-lg\">\n<span class=\"font-label-sm text-label-sm text-surface-tint block mb-1\">Masa Penyimpanan SOP</span>\n<div class=\"flex items-center gap-2 font-label-lg text-label-lg text-on-surface\">\n<span class=\"material-symbols-outlined text-secondary text-headline-sm\">event_repeat</span>\n<span>Hingga 17 Feb 2025 (90 Hari)</span>\n</div>\n</div>\n</div>\n<!-- Crucial Privacy & Anti-Fraud Disclaimer -->\n<div class=\"p-4 bg-surface-container-high/60 rounded-lg flex items-start gap-3\">\n<span class=\"material-symbols-outlined text-headline-md text-surface-tint flex-shrink-0 mt-0.5\">visibility_off</span>\n<div class=\"font-body-sm text-body-sm text-on-surface-variant leading-relaxed\">\n<strong class=\"font-label-md text-label-md text-on-surface block mb-0.5\">Catatan Privasi &amp; Pencegahan Penipuan:</strong>\n              Ciri khusus mendalam, merek bagian dalam, isi kompartemen dompet, atau tanda pengenal sengaja <strong>disembunyikan dari tampilan publik</strong> demi mencegah klaim palsu dan penyalahgunaan identitas.\n            </div>\n</div>\n<!-- Highlighted In-Person Verification Box (NO ONLINE CLAIM BUTTON) -->\n<div class=\"p-6 bg-surface-container-highest/80 rounded-xl flex flex-col gap-4\">\n<div class=\"flex items-center gap-3\">\n<div class=\"w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center flex-shrink-0\">\n<span class=\"material-symbols-outlined text-headline-sm\">handshake</span>\n</div>\n<div>\n<h2 class=\"font-headline-sm text-headline-sm text-on-surface\">Merasa Ini Barang Anda?</h2>\n<span class=\"font-body-sm text-body-sm text-surface-tint\">Protokol Pengambilan Tatap Muka Resmi</span>\n</div>\n</div>\n<p class=\"font-body-md text-body-md text-on-surface leading-relaxed\">\n              Datang langsung ke <strong class=\"text-primary font-bold\">Pos Satpam GKU</strong>, bawa kartu identitas diri (<strong class=\"text-primary font-bold\">KTM / KTP asli</strong>), dan sebutkan <strong class=\"font-bold text-secondary\">Item ID: LF-0248</strong>. Bukti kepemilikan wajib diverifikasi secara tatap muka langsung bersama petugas jaga Satpam.\n            </p>\n<div class=\"flex flex-wrap items-center gap-2 font-label-sm text-label-sm text-surface-tint bg-surface-container px-3.5 py-2 rounded-lg\">\n<span class=\"material-symbols-outlined text-headline-sm text-secondary\">policy</span>\n<span>Sesuai Surat Edaran Rektorat UII No. 12/KP/2022: Tidak melayani klaim transfer, kurir, atau verifikasi online pihak ketiga.</span>\n</div>\n<!-- Primary Direct Action Buttons -->\n<div class=\"flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2\">\n<a class=\"inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-on-primary rounded-lg font-label-lg text-label-lg hover:bg-on-surface-variant transition shadow-sm\" href=\"#lokasi-pos\">\n<span class=\"material-symbols-outlined text-headline-sm\">pin_drop</span>\n<span>Lihat Lokasi Pos Satpam</span>\n</a>\n<a class=\"inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-surface-container-lowest text-on-surface rounded-lg font-label-lg text-label-lg hover:bg-surface-container-high transition\" href=\"#lapor-kehilangan\">\n<span>Bukan barangmu? Lapor Kehilangan</span>\n<span class=\"material-symbols-outlined text-headline-sm\">arrow_forward</span>\n</a>\n</div>\n</div>\n<!-- Hotline Footer Strip inside right column -->\n<div class=\"flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1 text-surface-tint font-body-sm text-body-sm\">\n<span class=\"flex items-center gap-1.5\">\n<span class=\"w-2 h-2 rounded-full bg-emerald-500\"></span>\n              Petugas Jaga Siaga 24 Jam\n            </span>\n<a class=\"inline-flex items-center gap-1.5 text-secondary hover:underline font-label-md text-label-md\" href=\"https://wa.me/6281234567890\" rel=\"noopener noreferrer\" target=\"_blank\">\n<span class=\"material-symbols-outlined text-headline-sm\">support_agent</span>\n<span>Butuh Bantuan Cepat? Hubungi Hotline Satpam</span>\n</a>\n</div>\n</div>\n</div>\n</div>\n</section>\n<!-- Interactive Status Showcase / Banner Previews Section -->\n<section class=\"max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-14\">\n<div class=\"bg-surface-container-lowest rounded-xl p-6 sm:p-8 shadow-sm\">\n<div class=\"flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6\">\n<div>\n<div class=\"flex items-center gap-2\">\n<span class=\"font-label-sm text-label-sm uppercase tracking-wider text-surface-tint\">Arsip &amp; Transparansi Sistem</span>\n<span class=\"bg-surface-container px-2 py-0.5 rounded text-label-sm font-label-sm text-surface-tint\">Pratinjau Status</span>\n</div>\n<h2 class=\"font-headline-md text-headline-md text-on-surface mt-1\">Status Siklus Hidup Barang Temuan</h2>\n<p class=\"font-body-md text-body-md text-surface-tint\">Transparansi alur verifikasi barang mulai dari penemuan hingga pengembalian ke pemilik sah.</p>\n</div>\n<div class=\"flex items-center gap-2\">\n<button class=\"px-3.5 py-1.5 rounded-lg font-label-md text-label-md bg-surface-container text-on-surface hover:bg-surface-container-high transition\" onclick=\"showStateVariant('claimed')\" type=\"button\">Simulasi Selesai</button>\n<button class=\"px-3.5 py-1.5 rounded-lg font-label-md text-label-md bg-surface-container text-on-surface hover:bg-surface-container-high transition\" onclick=\"showStateVariant('verifying')\" type=\"button\">Simulasi Verifikasi</button>\n<button class=\"px-3.5 py-1.5 rounded-lg font-label-md text-label-md bg-primary text-on-primary hover:opacity-90 transition\" onclick=\"showStateVariant('active')\" type=\"button\">Aktif (Saat Ini)</button>\n</div>\n</div>\n<!-- State Variant Banners Displayed Grid -->\n<div class=\"grid grid-cols-1 md:grid-cols-2 gap-5\">\n<!-- VARIANT BANNER A: Status \"Proses Verifikasi\" (Amber / Yellow) -->\n<div class=\"p-5 rounded-xl bg-[#fef3c7] text-[#78350f] flex flex-col justify-between gap-4\">\n<div class=\"flex items-start gap-3.5\">\n<div class=\"w-10 h-10 rounded-full bg-[#fde68a] flex items-center justify-center flex-shrink-0 text-[#b45309]\">\n<span class=\"material-symbols-outlined text-headline-md animate-spin\" style=\"animation-duration: 4s;\">sync</span>\n</div>\n<div>\n<div class=\"flex items-center gap-2 mb-1\">\n<span class=\"px-2.5 py-0.5 rounded-full bg-[#f59e0b] text-white font-label-sm text-label-sm font-bold uppercase tracking-wider\">Status: Dalam Verifikasi</span>\n<span class=\"font-label-sm text-label-sm text-[#92400e]\">Contoh Kasus LF-0199</span>\n</div>\n<h3 class=\"font-headline-sm text-headline-sm text-[#78350f]\">Barang Sedang dalam Proses Verifikasi Klaim</h3>\n<p class=\"font-body-md text-body-md text-[#92400e] mt-1 leading-relaxed\">\n                Seorang pemilik sedang mencocokkan bukti kepemilikan fisik di Pos Satpam. Anda tetap dapat mencatat Item ID jika merasa memiliki barang yang sama.\n              </p>\n</div>\n</div>\n<div class=\"flex items-center justify-between pt-2 text-[#b45309] font-label-md text-label-md\">\n<span>Estimasi proses: 15\u201330 menit</span>\n<span class=\"flex items-center gap-1 font-bold\">Pos Satpam GKU <span class=\"material-symbols-outlined text-label-md\">chevron_right</span></span>\n</div>\n</div>\n<!-- VARIANT BANNER B: Status \"Telah Diambil / Selesai\" (Muted Slate / Gray) -->\n<div class=\"p-5 rounded-xl bg-surface-container text-on-surface-variant flex flex-col justify-between gap-4\">\n<div class=\"flex items-start gap-3.5\">\n<div class=\"w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0 text-primary\">\n<span class=\"material-symbols-outlined text-headline-md\" style=\"font-variation-settings: 'FILL' 1;\">task_alt</span>\n</div>\n<div>\n<div class=\"flex items-center gap-2 mb-1\">\n<span class=\"px-2.5 py-0.5 rounded-full bg-surface-tint text-on-primary font-label-sm text-label-sm font-bold uppercase tracking-wider\">Status: Telah Diserahkan</span>\n<span class=\"font-label-sm text-label-sm text-surface-tint\">Contoh Kasus LF-0182</span>\n</div>\n<h3 class=\"font-headline-sm text-headline-sm text-on-surface\">Barang Telah Diambil oleh Pemilik Sah</h3>\n<p class=\"font-body-md text-body-md text-on-surface-variant mt-1 leading-relaxed\">\n                Verifikasi fisik telah sukses dilakukan di Pos Satpam UII dengan kelengkapan Berita Acara Serah Terima. Barang tidak lagi tersedia untuk diklaim.\n              </p>\n</div>\n</div>\n<div class=\"flex items-center justify-between pt-2 text-surface-tint font-label-md text-label-md\">\n<span>Diserahkan pada 18 Nov 2024, 16:15 WIB</span>\n<span class=\"font-label-sm text-label-sm text-secondary bg-surface px-2 py-0.5 rounded\">Kasus Ditutup</span>\n</div>\n</div>\n</div>\n</div>\n</section>\n<!-- SOP & Verification Roadmap + Pos Satpam Location Section -->\n<section class=\"max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-16\" id=\"lokasi-pos\">\n<div class=\"grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch\">\n<!-- Verification Roadmap (7 Cols) -->\n<div class=\"lg:col-span-7 bg-surface-container-lowest rounded-xl p-6 sm:p-8 shadow-sm flex flex-col justify-between\">\n<div>\n<div class=\"flex items-center gap-2 mb-1\">\n<span class=\"font-label-sm text-label-sm uppercase tracking-wider text-surface-tint\">Prosedur Standar (SOP)</span>\n<span class=\"w-1.5 h-1.5 rounded-full bg-secondary\"></span>\n<span class=\"font-label-sm text-label-sm text-secondary font-semibold\">Keamanan Terpadu UII</span>\n</div>\n<h2 class=\"font-headline-lg text-headline-lg text-on-surface tracking-tight\">3 Langkah Mengambil Barang Temuan</h2>\n<p class=\"font-body-md text-body-md text-surface-tint mt-1 mb-8\">\n            Demi menjaga ketertiban dan mencegah klaim oleh pihak tak berwenang, ikuti tahapan verifikasi resmi berikut:\n          </p>\n<div class=\"flex flex-col gap-6 relative\">\n<!-- Step 1 -->\n<div class=\"flex items-start gap-4\">\n<div class=\"w-10 h-10 rounded-full bg-primary text-on-primary font-headline-sm text-headline-sm flex items-center justify-center flex-shrink-0 shadow-sm\">\n                1\n              </div>\n<div class=\"flex-1 bg-surface-container-low p-4 rounded-lg\">\n<div class=\"flex items-center justify-between mb-1\">\n<h3 class=\"font-label-lg text-label-lg text-on-surface\">Sebutkan Item ID: LF-0248</h3>\n<span class=\"font-label-sm text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded\">Langkah 1</span>\n</div>\n<p class=\"font-body-sm text-body-sm text-on-surface-variant\">\n                  Kunjungi Pos Satpam GKU dan sebutkan kode identifikasi barang agar petugas dapat mengambil wadah penyimpanan tersegel dari lemari arsip.\n                </p>\n</div>\n</div>\n<!-- Step 2 -->\n<div class=\"flex items-start gap-4\">\n<div class=\"w-10 h-10 rounded-full bg-secondary text-on-secondary font-headline-sm text-headline-sm flex items-center justify-center flex-shrink-0 shadow-sm\">\n                2\n              </div>\n<div class=\"flex-1 bg-surface-container-low p-4 rounded-lg\">\n<div class=\"flex items-center justify-between mb-1\">\n<h3 class=\"font-label-lg text-label-lg text-on-surface\">Sebutkan Ciri Khusus Rahasia</h3>\n<span class=\"font-label-sm text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded\">Verifikasi Fisik</span>\n</div>\n<p class=\"font-body-sm text-body-sm text-on-surface-variant\">\n                  Sebutkan merk di bagian dalam dompet, nominal uang/pecahan koin, nama pada kartu identitas terselip, atau tanda goresan khusus yang hanya diketahui pemilik sah.\n                </p>\n</div>\n</div>\n<!-- Step 3 -->\n<div class=\"flex items-start gap-4\">\n<div class=\"w-10 h-10 rounded-full bg-surface-container-highest text-primary font-headline-sm text-headline-sm flex items-center justify-center flex-shrink-0\">\n                3\n              </div>\n<div class=\"flex-1 bg-surface-container-low p-4 rounded-lg\">\n<div class=\"flex items-center justify-between mb-1\">\n<h3 class=\"font-label-lg text-label-lg text-on-surface\">Tunjukkan Identitas &amp; Tanda Tangan BAST</h3>\n<span class=\"font-label-sm text-label-sm text-secondary bg-surface-container px-2 py-0.5 rounded\">Dokumentasi</span>\n</div>\n<p class=\"font-body-sm text-body-sm text-on-surface-variant\">\n                  Perlihatkan KTM/KTP asli untuk dicatat dalam logbook resmi, lalu tandatangani Berita Acara Serah Terima (BAST) fisik bersama Komandan Regu jaga.\n                </p>\n</div>\n</div>\n</div>\n</div>\n<div class=\"mt-8 pt-4 flex items-center justify-between text-surface-tint font-body-sm text-body-sm bg-surface-container-low p-3 rounded-lg\">\n<span class=\"flex items-center gap-1.5\">\n<span class=\"material-symbols-outlined text-headline-sm text-secondary\">verified</span>\n            Proses klaim memakan waktu rata-rata 5-10 menit tanpa biaya sepeser pun.\n          </span>\n</div>\n</div>\n<!-- Pos Satpam Location Card with Map Preview (5 Cols) -->\n<div class=\"lg:col-span-5 bg-surface-container-lowest rounded-xl p-6 sm:p-8 shadow-sm flex flex-col justify-between\">\n<div>\n<div class=\"flex items-center justify-between mb-2\">\n<div class=\"flex items-center gap-2\">\n<span class=\"material-symbols-outlined text-secondary text-headline-md\">storefront</span>\n<span class=\"font-label-md text-label-md font-bold text-on-surface\">Titik Pengambilan Fisik</span>\n</div>\n<span class=\"inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-label-sm text-label-sm\">\n<span class=\"w-2 h-2 rounded-full bg-emerald-600 animate-pulse\"></span>\n              Buka 24 Jam Non-Stop\n            </span>\n</div>\n<h3 class=\"font-headline-md text-headline-md text-on-surface\">Pos Utama Satpam \u2014 GKU &amp; Gerbang Depan</h3>\n<p class=\"font-body-md text-body-md text-surface-tint mt-1 mb-4\">\n            Gedung Kuliah Umum (GKU) Prof. Dr. Sardjito &amp; Gerbang Utama Kampus Terpadu UII.\n          </p>\n<!-- Interactive Static Map Placeholder Component -->\n<div class=\"relative rounded-xl overflow-hidden shadow-sm bg-surface-container group\">\n<div class=\"w-full h-52 bg-cover bg-center rounded-xl transition duration-300 group-hover:scale-105\" data-location=\"Universitas Islam Indonesia, Gedung Kuliah Umum GKU, Sleman Yogyakarta\" style=\"background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDeyj85OdRcnnHEELHr5soj-d1xdS-cfkBcO4H-WnxLdKuSbLGxavgBhTcD60iHJkQp_7Uz8M1MWQUbPvLz172jkLnNdumcn3DluavNxt1FsOVhUxXq8y5AZGP5NeGQ6tBYsbjzygONsfx_G_1lcIn6EWF143GDGGRTjSGLGEcStR7j1n5IRjPjJr1oCZPLnXFv4ahJ-YKyzpAexA3yrIkmDEZCY3w8F-yuGMG0BbY')\"></div>\n<!-- Map Overlay Pin & Badge -->\n<div class=\"absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent flex items-end p-4\">\n<div class=\"text-on-primary\">\n<div class=\"flex items-center gap-1 font-label-md text-label-md\">\n<span class=\"material-symbols-outlined text-headline-sm text-secondary-fixed\">navigation</span>\n<span>Kampus Terpadu Jl. Kaliurang KM 14.5</span>\n</div>\n<div class=\"font-body-sm text-body-sm text-surface-container-highest opacity-90\">Kec. Ngemplak, Kabupaten Sleman, D.I. Yogyakarta 55584</div>\n</div>\n</div>\n</div>\n<!-- Quick Access Detail Specs -->\n<div class=\"flex flex-col gap-2.5 mt-5\">\n<div class=\"flex items-center justify-between p-3 bg-surface-container-low rounded-lg text-on-surface font-body-sm text-body-sm\">\n<span class=\"text-surface-tint\">Akses Masuk:</span>\n<span class=\"font-label-md text-label-md\">Sayap Timur Lobby GKU / Pintu Gerbang Utama</span>\n</div>\n<div class=\"flex items-center justify-between p-3 bg-surface-container-low rounded-lg text-on-surface font-body-sm text-body-sm\">\n<span class=\"text-surface-tint\">Petugas Piket:</span>\n<span class=\"font-label-md text-label-md\">Regu A Satuan Pengamanan UII</span>\n</div>\n<div class=\"flex items-center justify-between p-3 bg-surface-container-low rounded-lg text-on-surface font-body-sm text-body-sm\">\n<span class=\"text-surface-tint\">Telepon Pos Jaga:</span>\n<a class=\"font-label-md text-label-md text-secondary hover:underline\" href=\"tel:0274898444\">(0274) 898444 ext. 110</a>\n</div>\n</div>\n</div>\n<div class=\"pt-6\">\n<a class=\"w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-lg font-label-lg text-label-lg transition\" href=\"https://maps.google.com\" rel=\"noopener noreferrer\" target=\"_blank\">\n<span class=\"material-symbols-outlined text-headline-sm\">directions</span>\n<span>Buka Petunjuk Arah di Google Maps</span>\n</a>\n</div>\n</div>\n</div>\n</section>\n<!-- Inline Script for UI Micro-Interactions -->\n<script>\n    function copyItemId(itemId) {\n      if (navigator.clipboard) {\n        navigator.clipboard.writeText(itemId).then(() => {\n          showToast();\n        }).catch(() => {\n          showToast();\n        });\n      } else {\n        showToast();\n      }\n    }\n\n    function showToast() {\n      const toast = document.getElementById('copy-toast');\n      if (toast) {\n        toast.classList.remove('translate-y-20', 'opacity-0');\n        toast.classList.add('translate-y-0', 'opacity-100');\n        setTimeout(() => {\n          toast.classList.remove('translate-y-0', 'opacity-100');\n          toast.classList.add('translate-y-20', 'opacity-0');\n        }, 3200);\n      }\n    }\n\n    function switchPreview(buttonEl, imgSrc, angleLabel) {\n      const mainImg = document.getElementById('main-product-image');\n      if (mainImg) {\n        mainImg.style.opacity = '0.5';\n        setTimeout(() => {\n          mainImg.src = imgSrc;\n          mainImg.style.opacity = '1';\n        }, 120);\n      }\n\n      document.querySelectorAll('.thumbnail-btn').forEach(btn => {\n        btn.classList.remove('ring-2', 'ring-secondary', 'bg-surface-container-highest');\n      });\n      buttonEl.classList.add('ring-2', 'ring-secondary', 'bg-surface-container-highest');\n    }\n\n    function showStateVariant(state) {\n      const toast = document.getElementById('copy-toast');\n      if (state === 'verifying') {\n        alert(\"Simulasi Status: LF-0248 sedang dalam verifikasi tatap muka oleh mahasiswa bersangkutan.\");\n      } else if (state === 'claimed') {\n        alert(\"Simulasi Status: LF-0248 telah selesai diserahterimakan dengan BAST resmi.\");\n      } else {\n        alert(\"Status Saat Ini: LF-0248 aktif tersimpan di brankas Satpam GKU dan siap diambil pemilik sah.\");\n      }\n    }\n  </script>\n</div></main>\n<!-- BEGIN: MainFooter -->\n<footer class=\"bg-white border-t border-slate-200 pt-12 pb-8\" id=\"pos-satpam\">\n<div class=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">\n<div class=\"grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-slate-100\">\n<!-- Brand & Description (Col 1) -->\n<div class=\"md:col-span-5\">\n<div class=\"flex items-center space-x-3 mb-4\">\n<div class=\"w-9 h-9 rounded-lg bg-uiiNavy text-white flex items-center justify-center font-bold\">\n              UII\n            </div>\n<span class=\"font-bold text-slate-900 text-lg\">Lost &amp; Found Kampus UII</span>\n</div>\n<p class=\"text-sm text-slate-600 leading-relaxed pr-0 md:pr-8\">\n            Layanan resmi pelaporan barang hilang dan temuan untuk mahasiswa, staf, dan pengunjung Universitas Islam Indonesia bekerja sama dengan Satuan Pengamanan Kampus.\n          </p>\n<div class=\"mt-4 flex items-center space-x-3 text-xs text-slate-400\">\n<span class=\"inline-flex items-center gap-1\">\n<span class=\"w-2 h-2 rounded-full bg-emerald-500\"></span>\n              Sistem Aktif 24 Jam\n            </span>\n<span>\u2022</span>\n<span>Kampus Terpadu Yogyakarta</span>\n</div>\n</div>\n<!-- Quick Links (Col 2) -->\n<div class=\"md:col-span-3\">\n<h4 class=\"text-sm font-bold text-slate-900 uppercase tracking-wider mb-4\">Tautan Cepat</h4>\n<ul class=\"space-y-2.5 text-sm text-slate-600\">\n<li><a class=\"hover:text-uiiNavy transition\" href=\"#beranda\">Beranda</a></li>\n<li><a class=\"hover:text-uiiNavy transition\" href=\"#barang-temuan\">Barang Temuan</a></li>\n<li><a class=\"hover:text-uiiNavy transition\" href=\"#cara-kerja\">Cara Kerja &amp; Panduan</a></li>\n<li><a class=\"hover:text-uiiNavy transition\" href=\"#pos-satpam\">Pos Satpam &amp; Lokasi</a></li>\n<li><a class=\"hover:text-uiiNavy transition\" href=\"#kebijakan-privasi\">Kebijakan Privasi</a></li>\n</ul>\n</div>\n<!-- Pos Satpam Contact Info (Col 3) -->\n<div class=\"md:col-span-4\">\n<h4 class=\"text-sm font-bold text-slate-900 uppercase tracking-wider mb-4\">Kontak Pos Satpam</h4>\n<div class=\"text-sm text-slate-600 space-y-3\">\n<p class=\"leading-relaxed\">\n<strong>Pos Utama Satpam:</strong> Gedung Kuliah Umum (GKU) &amp; Gerbang Utama, Kampus Terpadu UII, Jl. Kaliurang Km 14,5, Sleman, D.I. Yogyakarta 55584.\n            </p>\n<div class=\"p-3 bg-slate-50 rounded-xl border border-slate-200/80\">\n<span class=\"block text-xs font-semibold text-slate-500\">Hotline 24 Jam Satpam:</span>\n<a class=\"text-base font-bold text-uiiNavy hover:underline\" href=\"tel:0274898444\">\n                (0274) 898444 ext. Satpam\n              </a>\n<span class=\"block text-xs text-slate-500 mt-0.5\">WhatsApp Tanggap Darurat: +62 812-3456-7890</span>\n</div>\n</div>\n</div>\n</div>\n<!-- Copyright Bottom Bar -->\n<div class=\"mt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4\">\n<p>\u00a9 2024 Universitas Islam Indonesia. Dilindungi hak cipta.</p>\n<div class=\"flex items-center space-x-6\">\n<a class=\"hover:text-slate-800 transition\" href=\"#\">Syarat &amp; Ketentuan</a>\n<a class=\"hover:text-slate-800 transition\" href=\"#\">Kebijakan Privasi</a>\n<a class=\"hover:text-slate-800 transition\" href=\"#\">Bantuan Satpam</a>\n</div>\n</div>\n</div>\n</footer>\n<!-- END: MainFooter -->";
 
-export default function DetailTemuan({ onNavigate }) {
+export default function DetailTemuan({ onNavigate, item }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    
-    // Intercept clicks on links or buttons with data-path, href, or text
+    const container = containerRef.current;
+    if (!container) return;
+
+    const main = container.querySelector("main");
+    if (!main) return;
+
+    let removeCopyListener = () => {};
+    let copyFeedbackTimer;
+
+    if (!item) {
+      const section = main.ownerDocument.createElement("section");
+      section.className = "max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-16";
+
+      const content = main.ownerDocument.createElement("div");
+      content.className = "bg-white rounded-xl p-8 text-center shadow-sm";
+
+      const heading = main.ownerDocument.createElement("h1");
+      heading.className = "text-2xl font-bold text-slate-900";
+      heading.textContent = "Pilih barang dari daftar temuan";
+
+      const message = main.ownerDocument.createElement("p");
+      message.className = "mt-2 text-slate-600";
+      message.textContent = "Detail hanya tersedia setelah barang dipilih dari daftar yang tersimpan.";
+
+      const link = main.ownerDocument.createElement("a");
+      link.href = "#barang-temuan";
+      link.className = "inline-flex mt-6 px-5 py-3 rounded-lg bg-blue-700 text-white font-semibold";
+      link.textContent = "Kembali ke Daftar Barang";
+
+      content.append(heading, message, link);
+      main.replaceChildren(section);
+      section.append(content);
+    } else {
+      const itemId = item.item_id || item.id || "-";
+      const itemName = item.item_name || item.name || item.title || item.category?.name || "Barang Temuan";
+      const categoryName =
+        typeof item.category === "string" ? item.category : item.category?.name || "-";
+      const colorName =
+        typeof item.color === "string" ? item.color : item.color?.label || item.color?.code || "-";
+      const locationName = item.location_name || item.location || "-";
+      const statusText = item.status || "Status tidak tersedia";
+      const foundDate = new Date(item.found_at || item.created_at || "");
+      const foundDateText = Number.isNaN(foundDate.getTime())
+        ? "-"
+        : foundDate.toLocaleString("id-ID", {
+            dateStyle: "long",
+            timeStyle: "short",
+            timeZone: "Asia/Jakarta",
+          });
+
+      const photoColumn = Array.from(main.querySelectorAll("div")).find(
+        (element) => element.classList.contains("lg:col-span-5") && element.querySelector("img"),
+      );
+      if (photoColumn) {
+        const placeholder = main.ownerDocument.createElement("div");
+        placeholder.className = "aspect-[4/3] rounded-xl bg-slate-100 flex items-center justify-center text-slate-500";
+        placeholder.textContent = "Foto belum tersedia";
+        photoColumn.replaceChildren(placeholder);
+      }
+
+      const detailsColumn = Array.from(main.querySelectorAll("div")).find(
+        (element) => element.classList.contains("lg:col-span-7") && element.querySelector("h1"),
+      );
+      if (detailsColumn) {
+        detailsColumn.classList.remove("lg:col-span-7");
+        detailsColumn.classList.add("lg:col-span-12");
+      }
+
+      const lifecycleSection = Array.from(main.querySelectorAll("section")).find((section) =>
+        Array.from(section.querySelectorAll("h2")).some((heading) =>
+          heading.textContent.includes("Status Siklus Hidup Barang Temuan"),
+        ),
+      );
+      lifecycleSection?.remove();
+
+      const itemTitle = main.querySelector("h1");
+      if (itemTitle) {
+        itemTitle.textContent = itemName;
+        const description = itemTitle.nextElementSibling;
+        if (description?.tagName === "P") {
+          description.hidden = true;
+          description.textContent = "";
+        }
+      }
+
+      const setLabeledValue = (label, value) => {
+        const labelElement = Array.from(main.querySelectorAll("span")).find(
+          (element) => element.textContent.trim() === label,
+        );
+        const valueElement = labelElement?.parentElement?.querySelector(":scope > div > span:last-child");
+        if (valueElement) valueElement.textContent = value;
+      };
+
+      const hideLabeledCard = (label) => {
+        const labelElement = Array.from(main.querySelectorAll("span")).find(
+          (element) => element.textContent.trim() === label,
+        );
+        if (labelElement?.parentElement) labelElement.parentElement.hidden = true;
+      };
+
+      setLabeledValue("Kategori", categoryName);
+      setLabeledValue("Warna Dominan", colorName);
+      setLabeledValue("Lokasi Ditemukan", locationName);
+      setLabeledValue("Waktu Temuan", foundDateText);
+      hideLabeledCard("Pos Penyimpanan Saat Ini");
+      hideLabeledCard("Masa Penyimpanan SOP");
+
+      const categoryLabel = Array.from(main.querySelectorAll("span")).find(
+        (element) => element.textContent.trim() === "Kategori",
+      );
+      const categoryIcon = categoryLabel?.parentElement?.querySelector(".material-symbols-outlined");
+      if (categoryIcon) categoryIcon.textContent = "category";
+
+      const colorLabel = Array.from(main.querySelectorAll("span")).find(
+        (element) => element.textContent.trim() === "Warna Dominan",
+      );
+      const colorSwatch = colorLabel?.parentElement?.querySelector(".w-4.h-4");
+      if (colorSwatch) colorSwatch.hidden = true;
+
+      const statusBadge = Array.from(main.querySelectorAll("div, span")).find(
+        (element) =>
+          element.childElementCount === 0 &&
+          element.textContent.trim() === "Barang Ditemukan — Siap Diklaim di Pos Satpam",
+      );
+      if (statusBadge) statusBadge.textContent = statusText;
+
+      const privacyHeading = Array.from(main.querySelectorAll("strong")).find(
+        (element) => element.textContent.trim() === "Catatan Privasi & Pencegahan Penipuan:",
+      );
+      if (privacyHeading?.parentElement) {
+        privacyHeading.parentElement.replaceChildren(
+          privacyHeading,
+          main.ownerDocument.createTextNode(
+            " Ciri khusus tertentu tidak ditampilkan pada halaman publik agar dapat digunakan sebagai bahan verifikasi langsung oleh petugas Satpam.",
+          ),
+        );
+      }
+
+      const sensitiveStep = Array.from(main.querySelectorAll("p")).find((element) =>
+        element.textContent.includes("merk di bagian dalam dompet"),
+      );
+      if (sensitiveStep) {
+        sensitiveStep.textContent =
+          "Sebutkan ciri khusus yang hanya diketahui pemilik sah dan tidak ditampilkan pada halaman publik.";
+      }
+
+      const copyToast = main.querySelector("#copy-toast");
+      const copyToastMessage = copyToast?.querySelector(".font-body-md");
+      if (copyToastMessage) copyToastMessage.textContent = `Kode Item ID ${itemId} berhasil disalin!`;
+      if (copyToast) {
+        copyToast.hidden = true;
+        copyToast.style.display = "none";
+      }
+
+      const textWalker = main.ownerDocument.createTreeWalker(
+        main,
+        main.ownerDocument.defaultView?.NodeFilter.SHOW_TEXT ?? 4,
+      );
+      const textNodes = [];
+      while (textWalker.nextNode()) textNodes.push(textWalker.currentNode);
+      for (const textNode of textNodes) {
+        if (textNode.nodeValue.includes("LF-0248")) {
+          textNode.nodeValue = textNode.nodeValue.replaceAll("LF-0248", itemId);
+        }
+      }
+
+      const idElement = main.querySelector("#target-item-id");
+      if (idElement) idElement.textContent = itemId;
+
+      const copyButton = idElement?.parentElement?.querySelector("button");
+      if (copyButton) {
+        copyButton.removeAttribute("onclick");
+        const icon = copyButton.querySelector("span");
+        const showCopyFeedback = (message) => {
+          if (copyToastMessage) copyToastMessage.textContent = message;
+          if (copyToast) {
+            copyToast.hidden = false;
+            copyToast.style.display = "flex";
+          }
+          clearTimeout(copyFeedbackTimer);
+          copyFeedbackTimer = setTimeout(() => {
+            if (copyToast) {
+              copyToast.hidden = true;
+              copyToast.style.display = "none";
+            }
+          }, 2500);
+        };
+        const copyItemId = async () => {
+          try {
+            await navigator.clipboard.writeText(itemId);
+            copyButton.title = "ID barang berhasil disalin";
+            if (icon) icon.textContent = "check";
+            showCopyFeedback(`Kode Item ID ${itemId} berhasil disalin!`);
+          } catch (error) {
+            console.error("Gagal menyalin ID barang:", error);
+            copyButton.title = "Gagal menyalin ID barang";
+            if (icon) icon.textContent = "error";
+            showCopyFeedback("Gagal menyalin ID barang.");
+          }
+        };
+        copyButton.addEventListener("click", copyItemId);
+        removeCopyListener = () => copyButton.removeEventListener("click", copyItemId);
+      }
+    }
+
     const handleClick = (e) => {
       const target = e.target.closest('a, button');
       if (!target) return;
@@ -60,10 +262,13 @@ export default function DetailTemuan({ onNavigate }) {
       }
     };
 
-    const el = containerRef.current;
-    el.addEventListener('click', handleClick);
-    return () => el.removeEventListener('click', handleClick);
-  }, [onNavigate]);
+    container.addEventListener("click", handleClick);
+    return () => {
+      container.removeEventListener("click", handleClick);
+      removeCopyListener();
+      clearTimeout(copyFeedbackTimer);
+    };
+  }, [item, onNavigate]);
 
   return (
     <div

@@ -457,6 +457,46 @@ paths:
         '500':
           description: Gagal mengambil antrean atau statistik.
 
+  /staff/items:
+    get:
+      tags: [staff-intake]
+      summary: Ambil daftar inventaris tersimpan
+      description: Mengambil seluruh item yang sudah tersimpan pada tabel `item`, dari yang terbaru diterima.
+      operationId: listInventoryItems
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Daftar inventaris tersimpan.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, total]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [item_id, item_name, category_name, color, condition, storage_rack, received_at, received_by_name, received_by_username, status, has_photo]
+                      properties:
+                        item_id: { type: string }
+                        item_name: { type: string }
+                        category_name: { type: string }
+                        color: { type: string }
+                        condition: { type: string }
+                        storage_rack: { type: string }
+                        received_at: { type: string, format: date-time }
+                        received_by_name: { type: string }
+                        received_by_username: { type: string }
+                        status: { type: string, enum: [Barang Ditemukan, Proses Verifikasi, Telah Diambil, Ditahan] }
+                        has_photo: { type: boolean }
+                  total: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500':
+          description: Gagal mengambil daftar inventaris.
+
   /staff/found-reports/{report_id}/receive:
     post:
       tags: [staff-intake]

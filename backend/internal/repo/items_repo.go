@@ -156,3 +156,61 @@ func (s *Store) PublicItems(ctx context.Context) ([]PublicItem, error) {
 
 	return items, nil
 }
+
+func (s *Store) ListInventoryItems(ctx context.Context) ([]InventoryItem, error) {
+	items := make([]InventoryItem, 0)
+
+	rows, err := s.db.Query(ctx, `
+		SELECT
+			i.item_id,
+			COALESCE(NULLIF(BTRIM(fr.item_name), ''), NULLIF(BTRIM(fr.description), ''), c.name),
+			c.name,
+			i.color,
+			i.condition,
+			i.storage_rack,
+			i.received_at,
+			staff.name,
+			staff.username,
+			i.status,
+			COALESCE(octet_length(i.intake_photo_data), 0) > 0
+		FROM item i
+		JOIN found_report fr
+			ON fr.found_report_id = i.found_report_id
+		JOIN category c
+			ON c.category_id = i.category_id
+		JOIN staff
+			ON staff.staff_id = i.received_by_staff_id
+		ORDER BY i.received_at DESC
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("mengambil daftar inventaris: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var item InventoryItem
+		if err := rows.Scan(
+			&item.ItemID,
+			&item.ItemName,
+			&item.CategoryName,
+			&item.Color,
+			&item.Condition,
+			&item.StorageRack,
+			&item.ReceivedAt,
+			&item.ReceivedByName,
+			&item.ReceivedByUsername,
+			&item.Status,
+			&item.HasPhoto,
+		); err != nil {
+			return nil, fmt.Errorf("membaca daftar inventaris: %w", err)
+		}
+
+		items = append(items, item)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("membaca hasil daftar inventaris: %w", err)
+	}
+
+	return items, nil
+}
