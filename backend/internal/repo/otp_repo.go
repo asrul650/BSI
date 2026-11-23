@@ -285,6 +285,11 @@ var (
 	ErrVerificationTokenInvalid = errors.New("token verifikasi tidak valid")
 	ErrVerificationTokenExpired = errors.New("token verifikasi sudah kedaluwarsa")
 	ErrVerificationTokenUsed    = errors.New("token verifikasi sudah digunakan")
+
+	// ErrReportSaveFailed menandai kegagalan infrastruktur (DB/transaksi) saat
+	// menyimpan laporan. Pesan err asli hanya boleh dibaca lewat log server
+	// (errors.Unwrap), tidak pernah dikirim langsung ke klien.
+	ErrReportSaveFailed = errors.New("gagal menyimpan laporan")
 )
 
 func (s *Store) ConsumeVerificationToken(
@@ -357,7 +362,7 @@ func (s *Store) CreateLostReportWithToken(
 ) error {
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
-		return fmt.Errorf("begin create lost report: %w", err)
+		return fmt.Errorf("%w: begin create lost report: %v", ErrReportSaveFailed, err)
 	}
 	defer tx.Rollback(ctx)
 
@@ -383,7 +388,7 @@ func (s *Store) CreateLostReportWithToken(
 		return ErrVerificationTokenInvalid
 	}
 	if err != nil {
-		return fmt.Errorf("get verification token: %w", err)
+		return fmt.Errorf("%w: get verification token: %v", ErrReportSaveFailed, err)
 	}
 
 	if usedAt != nil {
@@ -425,7 +430,7 @@ func (s *Store) CreateLostReportWithToken(
 	)
 
 	if err != nil {
-		return fmt.Errorf("insert lost report: %w", err)
+		return fmt.Errorf("%w: insert lost report: %v", ErrReportSaveFailed, err)
 	}
 
 	// Tandai token telah digunakan.
@@ -439,11 +444,11 @@ func (s *Store) CreateLostReportWithToken(
 	`, p.PhoneHash, OTPPurposeLostReport, p.TokenHash)
 
 	if err != nil {
-		return fmt.Errorf("consume verification token: %w", err)
+		return fmt.Errorf("%w: consume verification token: %v", ErrReportSaveFailed, err)
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-		return fmt.Errorf("commit lost report: %w", err)
+		return fmt.Errorf("%w: commit lost report: %v", ErrReportSaveFailed, err)
 	}
 
 	return nil
@@ -455,7 +460,7 @@ func (s *Store) CreateFoundReportWithToken(
 ) error {
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
-		return fmt.Errorf("begin create found report: %w", err)
+		return fmt.Errorf("%w: begin create found report: %v", ErrReportSaveFailed, err)
 	}
 	defer tx.Rollback(ctx)
 
@@ -481,7 +486,7 @@ func (s *Store) CreateFoundReportWithToken(
 		return ErrVerificationTokenInvalid
 	}
 	if err != nil {
-		return fmt.Errorf("get verification token: %w", err)
+		return fmt.Errorf("%w: get verification token: %v", ErrReportSaveFailed, err)
 	}
 
 	if usedAt != nil {
@@ -527,7 +532,7 @@ func (s *Store) CreateFoundReportWithToken(
 	)
 
 	if err != nil {
-		return fmt.Errorf("insert found report: %w", err)
+		return fmt.Errorf("%w: insert found report: %v", ErrReportSaveFailed, err)
 	}
 
 	// Tandai token sudah digunakan.
@@ -541,11 +546,11 @@ func (s *Store) CreateFoundReportWithToken(
 	`, p.PhoneHash, OTPPurposeFoundReport, p.TokenHash)
 
 	if err != nil {
-		return fmt.Errorf("consume verification token: %w", err)
+		return fmt.Errorf("%w: consume verification token: %v", ErrReportSaveFailed, err)
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-		return fmt.Errorf("commit found report: %w", err)
+		return fmt.Errorf("%w: commit found report: %v", ErrReportSaveFailed, err)
 	}
 
 	return nil

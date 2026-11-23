@@ -152,8 +152,10 @@ func (h *FoundHandler) CreateFoundReport(w http.ResponseWriter, r *http.Request)
 	)
 
 	if err != nil {
-		log.Printf("Gagal menyimpan laporan ditemukan: %v", err)
-
+		if errors.Is(err, repo.ErrReportSaveFailed) {
+			writeInternalError(w, r, "CreateFoundReport", err)
+			return
+		}
 		writeJSON(w, http.StatusBadRequest, map[string]string{
 			"error": err.Error(),
 		})
@@ -215,6 +217,10 @@ func (h *FoundHandler) ReceiveFoundReport(w http.ResponseWriter, r *http.Request
 		photoMimeType,
 	)
 	if err != nil {
+		if errors.Is(err, repo.ErrReceiveFoundReportFailed) {
+			writeInternalError(w, r, "ReceiveFoundReport", err)
+			return
+		}
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}

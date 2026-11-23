@@ -13,6 +13,10 @@ import (
 
 var ErrFoundReceiptNotAvailable = errors.New("bukti penerimaan belum tersedia")
 
+// ErrReceiveFoundReportFailed menandai kegagalan infrastruktur (DB/transaksi)
+// saat memproses penerimaan barang. Detail asli hanya untuk log server.
+var ErrReceiveFoundReportFailed = errors.New("gagal memproses penerimaan barang")
+
 func (s *Store) ReceiveFoundReport(
 	ctx context.Context,
 	reportID, storageRack, condition string,
@@ -21,7 +25,7 @@ func (s *Store) ReceiveFoundReport(
 ) (ItemData, error) {
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
-		return ItemData{}, fmt.Errorf("memulai penerimaan barang: %w", err)
+		return ItemData{}, fmt.Errorf("%w: memulai penerimaan barang: %v", ErrReceiveFoundReportFailed, err)
 	}
 	defer tx.Rollback(ctx)
 
@@ -58,7 +62,7 @@ func (s *Store) ReceiveFoundReport(
 		if errors.Is(err, pgx.ErrNoRows) {
 			return ItemData{}, fmt.Errorf("laporan temuan tidak ditemukan")
 		}
-		return ItemData{}, fmt.Errorf("mengambil laporan temuan: %w", err)
+		return ItemData{}, fmt.Errorf("%w: mengambil laporan temuan: %v", ErrReceiveFoundReportFailed, err)
 	}
 	if report.Status != "Menunggu Penyerahan" {
 		return ItemData{}, fmt.Errorf("status laporan tidak bisa diterima")
@@ -77,12 +81,12 @@ func (s *Store) ReceiveFoundReport(
 		LIMIT 1
 	`).Scan(&staffID, &staffName)
 	if err != nil {
-		return ItemData{}, fmt.Errorf("mengambil petugas satpam aktif: %w", err)
+		return ItemData{}, fmt.Errorf("%w: mengambil petugas satpam aktif: %v", ErrReceiveFoundReportFailed, err)
 	}
 
 	itemID, err := core.GenerateTicketID("BRG")
 	if err != nil {
-		return ItemData{}, fmt.Errorf("membuat ID barang: %w", err)
+		return ItemData{}, fmt.Errorf("%w: membuat ID barang: %v", ErrReceiveFoundReportFailed, err)
 	}
 
 	var savedItem ItemData
@@ -121,7 +125,7 @@ func (s *Store) ReceiveFoundReport(
 		VALUES ($1, $2, $3, $4, $5, $6, '', $7, $8, $9, 'Barang Ditemukan')
 	`, itemID, reportID, report.CategoryID, report.Color, condition, storageRack, intakePhotoValue, intakePhotoMimeTypeValue, staffID)
 	if err != nil {
-		return ItemData{}, fmt.Errorf("menyimpan barang inventaris: %w", err)
+		return ItemData{}, fmt.Errorf("%w: menyimpan barang inventaris: %v", ErrReceiveFoundReportFailed, err)
 	}
 
 	_, err = tx.Exec(ctx, `
@@ -130,11 +134,11 @@ func (s *Store) ReceiveFoundReport(
 		WHERE found_report_id = $1
 	`, reportID)
 	if err != nil {
-		return ItemData{}, fmt.Errorf("memperbarui status laporan temuan: %w", err)
+		return ItemData{}, fmt.Errorf("%w: memperbarui status laporan temuan: %v", ErrReceiveFoundReportFailed, err)
 	}
 
 	if err := tx.Commit(ctx); err != nil {
-		return ItemData{}, fmt.Errorf("menyelesaikan penerimaan barang: %w", err)
+		return ItemData{}, fmt.Errorf("%w: menyelesaikan penerimaan barang: %v", ErrReceiveFoundReportFailed, err)
 	}
 
 	return savedItem, nil

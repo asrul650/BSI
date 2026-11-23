@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"strings"
@@ -176,8 +177,11 @@ func (h *PublicHandler) CreateLostReport(w http.ResponseWriter, r *http.Request)
 	)
 
 	if err != nil {
+		if errors.Is(err, repo.ErrReportSaveFailed) {
+			writeInternalError(w, r, "CreateLostReport", err)
+			return
+		}
 		log.Printf("Gagal menyimpan laporan kehilangan: %v", err)
-
 		writeJSON(w, http.StatusBadRequest, map[string]string{
 			"error": "Verifikasi WhatsApp gagal atau token tidak valid",
 		})

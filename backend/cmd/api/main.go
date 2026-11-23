@@ -7,6 +7,7 @@ import (
 
 	"LostandFound/internal/core"
 	"LostandFound/internal/handler"
+	"LostandFound/internal/middleware"
 	"LostandFound/internal/repo"
 	"LostandFound/internal/service"
 
@@ -65,7 +66,8 @@ func main() {
 
 	log.Println("Server jalan di http://localhost:8080")
 
-	if err := http.ListenAndServe(":8080", corsMiddleware(mux)); err != nil {
+	handlerChain := middleware.RequestID(corsMiddleware(mux))
+	if err := http.ListenAndServe(":8080", handlerChain); err != nil {
 		log.Fatal(err)
 	}
 }
