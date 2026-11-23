@@ -86,20 +86,11 @@ const screens = {
 export default function App() {
   const [activeScreen, setActiveScreen] = useState('landing');
 
-  // Sesi akun Satpam aktif (tersimpan di localStorage)
+  // Sesi akun Satpam aktif (default null agar wajib login saat membuka portal satpam)
   const [satpamUser, setSatpamUser] = useState(() => {
     try {
-      const saved = localStorage.getItem("satpam_session");
-      return saved
-        ? JSON.parse(saved)
-        : {
-            nrp: "SEC-042",
-            username: "satpam_pos1",
-            name: "Bripka Hendra Kurniawan",
-            jabatan: "Komandan Regu (Danru)",
-            pos: "Pos Induk GKU (Sardjito)",
-            token: "mock_jwt_satpam_SEC-042",
-          };
+      const saved = sessionStorage.getItem("satpam_session");
+      return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
     }
@@ -111,8 +102,13 @@ export default function App() {
   const isPublicPortal = !isSatpamPortal && !isAdminPortal;
 
   const handleNavigate = (target) => {
-    if (screens[target]) {
-      setActiveScreen(target);
+    let destination = target;
+    // Proteksi rute: jika masuk ke portal satpam tanpa login, paksa ke satpam_login
+    if (destination.startsWith('satpam_') && destination !== 'satpam_login' && !satpamUser) {
+      destination = 'satpam_login';
+    }
+    if (screens[destination]) {
+      setActiveScreen(destination);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -120,17 +116,20 @@ export default function App() {
   const handleSatpamLogin = (user) => {
     setSatpamUser(user);
     try {
-      localStorage.setItem("satpam_session", JSON.stringify(user));
+      sessionStorage.setItem("satpam_session", JSON.stringify(user));
     } catch {}
-    handleNavigate('satpam_dashboard');
+    setActiveScreen('satpam_dashboard');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSatpamLogout = () => {
     setSatpamUser(null);
     try {
+      sessionStorage.removeItem("satpam_session");
       localStorage.removeItem("satpam_session");
     } catch {}
-    handleNavigate('satpam_login');
+    setActiveScreen('satpam_login');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const getPortalLabel = () => {
@@ -174,20 +173,39 @@ export default function App() {
 
             {isSatpamPortal && activeScreen !== 'satpam_login' && (
               <button
-                onClick={() => handleNavigate('satpam_login')}
+                onClick={handleSatpamLogout}
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 transition-all shadow-sm cursor-pointer border border-amber-500/40"
-                title="Buka Form Login Satpam (Untuk Demo / Backend)"
+                title="Keluar dari Akun Satpam / Kembali ke Login"
               >
-                <span className="material-symbols-outlined text-[15px]">login</span>
-                <span className="hidden sm:inline">Layar Login</span>
+                <span className="material-symbols-outlined text-[15px]">logout</span>
+                <span className="hidden sm:inline">Logout Satpam</span>
+              </button>
+            )}
+
+            {isSatpamPortal && activeScreen === 'satpam_login' && (
+              <button
+                onClick={() => {
+                  setSatpamUser({
+                    nrp: "SEC-042",
+                    name: "Bripka Hendra Kurniawan",
+                    jabatan: "Danru",
+                    pos: "Pos Induk GKU",
+                  });
+                  setActiveScreen('satpam_dashboard');
+                }}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Lewati Login Langsung ke Dashboard"
+              >
+                <span className="material-symbols-outlined text-[15px]">dashboard</span>
+                <span className="hidden sm:inline">Buka Dashboard</span>
               </button>
             )}
 
             {!isSatpamPortal && (
               <button
-                onClick={() => handleNavigate(satpamUser ? 'satpam_dashboard' : 'satpam_login')}
+                onClick={() => handleNavigate('satpam_login')}
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Satpam Kampus UII"
+                title="Buka Portal Satpam Kampus UII (Login)"
               >
                 <span className="material-symbols-outlined text-[15px]">local_police</span>
                 <span className="hidden sm:inline">Satpam</span>
