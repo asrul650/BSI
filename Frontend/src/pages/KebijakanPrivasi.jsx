@@ -58,6 +58,13 @@ export default function KebijakanPrivasi({ onNavigate }) {
         if (onNavigate) onNavigate('pilihan_penyerahan');
         return;
       }
+
+      // Pos Satpam
+      if (text.includes('Pos Satpam') || path === '#pos-satpam' || path === 'pos-satpam') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
+      }
     };
 
     el.addEventListener('click', handleClick);

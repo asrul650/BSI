@@ -119,11 +119,15 @@ export default function DetailTemuan({ onNavigate }) {
         return;
       }
 
-      // "Lihat Lokasi Pos Satpam"
-      if (text.includes('Lihat Lokasi Pos') || path === '#lokasi-pos') {
+      // "Pos Satpam" or "Lihat Lokasi Pos Satpam"
+      if (text.includes('Pos Satpam') || path === '#pos-satpam' || path === 'pos-satpam' || text.includes('Lihat Lokasi Pos') || path === '#lokasi-pos') {
         e.preventDefault();
-        const posEl = el.querySelector('#lokasi-pos');
-        if (posEl) posEl.scrollIntoView({ behavior: 'smooth' });
+        const posEl = el.querySelector('#lokasi-pos') || el.querySelector('#pos-satpam');
+        if (posEl) {
+          posEl.scrollIntoView({ behavior: 'smooth' });
+        } else if (onNavigate) {
+          onNavigate('landing');
+        }
         return;
       }
 

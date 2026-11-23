@@ -79,6 +79,13 @@ export default function LaporKehilanganStep3({ onNavigate }) {
         if (onNavigate) onNavigate('kebijakan_privasi');
         return;
       }
+
+      // Pos Satpam
+      if (text.includes('Pos Satpam') || path === '#pos-satpam' || path === 'pos-satpam') {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
+      }
     };
 
     el.addEventListener('click', handleClick);

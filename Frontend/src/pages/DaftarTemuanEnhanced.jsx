@@ -152,6 +152,18 @@ export default function DaftarTemuanEnhanced({ onNavigate }) {
         return;
       }
 
+      // "Pos Satpam"
+      if (text === 'Pos Satpam' || path === '#pos-satpam' || path === 'pos-satpam') {
+        e.preventDefault();
+        const posSection = el.querySelector('#pos-satpam');
+        if (posSection) {
+          posSection.scrollIntoView({ behavior: 'smooth' });
+        } else if (onNavigate) {
+          onNavigate('landing');
+        }
+        return;
+      }
+
       // "Klaim di Pos Satpam" OR clicking any card in the grid -> goes to detail
       if (text.includes('Klaim di Pos Satpam') || target.closest('.grid .group') || path.includes('detail') || path.includes('0064cc74')) {
         e.preventDefault();

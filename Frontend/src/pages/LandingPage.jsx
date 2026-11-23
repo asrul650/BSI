@@ -75,8 +75,8 @@ export default function LandingPage({ onNavigate }) {
         return;
       }
 
-      // "Tanya Satpam Sekarang"
-      if (text.includes('Tanya Satpam')) {
+      // "Pos Satpam" or "Tanya Satpam Sekarang"
+      if (text.includes('Pos Satpam') || text.includes('Tanya Satpam') || path === '#pos-satpam' || path === 'pos-satpam') {
         e.preventDefault();
         const posSection = el.querySelector('#pos-satpam');
         if (posSection) posSection.scrollIntoView({ behavior: 'smooth' });
