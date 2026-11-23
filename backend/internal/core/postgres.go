@@ -12,7 +12,7 @@ import (
 func NewPool(ctx context.Context) (*pgxpool.Pool, error) {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
-		dsn = "postgres://lostfound:lostfound_dev@localhost:5432/lostfound?sslmode=disable"
+		return nil, fmt.Errorf("DATABASE_URL wajib diisi di .env")
 	}
 
 	cfg, err := pgxpool.ParseConfig(dsn)

@@ -5,10 +5,10 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: lostfound
-      POSTGRES_PASSWORD: lostfound_dev
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?isi POSTGRES_PASSWORD di backend/.env}
       POSTGRES_DB: lostfound
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - lostfound_data:/var/lib/postgresql/data
     healthcheck:
