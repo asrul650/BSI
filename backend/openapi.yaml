@@ -891,8 +891,11 @@ paths:
       tags: [staff-matching]
       summary: Daftar hasil matching (UC-08)
       description: |
-        Hanya `tinggi` dan `sedang` yang ditampilkan (`rendah` disimpan untuk analisis, tidak ditampilkan).
-        Urutan: `final_score` turun, lalu `description_priority` turun. Rincian per komponen disertakan.
+        Pasangan dihitung dari item berstatus `Barang Ditemukan` dan laporan berstatus aktif,
+        lalu skor terbaru dicatat di `matching_result`. Hanya `tinggi` dan `sedang` yang
+        ditampilkan (`rendah` disimpan untuk analisis, tidak ditampilkan). Urutan:
+        `final_score` turun, lalu `description_priority` turun. Rincian perbandingan aman
+        untuk petugas dan skor per komponen disertakan; deskripsi lengkap dan kontak pelapor tidak.
       operationId: listMatches
       security:
         - cookieAuth: []
@@ -913,7 +916,7 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, page, page_size, total]
+                required: [data, page, page_size, total, evaluated_pairs, summary]
                 properties:
                   data:
                     type: array
@@ -921,6 +924,17 @@ paths:
                   page: { type: integer }
                   page_size: { type: integer }
                   total: { type: integer }
+                  evaluated_pairs:
+                    type: integer
+                    description: Jumlah pasangan kategori aktif yang dihitung.
+                  summary:
+                    type: object
+                    required: [high, medium, notified, needs_review]
+                    properties:
+                      high: { type: integer }
+                      medium: { type: integer }
+                      notified: { type: integer }
+                      needs_review: { type: integer }
         '401': { $ref: '#/components/responses/Unauthenticated' }
         '403': { $ref: '#/components/responses/Forbidden' }
 
@@ -2164,7 +2178,16 @@ components:
         matching_id: { type: integer, format: int64 }
         lost_report_id: { $ref: '#/components/schemas/LostReportCode' }
         item_id: { type: string }
+        lost_item_name: { type: string }
+        item_name: { type: string }
         category: { type: string }
+        lost_color: { type: string }
+        item_color: { type: string }
+        lost_location: { type: string }
+        item_location: { type: string }
+        storage_rack: { type: string }
+        lost_at: { type: string, format: date-time }
+        found_at: { type: string, format: date-time }
         band: { $ref: '#/components/schemas/MatchBand' }
         final_score:
           type: number
@@ -2177,6 +2200,9 @@ components:
         description_priority:
           type: number
           description: Jaccard 0-1. Hanya untuk urutan, tidak ikut skor.
+        should_notify:
+          type: boolean
+          description: Kandidat mencapai ambang skor notifikasi; bukan bukti notifikasi terkirim.
         notified: { type: boolean }
         queued_for_review:
           type: boolean

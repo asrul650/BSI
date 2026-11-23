@@ -198,23 +198,9 @@ func (h *PublicHandler) CreateLostReport(w http.ResponseWriter, r *http.Request)
 		Status:           "Aktif",
 	}
 
-	// Mencari barang yang cocok
-	matches := h.store.FindMatches(saved)
-
-	for _, m := range matches {
-		log.Printf(
-			"[MATCH] Laporan %s -> barang %s | skor: %.2f | band: %s",
-			saved.ReportID,
-			m.ItemID,
-			m.Score,
-			m.Band,
-		)
-	}
-
 	writeJSON(w, http.StatusCreated, map[string]any{
 		"message": "Laporan kehilangan berhasil dibuat",
 		"report":  saved,
-		"matches": matches,
 	})
 }
 

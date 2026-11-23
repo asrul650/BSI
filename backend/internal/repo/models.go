@@ -175,6 +175,32 @@ type MatchResult struct {
 	ShouldNotify  bool    `json:"should_notify"`
 }
 
+type StaffMatch struct {
+	MatchingID          int64     `json:"matching_id"`
+	LostReportID        string    `json:"lost_report_id"`
+	LostItemName        string    `json:"lost_item_name"`
+	LostColor           string    `json:"lost_color"`
+	LostLocation        string    `json:"lost_location"`
+	LostAt              time.Time `json:"lost_at"`
+	ItemID              string    `json:"item_id"`
+	ItemName            string    `json:"item_name"`
+	Category            string    `json:"category"`
+	ItemColor           string    `json:"item_color"`
+	ItemLocation        string    `json:"item_location"`
+	StorageRack         string    `json:"storage_rack"`
+	FoundAt             time.Time `json:"found_at"`
+	ColorScore          float64   `json:"color_score"`
+	LocationScore       float64   `json:"location_score"`
+	TimeScore           float64   `json:"time_score"`
+	FinalScore          float64   `json:"final_score"`
+	DescriptionPriority float64   `json:"description_priority"`
+	Band                string    `json:"band"`
+	ShouldNotify        bool      `json:"should_notify"`
+	Notified            bool      `json:"notified"`
+	QueuedForReview     bool      `json:"queued_for_review"`
+	ProcessedAt         time.Time `json:"processed_at"`
+}
+
 type FailedClaimRecord struct {
 	ClaimantName string    `json:"claimant_name"`
 	ClaimantWA   string    `json:"claimant_wa"`
