@@ -224,7 +224,7 @@ func (h *FoundHandler) ReceiveFoundReport(w http.ResponseWriter, r *http.Request
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 		return
 	}
-	h.store.AddAuditLog("receive_found", item.ItemID, "satpam",
+	h.store.AddAuditLog("receive_found", item.ItemID, actorFromRequest(r),
 		"Dari laporan "+reportID+", rak: "+item.StorageRack)
 
 	writeJSON(w, http.StatusCreated, map[string]any{

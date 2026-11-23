@@ -161,6 +161,7 @@ type SessionView struct {
 	SessionID          int64
 	StaffID            int64
 	StaffName          string
+	StaffUsername      string
 	StaffRole          string
 	CSRFToken          string
 	MFAVerified        bool
@@ -203,6 +204,7 @@ func (a *AuthService) ValidateSession(ctx context.Context, token string) (Sessio
 		SessionID:          sess.SessionID,
 		StaffID:            sess.StaffID,
 		StaffName:          sess.StaffName,
+		StaffUsername:      sess.StaffUsername,
 		StaffRole:          sess.StaffRole,
 		CSRFToken:          sess.CSRFToken,
 		MFAVerified:        sess.MFAVerified,

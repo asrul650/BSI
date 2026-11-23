@@ -62,7 +62,7 @@ func (h *HandoverHandler) StartVerification(w http.ResponseWriter, r *http.Reque
 	if item.Claim != nil && item.Claim.RejectCount >= 2 {
 		anomalies = append(anomalies, "A2")
 	}
-	h.store.AddAuditLog("start_verify", item.ItemID, "satpam",
+	h.store.AddAuditLog("start_verify", item.ItemID, actorFromRequest(r),
 		"Pemohon: "+item.Claim.ClaimantName+" ("+item.Claim.ClaimantIDType+")", anomalies...)
 
 	writeJSON(w, http.StatusOK, map[string]any{
@@ -91,8 +91,8 @@ func (h *HandoverHandler) RejectClaim(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.store.AddAuditLog("reject_claim", item.ItemID, "satpam",
-	"Alasan: "+req.Reason, "A3")
+	h.store.AddAuditLog("reject_claim", item.ItemID, actorFromRequest(r),
+		"Alasan: "+req.Reason, "A3")
 
 	writeJSON(w, http.StatusOK, map[string]any{
 		"item_id": item.ItemID,
@@ -125,8 +125,8 @@ func (h *HandoverHandler) CompleteHandover(w http.ResponseWriter, r *http.Reques
 		!strings.EqualFold(strings.TrimSpace(item.Claim.ClaimantName), strings.TrimSpace(req.ReceiverName)) {
 		anomalies = append(anomalies, "A7")
 	}
-	h.store.AddAuditLog("handover", item.ItemID, "satpam",
-	"Penerima: "+req.ReceiverName, anomalies...)
+	h.store.AddAuditLog("handover", item.ItemID, actorFromRequest(r),
+		"Penerima: "+req.ReceiverName, anomalies...)
 
 	writeJSON(w, http.StatusOK, map[string]any{
 		"item_id":  item.ItemID,
