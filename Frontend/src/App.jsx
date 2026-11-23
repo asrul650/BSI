@@ -12,6 +12,8 @@ import LaporKehilanganStep3 from "./pages/LaporKehilanganStep3";
 import LaporKehilanganSukses from "./pages/LaporKehilanganSukses";
 import PilihanPenyerahanTemuan from "./pages/PilihanPenyerahanTemuan";
 import LaporTemuanStep1 from "./pages/LaporTemuanStep1";
+import LaporTemuanStep2OTP from "./pages/LaporTemuanStep2OTP";
+import LaporTemuanStep3 from "./pages/LaporTemuanStep3";
 import LaporTemuanSukses from "./pages/LaporTemuanSukses";
 import CaraKerja from "./pages/CaraKerja";
 import FAQ from "./pages/FAQ";
@@ -54,6 +56,8 @@ const screens = {
 
   pilihan_penyerahan: PilihanPenyerahanTemuan,
   lapor_temuan_1: LaporTemuanStep1,
+  lapor_temuan_2_otp: LaporTemuanStep2OTP,
+  lapor_temuan_3: LaporTemuanStep3,
   lapor_temuan_sukses: LaporTemuanSukses,
 
   cara_kerja: CaraKerja,

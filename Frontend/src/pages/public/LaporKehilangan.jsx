@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import LaporKehilanganStep3 from "./LaporKehilanganStep3";
 import { ArrowLeft, ArrowRight, ShieldCheck, CheckCircle2, Lock, Smartphone, Timer, AlertCircle } from "lucide-react";
 const API_BASE_URL = "http://localhost:8080";
 
@@ -117,7 +118,7 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
       setOtpError("Kode OTP telah kedaluwarsa. Silakan minta kode baru.");
       return;
     }
-    
+
     if (otpInput.length !== 6) {
       setOtpError("Kode OTP harus terdiri dari 6 digit angka");
       return;
@@ -152,65 +153,33 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
         throw new Error("Token verifikasi tidak diterima dari server");
       }
 
-      setVerificationToken(token);
-
-      // 2. Gabungkan tanggal dan waktu
+      // 2. Simpan token dan data laporan sementara
       const lostAt = new Date(`${formData.date}T${formData.time}:00+07:00`).toISOString();
 
-      // 3. Simpan laporan ke backend
-      const reportResponse = await fetch(`${API_BASE_URL}/v1/public/lost-reports`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          category_id: Number(formData.category),
-          item_name: formData.itemName,
-          color: formData.color,
-          location_id: Number(formData.location),
-          lost_at: lostAt,
-          description: formData.description,
-          reporter_name: formData.reporterName,
-          reporter_whatsapp: formData.whatsapp,
-          verification_token: token,
-          consent: formData.consent,
-        }),
-      });
+      const draft = {
+        category: formData.category,
+        item_name: formData.itemName,
+        color: formData.color,
+        location: formData.location,
+        lost_date: formData.date,
+        lost_time: formData.time,
+        lost_at: lostAt,
+        description: formData.description,
+        reporter_name: formData.reporterName,
+        reporter_whatsapp: formData.whatsapp,
+        consent: formData.consent,
+      };
 
-      const reportResult = await reportResponse.json();
+      sessionStorage.setItem("lostReportDraft", JSON.stringify(draft));
+      sessionStorage.setItem("lostVerificationToken", token);
+      sessionStorage.setItem("lostReportPhone", formData.whatsapp);
 
-      if (!reportResponse.ok) {
-        throw new Error(reportResult.error || "Gagal menyimpan laporan");
-      }
+      setVerificationToken(token);
 
-      // 4. Gunakan ID asli dari backend
-      const realTicketId = reportResult.report?.report_id;
-
-      if (!realTicketId) {
-        throw new Error("Laporan tersimpan, tetapi ID tiket tidak ditemukan dalam respons");
-      }
-
-      setTicketId(realTicketId);
-
-      if (onNewReport) {
-        onNewReport({
-          id: realTicketId,
-          name: formData.itemName,
-          category: formData.category,
-          color: formData.color,
-          lostLocation: formData.location,
-          lostDate: formData.date,
-          lostTime: formData.time + " WIB",
-          description: formData.description,
-          reporterName: formData.reporterName,
-          reporterPhone: formData.whatsapp,
-          status: "Aktif",
-        });
-      }
-
+      // 3. Pindah ke halaman review (Step 3)
       setStep(3);
     } catch (error) {
-      console.error("Proses laporan gagal:", error);
+      console.error("Verifikasi OTP gagal:", error);
       setOtpError(error.message || "Terjadi kesalahan pada server");
     } finally {
       setIsSubmitting(false);
@@ -457,44 +426,7 @@ export default function LaporKehilangan({ setActivePage, onNewReport }) {
       )}
 
       {/* STEP 3: SUKSES */}
-      {step === 3 && (
-        <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-xs max-w-xl mx-auto text-center">
-          <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-9 h-9" />
-          </div>
-          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wider">Laporan Berhasil Disimpan</span>
-          <h2 className="text-2xl font-extrabold text-slate-900 mt-3">Nomor Tiket: {ticketId}</h2>
-          <p className="text-sm text-slate-600 mt-2 leading-relaxed">Laporan barang hilang Anda telah aktif di sistem. Sistem secara berkala akan mencocokkan data barang ini dengan temuan fisik di seluruh Pos Satpam UII.</p>
-
-          <div className="mt-6 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs text-slate-600 space-y-2">
-            <div className="flex justify-between">
-              <span className="text-slate-400">Nama Barang:</span>
-              <strong className="text-slate-800">{formData.itemName}</strong>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Kategori:</span>
-              <span>{formData.category}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Status Laporan:</span>
-              <span className="text-emerald-700 font-bold">Aktif (Mencari Kecocokan)</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Notifikasi:</span>
-              <span>Kabar dikirim otomatis ke WA {formData.whatsapp}</span>
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <button onClick={() => setActivePage("katalog")} className="px-6 py-3 bg-uiiNavy text-white rounded-full text-xs sm:text-sm font-semibold hover:bg-slate-800 transition cursor-pointer">
-              Lihat Daftar Barang Temuan
-            </button>
-            <button onClick={() => setActivePage("home")} className="px-6 py-3 bg-slate-100 text-slate-700 rounded-full text-xs sm:text-sm font-semibold hover:bg-slate-200 transition cursor-pointer">
-              Kembali ke Beranda
-            </button>
-          </div>
-        </div>
-      )}
+      {step === 3 && <LaporKehilanganStep3 onNavigate={(page) => setActivePage(page)} />}
     </div>
   );
 }

@@ -1,589 +1,828 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-surface-variant":"#45464d","outline":"#76777d","on-tertiary-container":"#008ebf","surface":"#f7f9fb","on-secondary-fixed-variant":"#004b73","error-container":"#ffdad6","surface-container-high":"#e6e8ea","on-secondary":"#ffffff","secondary-fixed":"#cce5ff","secondary":"#006398","surface-container-low":"#f2f4f6","tertiary-fixed-dim":"#7bd0ff","on-primary-fixed":"#131b2e","on-background":"#191c1e","on-primary":"#ffffff","primary-container":"#131b2e","primary-fixed-dim":"#bec6e0","tertiary-fixed":"#c4e7ff","inverse-on-surface":"#eff1f3","surface-container":"#eceef0","tertiary":"#000000","tertiary-container":"#001e2c","surface-container-highest":"#e0e3e5","surface-variant":"#e0e3e5","on-error-container":"#93000a","secondary-container":"#5bb8fe","on-primary-fixed-variant":"#3f465c","outline-variant":"#c6c6cd","background":"#f7f9fb","error":"#ba1a1a","on-error":"#ffffff","surface-container-lowest":"#ffffff","inverse-primary":"#bec6e0","on-secondary-fixed":"#001d31","on-surface":"#191c1e","on-secondary-container":"#00476e","inverse-surface":"#2d3133","on-tertiary-fixed-variant":"#004c69","primary-fixed":"#dae2fd","on-tertiary":"#ffffff","surface-tint":"#565e74","secondary-fixed-dim":"#93ccff","primary":"#000000","on-tertiary-fixed":"#001e2c","surface-bright":"#f7f9fb","surface-dim":"#d8dadc","on-primary-container":"#7c839b"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-xs":"0.375rem","space-lg":"2rem","space-sm":"0.75rem","margin-mobile":"1rem","margin":"2rem","gutter":"1.5rem","space-md":"1.25rem","space-xl":"3rem","gutter-mobile":"1rem"},"fontFamily":{"display":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"label-lg":["Plus Jakarta Sans"],"display-mobile":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"]},"fontSize":{"display":["40px",{"lineHeight":"52px","fontWeight":"700"}],"headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-lg":["30px",{"lineHeight":"38px","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"display-mobile":["28px",{"lineHeight":"36px","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"headline-lg-mobile":["22px",{"lineHeight":"30px","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1200px] mx-auto px-margin flex items-center justify-between gap-gutter"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0"><span class="material-symbols-outlined text-[22px]">local_police</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-tight">Lost &amp; Found UII</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Kampus Terpadu • Temukan kembali barangmu</span></div></div><nav class="hidden lg:flex items-center gap-space-xs p-1" data-active-classes="bg-surface-container-high text-on-surface font-semibold rounded-full"><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="beranda" href="#">Beranda</a><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="barang-temuan" href="#">Barang Temuan</a><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="cara-kerja" href="#">Cara Kerja</a><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="pos-satpam" href="#">Pos Satpam</a><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="faq" href="#">FAQ</a></nav><div class="flex items-center gap-space-sm"><a class="hidden sm:inline-flex items-center gap-1.5 px-space-md py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-[0_2px_8px_rgba(15,23,42,0.06)] hover:bg-surface-container transition-all" data-path="saya-kehilangan" href="#"><span>Saya Kehilangan</span><span class="material-symbols-outlined text-[16px] text-secondary">arrow_forward</span></a><a class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-[0_4px_16px_rgba(15,23,42,0.12)] hover:opacity-95 transition-opacity" data-path="saya-menemukan" href="#"><span>Saya Menemukan</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-1 shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]"><div class="flex flex-col w-full">
-<!-- Content Area Wrapper -->
-<div class="w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin py-space-md md:py-space-lg space-y-space-lg">
-<!-- 1. Breadcrumbs & Top Bar Utility -->
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<nav aria-label="Breadcrumb" class="flex items-center gap-1.5 flex-wrap">
-<a class="hover:text-secondary flex items-center gap-1 transition-colors" data-path="beranda" href="#">
-<span class="material-symbols-outlined text-[16px]">home</span>
-<span>Beranda</span>
-</a>
-<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
-<a class="hover:text-secondary transition-colors" data-path="saya-menemukan" href="#">
-          Saya Menemukan Barang
-        </a>
-<span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
-<span class="font-label-md text-label-md text-on-surface font-semibold bg-surface-container-high px-2 py-0.5 rounded-full">
-          Laporan Temuan Berhasil
-        </span>
-</nav>
-<div class="flex items-center gap-space-xs text-on-surface-variant">
-<span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-<span class="font-label-sm text-label-sm">Sinkronisasi Pos Keamanan Aktif</span>
-</div>
-</div>
-<!-- 2. Top Stepper Status (Langkah 1 - 3) -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
-<!-- Step 1 Done -->
-<div class="bg-surface-container-lowest rounded-xl p-space-sm flex items-center gap-space-sm shadow-sm">
-<div class="w-9 h-9 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check</span>
-</div>
-<div class="min-w-0">
-<p class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Langkah 1</p>
-<p class="font-label-md text-label-md text-on-surface truncate">Detail Barang &amp; Kontak</p>
-</div>
-</div>
-<!-- Step 2 Done -->
-<div class="bg-surface-container-lowest rounded-xl p-space-sm flex items-center gap-space-sm shadow-sm">
-<div class="w-9 h-9 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check</span>
-</div>
-<div class="min-w-0">
-<p class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Langkah 2</p>
-<p class="font-label-md text-label-md text-on-surface truncate">Verifikasi WhatsApp</p>
-</div>
-</div>
-<!-- Step 3 Active / Milestone Completed -->
-<div class="bg-primary text-on-primary rounded-xl p-space-sm flex items-center gap-space-sm shadow-md ring-1 ring-primary/10">
-<div class="w-9 h-9 rounded-full bg-on-primary text-primary flex items-center justify-center shrink-0 font-label-md text-label-md font-bold">
-<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
-</div>
-<div class="min-w-0">
-<div class="flex items-center gap-1.5">
-<p class="font-label-sm text-label-sm text-on-primary/70 font-semibold uppercase tracking-wider">Langkah 3</p>
-<span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
-</div>
-<p class="font-label-md text-label-md text-on-primary font-semibold truncate">Tiket Terbit &amp; Penyerahan</p>
-</div>
-</div>
-</div>
-<!-- Active State & Expired Toggle Controller (Simulation Bar) -->
-<div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm bg-surface-container-low p-space-sm rounded-xl text-on-surface">
-<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[18px] text-secondary">tune</span>
-<span>Simulasi Mode Tampilan (Hanya Pengujian):</span>
-</div>
-<div class="inline-flex p-1 bg-surface-container-high rounded-full font-label-md text-label-md">
-<button class="px-space-md py-1 rounded-full bg-surface-container-lowest text-on-surface font-semibold shadow-sm transition-all flex items-center gap-1.5" id="btnStateActive" type="button">
-<span class="w-2 h-2 rounded-full bg-secondary"></span>
-<span>Status Aktif (24 Jam)</span>
-</button>
-<button class="px-space-md py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5" id="btnStateExpired" type="button">
-<span class="w-2 h-2 rounded-full bg-error"></span>
-<span>Simulasi Kedaluwarsa</span>
-</button>
-</div>
-</div>
-<!-- MAIN VIEW CONTAINER: ACTIVE FLOW -->
-<div class="space-y-space-lg" id="viewActiveState">
-<!-- 3. Hero Success Card -->
-<section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-xl shadow-[0_4px_24px_rgba(15,23,42,0.06)] relative overflow-hidden">
-<div class="absolute -top-24 -right-24 w-72 h-72 bg-secondary-fixed/30 rounded-full blur-3xl pointer-events-none"></div>
-<div class="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-space-lg">
-<div class="space-y-space-md max-w-2xl">
-<!-- Badge Status -->
-<div class="flex items-center gap-space-sm flex-wrap">
-<div class="w-12 h-12 rounded-2xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 shadow-sm">
-<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">verified</span>
-</div>
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">
-<span class="material-symbols-outlined text-[14px]">format_image_left</span> Unit Keamanan Terpadu UII
-                </span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Sistem Lost &amp; Found Kampus Terpadu</span>
-</div>
-</div>
-<div class="space-y-space-xs">
-<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
-                Laporan Temuan Berhasil Dicatat!
-              </h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant">
-                Terima kasih atas kepedulian dan integritas Anda. Tiket penyerahan fisik resmi telah diterbitkan secara otomatis dan salinan digital telah dikirimkan ke WhatsApp Anda.
-              </p>
-</div>
-<!-- Monospace Ticket Number Pod -->
-<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
-<div class="space-y-1">
-<div class="flex items-center gap-2">
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Nomor Registrasi Tiket</span>
-<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
-                    Menunggu Penyerahan Fisik
-                  </span>
-</div>
-<div class="flex items-baseline gap-space-sm">
-<span class="font-display text-display text-on-surface font-mono tracking-wider select-all" id="ticketCodeDisplay">TM-7F3P9X</span>
-<button class="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all active:scale-95" id="copyTicketBtn" title="Salin Kode Tiket" type="button">
-<span class="material-symbols-outlined text-[16px]">content_copy</span>
-<span id="copyLabel">Salin Kode</span>
-</button>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 pt-0.5">
-<span class="material-symbols-outlined text-[15px] text-secondary">schedule</span>
-<span>Didaftarkan: <strong>Hari ini, 20 Nov 2024 • 14:30 WIB</strong></span>
-</p>
-</div>
-</div>
-<div class="flex items-start gap-space-xs bg-surface-container-high/60 p-space-sm rounded-xl text-on-surface-variant font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-[20px] text-secondary shrink-0 mt-0.5">info</span>
-<span>
-                Tunjukkan <strong>Nomor Tiket</strong> atau pindai <strong>QR Code Pas Kilat</strong> kepada petugas Satpam di Pos Jaga terdekat untuk serah terima barang bukti.
-              </span>
-</div>
-</div>
-<!-- Quick Action QR & Stamp on Right -->
-<div class="w-full md:w-80 shrink-0 bg-surface-container-lowest p-space-md rounded-2xl shadow-md flex flex-col items-center text-center space-y-space-sm">
-<div class="flex items-center justify-between w-full font-label-sm text-label-sm text-on-surface-variant">
-<span class="inline-flex items-center gap-1 font-semibold text-on-surface">
-<span class="material-symbols-outlined text-[16px] text-secondary">qr_code_scanner</span>
-                Drop-Off Pass
-              </span>
-<span class="bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-mono text-[10px]">UII-SEC</span>
-</div>
-<!-- Scannable Clean QR Mockup (Vector SVG) -->
-<div class="p-3 bg-white rounded-xl shadow-inner w-48 h-48 flex items-center justify-center">
-<svg class="w-full h-full text-on-surface" fill="currentColor" viewbox="0 0 160 160">
-<!-- Outer Corners Pattern -->
-<path d="M16 16h40v40H16V16zm8 8v24h24V24H24zm8 8h8v8h-8v-8zM104 16h40v40h-40V16zm8 8v24h24V24h-24zm8 8h8v8h-8v-8zM16 104h40v40H16v-40zm8 8v24h24v-24H24zm8 8h8v8h-8v-8z"></path>
-<!-- Positioning and timing sync marks -->
-<path d="M68 20h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8zm16 16h8v8h-8zm-8 16h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8zm16 16h8v8h-8zm-24 16h8v8h-8zm16 0h8v8h-8zM20 68h8v8h-8zm0 16h8v8h-8zm16-16h8v8h-8zm0 16h8v8h-8zm32-16h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm-48 16h8v8h-8zm16 0h8v8h-8zm32 0h8v8h-8zm-32 16h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8zm32 0h8v8h-8zm-16 16h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8z"></path>
-<!-- Center Lost and Found Security Badge Dot -->
-<circle class="text-secondary" cx="80" cy="80" fill="currentColor" r="10"></circle>
-<path d="M78 76h4v8h-4zm0 10h4v2h-4z" fill="#ffffff"></path>
-</svg>
-</div>
-<div class="space-y-1">
-<span class="font-headline-sm text-headline-sm font-mono tracking-widest text-on-surface">TM-7F3P9X</span>
-<p class="font-body-sm text-body-sm text-on-surface-variant">Sebutkan tiket ini atau tunjukkan QR ke Satpam di meja serah terima.</p>
-</div>
-<div class="w-full pt-space-xs flex flex-col gap-1.5">
-<button class="w-full inline-flex items-center justify-center gap-1.5 px-space-md py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm" onclick="alert('Tiket dan QR Code berhasil diunduh dalam format PNG resolusi tinggi.');" type="button">
-<span class="material-symbols-outlined text-[16px]">download</span>
-<span>Unduh Tiket (PNG)</span>
-</button>
-<button class="w-full inline-flex items-center justify-center gap-1.5 px-space-md py-2 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all" onclick="alert('Notifikasi konfirmasi &amp; tautan tiket berhasil dikirim ulang ke nomor WhatsApp yang terdaftar (+62 812-3456-xxxx).');" type="button">
-<span class="material-symbols-outlined text-[16px] text-secondary">chat</span>
-<span>Kirim Ulang ke WhatsApp</span>
-</button>
-</div>
-</div>
-</div>
-</section>
-<!-- 4. Prominent 24-Hour Countdown Alert Card -->
-<section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm">
-<div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
-<div class="flex items-start gap-space-md">
-<div class="w-12 h-12 rounded-2xl bg-error-container text-on-error-container flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[26px]">hourglass_top</span>
-</div>
-<div class="space-y-1 max-w-xl">
-<div class="flex items-center gap-2">
-<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-error">Peringatan Penting</span>
-<span class="font-label-sm text-label-sm text-on-surface-variant">• Maksimal 24 Jam</span>
-</div>
-<h2 class="font-headline-md text-headline-md text-on-surface">Batas Waktu Penyerahan Barang Fisik</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">
-                Bawa barang ke Pos Satpam sebelum <strong class="text-on-surface">Kamis, 21 November 2024, pukul 14:30 WIB</strong>. Laporan otomatis kedaluwarsa jika barang tidak diserahkan ke pos jaga dalam kurun waktu 24 jam.
-              </p>
-<div class="pt-1 flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
-<span class="material-symbols-outlined text-[16px] text-secondary">help_outline</span>
-<span>Mengapa 24 jam? Untuk mencegah klaim palsu dan menjaga akurasi data inventaris resmi kampus.</span>
-</div>
-</div>
-</div>
-<!-- Digital Countdown Display Box -->
-<div class="w-full lg:w-auto flex flex-col items-center sm:items-end justify-center bg-surface-container-low p-space-md rounded-2xl shrink-0">
-<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Sisa Waktu Penyerahan</span>
-<div class="flex items-center gap-2">
-<!-- Hours -->
-<div class="flex flex-col items-center">
-<div class="w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center font-display text-[26px] font-mono font-bold text-on-surface shadow-sm">
-<span id="hoursBox">23</span>
-</div>
-<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">JAM</span>
-</div>
-<span class="font-display text-headline-md font-bold text-on-surface-variant -mt-4">:</span>
-<!-- Minutes -->
-<div class="flex flex-col items-center">
-<div class="w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center font-display text-[26px] font-mono font-bold text-on-surface shadow-sm">
-<span id="minutesBox">58</span>
-</div>
-<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">MENIT</span>
-</div>
-<span class="font-display text-headline-md font-bold text-on-surface-variant -mt-4">:</span>
-<!-- Seconds -->
-<div class="flex flex-col items-center">
-<div class="w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center font-display text-[26px] font-mono font-bold text-error shadow-sm">
-<span id="secondsBox">40</span>
-</div>
-<span class="font-label-sm text-[10px] text-on-surface-variant mt-1">DETIK</span>
-</div>
-</div>
-<!-- Progress bar -->
-<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-3 overflow-hidden">
-<div class="bg-secondary h-full rounded-full" style="width: 96%;"></div>
-</div>
-</div>
-</div>
-</section>
-<!-- 6 & 7. Split Section: Lokasi Pos Satpam (Left 7 Cols) & Detail Ringkasan Barang (Right 5 Cols) -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
-<!-- Left: Lokasi Pos Satpam Siaga (7 cols) -->
-<div class="lg:col-span-7 space-y-space-md">
-<div class="flex items-center justify-between">
-<div>
-<h2 class="font-headline-md text-headline-md text-on-surface">Lokasi &amp; Jam Operasional Pos Satpam</h2>
-<p class="font-body-sm text-body-sm text-on-surface-variant">Pilih salah satu pos jaga terdekat untuk menyerahkan barang temuan.</p>
-</div>
-<a class="hidden sm:inline-flex items-center gap-1.5 px-space-sm py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all" href="https://maps.google.com" rel="noopener noreferrer" target="_blank">
-<span class="material-symbols-outlined text-[16px] text-secondary">near_me</span>
-<span>Buka Google Maps</span>
-</a>
-</div>
-<div class="space-y-space-sm">
-<!-- Pos 1: Posko Induk GKU -->
-<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm transition-all hover:shadow-md">
-<div class="flex items-start justify-between gap-space-sm">
-<div class="flex items-start gap-space-sm">
-<div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[22px]">corporate_fare</span>
-</div>
-<div class="space-y-1">
-<div class="flex items-center gap-2 flex-wrap">
-<h3 class="font-headline-sm text-headline-sm text-on-surface">1. Posko Induk Keamanan GKU</h3>
-<span class="bg-secondary text-on-secondary px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold">Rekomendasi Utama</span>
-<span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm">Buka 24 Jam</span>
-</div>
-<p class="font-body-md text-body-md text-on-surface-variant">
-                      Gedung Kuliah Umum Prof. Dr. Sardjito — Lantai Dasar Sayap Barat (Dekat Tangga Sentral).
-                    </p>
-<div class="pt-1 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm flex-wrap">
-<span class="inline-flex items-center gap-1 text-secondary font-medium">
-<span class="material-symbols-outlined text-[16px]">lock</span> Brankas Khusus Elektronik/Valuable
-                      </span>
-<span>•</span>
-<span class="inline-flex items-center gap-1">
-<span class="material-symbols-outlined text-[16px]">verified</span> Berita Acara (BAST) Langsung
-                      </span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Pos 2: Pos Gerbang Utama -->
-<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm transition-all hover:shadow-md">
-<div class="flex items-start justify-between gap-space-sm">
-<div class="flex items-start gap-space-sm">
-<div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[22px]">door_sliding</span>
-</div>
-<div class="space-y-1">
-<div class="flex items-center gap-2 flex-wrap">
-<h3 class="font-headline-sm text-headline-sm text-on-surface">2. Pos Gerbang Utama (Pintu Masuk)</h3>
-<span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm">Buka 24 Jam</span>
-</div>
-<p class="font-body-md text-body-md text-on-surface-variant">
-                      Jl. Kaliurang KM 14.5 (Pintu Masuk Gerbang Utama Kampus Terpadu UII).
-                    </p>
-<div class="pt-1 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm flex-wrap">
-<span class="inline-flex items-center gap-1 text-secondary font-medium">
-<span class="material-symbols-outlined text-[16px]">electric_moped</span> Loket Drop-Off Cepat (Drive-Thru)
-                      </span>
-<span>•</span>
-<span>Mudah dijangkau kendaraan roda dua/empat</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Pos 3: Pos Parkir Sentral / GOR -->
-<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm transition-all hover:shadow-md">
-<div class="flex items-start justify-between gap-space-sm">
-<div class="flex items-start gap-space-sm">
-<div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[22px]">sports_soccer</span>
-</div>
-<div class="space-y-1">
-<div class="flex items-center gap-2 flex-wrap">
-<h3 class="font-headline-sm text-headline-sm text-on-surface">3. Pos Parkir Sentral &amp; GOR UII</h3>
-<span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm">06.00 - 22.00 WIB</span>
-</div>
-<p class="font-body-md text-body-md text-on-surface-variant">
-                      Kawasan Gedung Olahraga &amp; Area Parkir Timur Kampus Terpadu.
-                    </p>
-<div class="pt-1 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm flex-wrap">
-<span class="inline-flex items-center gap-1 text-secondary font-medium">
-<span class="material-symbols-outlined text-[16px]">key</span> Khusus Helm, Jaket &amp; Kunci Kendaraan
-                      </span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Hotline / Contact Bar -->
-<div class="bg-surface-container-low p-space-md rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-space-sm">
-<div class="flex items-center gap-space-xs">
-<span class="material-symbols-outlined text-secondary text-[22px]">headset_mic</span>
-<div class="text-left">
-<p class="font-label-md text-label-md text-on-surface font-semibold">Butuh Bantuan Segera?</p>
-<p class="font-body-sm text-body-sm text-on-surface-variant">Hubungi Command Center Satpam Kampus Terpadu</p>
-</div>
-</div>
-<div class="flex items-center gap-2 w-full sm:w-auto">
-<a class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-md py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-high transition-colors" href="tel:0274898444">
-<span class="material-symbols-outlined text-[16px]">call</span>
-<span>(0274) 898444</span>
-</a>
-<a class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity" href="https://wa.me/628112555844" rel="noopener noreferrer" target="_blank">
-<span class="material-symbols-outlined text-[16px]">chat</span>
-<span>WhatsApp Darurat</span>
-</a>
-</div>
-</div>
-</div>
-<!-- Right: Detail Ringkasan Barang yang Dilaporkan (5 cols) -->
-<div class="lg:col-span-5 space-y-space-md">
-<div class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm space-y-space-md">
-<div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
-<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-[20px]">inventory_2</span>
-<span>Ringkasan Temuan</span>
-</h2>
-<span class="bg-surface-container-high text-on-surface-variant px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-mono">
-                DATA-INPUT
-              </span>
-</div>
-<!-- Item visual placeholder with photo notice -->
-<div class="bg-surface-container-low rounded-xl p-space-sm flex items-center gap-space-sm">
-<div class="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0 relative overflow-hidden">
-<img class="w-full h-full object-cover rounded-lg" data-alt="A clean top-down view of a modern metallic USB flash drive lying on a pristine wooden desk beside study notebooks, soft diffused campus library lighting with shallow depth of field, realistic documentary campus photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAElMoi9aqrX-6r1my_ZUuDpqCZlJ3wKHfVqFMGjVqVmV8gu4q1q1ogrAurKOWqLhl2_xuDvXnvMi5BXNTY1egEOlPxUyKADA9SaGeHH6ncYd0l4QD_h8a1pmFv1evUutPAxom0uZavwQwufkyYY5ApPaUxDh9HamBEJ4F1mWg82KOOH4kiA1xXCgg16J4QoDhsMKgxb6ez6ceg9m_n6pk5PiVaxAwqL_F9ukOCbbo"/>
-</div>
-<div class="min-w-0">
-<span class="font-label-sm text-label-sm text-secondary font-semibold uppercase">Flashdisk Sandisk 64GB Merah</span>
-<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Kategori: Elektronik &amp; Aksesoris</p>
-<span class="inline-flex items-center gap-1 text-[11px] text-on-surface-variant mt-0.5">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Menunggu Foto Resmi Petugas
-                </span>
-</div>
-</div>
-<!-- Details List -->
-<dl class="space-y-space-xs font-body-sm text-body-sm">
-<div class="flex justify-between py-1.5 border-b border-surface-container-high">
-<dt class="text-on-surface-variant">Lokasi Penemuan</dt>
-<dd class="font-label-md text-label-md text-on-surface text-right">Gedung Kuliah Umum (GKU) Lt. 2, R. 2.14</dd>
-</div>
-<div class="flex justify-between py-1.5 border-b border-surface-container-high">
-<dt class="text-on-surface-variant">Waktu Ditemukan</dt>
-<dd class="font-label-md text-label-md text-on-surface text-right">Hari Ini, 20 Nov 2024 • 13:45 WIB</dd>
-</div>
-<div class="flex justify-between py-1.5 border-b border-surface-container-high">
-<dt class="text-on-surface-variant">Identitas Pelapor</dt>
-<dd class="font-label-md text-label-md text-on-surface text-right flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-secondary">verified_user</span>
-<span>Civitas Peduli (Anonim Terjaga)</span>
-</dd>
-</div>
-<div class="flex justify-between py-1.5 border-b border-surface-container-high">
-<dt class="text-on-surface-variant">Nomor WhatsApp Pelapor</dt>
-<dd class="font-label-md text-label-md text-on-surface text-right font-mono">+62 812-3456-xxxx</dd>
-</div>
-<div class="flex justify-between py-1.5">
-<dt class="text-on-surface-variant">Status Publikasi Web</dt>
-<dd class="font-label-md text-label-md text-secondary text-right font-semibold">Tersimpan (Menunggu Verifikasi Fisik)</dd>
-</div>
-</dl>
-<!-- Verification Notice Card -->
-<div class="bg-surface-container-high/60 rounded-xl p-space-sm flex items-start gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
-<span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">photo_camera</span>
-<p>
-<strong class="text-on-surface">Foto Dokumentasi Resmi:</strong> Petugas Satpam akan memverifikasi kondisi fisik, mencocokkan nomor seri, serta mengunggah foto resmi ke etalase publik setelah barang Anda serahkan.
-              </p>
-</div>
-<!-- Print / Save Receipt Action -->
-<button class="w-full inline-flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all shadow-sm" onclick="window.print();" type="button">
-<span class="material-symbols-outlined text-[18px]">print</span>
-<span>Cetak / Simpan Bukti Tanda Terima (PDF)</span>
-</button>
-</div>
-<!-- Trust & Privacy Guarantee Card -->
-<div class="bg-surface-container-low rounded-2xl p-space-md space-y-space-xs">
-<div class="flex items-center gap-2 text-on-surface font-headline-sm text-headline-sm">
-<span class="material-symbols-outlined text-secondary text-[20px]">security</span>
-<span>Jaminan Privasi Penemu</span>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant">
-              Nomor WhatsApp dan data kontak Anda tidak akan pernah dipublikasikan secara umum. Informasi kontak hanya digunakan Satpam bila diperlukan konfirmasi serah terima kepada pemilik sah.
-            </p>
-</div>
-</div>
-</div>
-</div>
-<!-- 8. VARIANT STATE SECTION: EXPIRED SIMULATION (Hidden by default, toggled via test bar) -->
-<div class="hidden space-y-space-lg" id="viewExpiredState">
-<section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-xl shadow-md border-l-4 border-error space-y-space-md">
-<div class="flex flex-col md:flex-row md:items-start justify-between gap-space-md">
-<div class="flex items-start gap-space-md">
-<div class="w-14 h-14 rounded-2xl bg-error-container text-on-error-container flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[32px]">event_busy</span>
-</div>
-<div class="space-y-1">
-<div class="flex items-center gap-2 flex-wrap">
-<span class="bg-error text-on-error px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold">
-                  STATUS: KEDALUWARSA (EXPIRED)
-                </span>
-<span class="font-mono font-bold text-headline-sm text-on-surface-variant line-through">
-                  TM-7F3P9X
-                </span>
-</div>
-<h2 class="font-headline-lg text-headline-lg text-on-surface">Tiket Tidak Berlaku Lagi</h2>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
-                Batas waktu penyerahan barang 24 jam telah berakhir pada <strong class="text-on-surface">Kamis, 21 November 2024, pukul 14:30 WIB</strong>. Tiket registrasi mandiri ini telah otomatis dinonaktifkan dari sistem terpadu.
-              </p>
-</div>
-</div>
-<div class="bg-surface-container-low p-space-sm rounded-xl text-center md:text-right shrink-0">
-<span class="font-label-sm text-label-sm text-on-surface-variant block">Status Sinkronisasi</span>
-<span class="font-label-md text-label-md text-error font-semibold flex items-center justify-center md:justify-end gap-1">
-<span class="material-symbols-outlined text-[16px]">cancel</span> Dihapus dari Antrean
-            </span>
-</div>
-</div>
-<div class="bg-surface-container-low rounded-xl p-space-md space-y-space-xs text-on-surface">
-<h3 class="font-headline-sm text-headline-sm flex items-center gap-1.5">
-<span class="material-symbols-outlined text-secondary text-[20px]">tips_and_updates</span>
-<span>Apa yang Harus Dilakukan Sekarang?</span>
-</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">
-            Jika barang temuan tersebut saat ini masih berada pada Anda, jangan khawatir. Anda tetap dapat menyerahkannya kepada petugas kampus melalui opsi berikut:
-          </p>
-<ul class="space-y-1 font-body-sm text-body-sm text-on-surface-variant list-disc list-inside pt-1">
-<li><strong>Buat Laporan Baru:</strong> Dapatkan nomor tiket baru dalam 1 menit tanpa perlu login.</li>
-<li><strong>Datang Langsung (Drop-Off Langsung):</strong> Bawa barang langsung ke Posko Induk GKU atau Pos Gerbang Utama. Petugas Satpam akan membuatkan BAST manual secara instan di tempat.</li>
-</ul>
-</div>
-<div class="flex flex-col sm:flex-row items-center gap-space-sm pt-space-xs">
-<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-lg py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm" data-path="saya-menemukan" href="#">
-<span class="material-symbols-outlined text-[18px]">add_circle</span>
-<span>Buat Laporan Temuan Baru</span>
-</a>
-<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-lg py-2.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors" href="https://wa.me/628112555844" rel="noopener noreferrer" target="_blank">
-<span class="material-symbols-outlined text-[18px] text-secondary">chat</span>
-<span>Tanya Petugas Satpam via WhatsApp</span>
-</a>
-<button class="w-full sm:w-auto ml-auto inline-flex items-center justify-center gap-1 text-secondary font-label-md text-label-md hover:underline" id="btnRestoreActive" type="button">
-<span class="material-symbols-outlined text-[16px]">refresh</span>
-<span>Kembalikan ke Tampilan Aktif</span>
-</button>
-</div>
-</section>
-</div>
-<!-- 9. Navigation Actions at Bottom -->
-<section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
-<div class="flex items-center gap-space-sm">
-<div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[20px]">explore</span>
-</div>
-<div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface">Langkah Selanjutnya</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">Pantau status publikasi barang atau jelajahi barang yang sedang dicari pemiliknya.</p>
-</div>
-</div>
-<div class="flex items-center gap-space-sm w-full sm:w-auto flex-wrap sm:flex-nowrap">
-<a class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors" data-path="beranda" href="#">
-<span class="material-symbols-outlined text-[18px]">arrow_back</span>
-<span>Kembali ke Beranda</span>
-</a>
-<a class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-lg py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity shadow-md" data-path="barang-temuan" href="#">
-<span>Lihat Etalase Barang Temuan</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-</section>
-</div>
-</div>
-<script>
-  (function initSuccessReportScreen() {
-    // 1. Copy Ticket Code Micro-interaction
-    const copyBtn = document.getElementById('copyTicketBtn');
-    const copyLabel = document.getElementById('copyLabel');
-    const ticketCode = 'TM-7F3P9X';
-
-    if (copyBtn && copyLabel) {
-      copyBtn.addEventListener('click', async () => {
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(ticketCode);
-          }
-          copyLabel.textContent = 'Tersalin!';
-          copyBtn.classList.add('bg-secondary-fixed', 'text-on-secondary-fixed');
-          setTimeout(() => {
-            copyLabel.textContent = 'Salin Kode';
-            copyBtn.classList.remove('bg-secondary-fixed', 'text-on-secondary-fixed');
-          }, 2500);
-        } catch (err) {
-          copyLabel.textContent = 'Tersalin!';
-          setTimeout(() => { copyLabel.textContent = 'Salin Kode'; }, 2000);
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="web_standard" name="shell-type" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
         }
-      });
-    }
-
-    // 2. Interactive Countdown Timer (23h 58m 40s decrement)
-    let totalSeconds = 23 * 3600 + 58 * 60 + 40;
-    const hoursBox = document.getElementById('hoursBox');
-    const minutesBox = document.getElementById('minutesBox');
-    const secondsBox = document.getElementById('secondsBox');
-
-    function updateCountdown() {
-      if (totalSeconds <= 0) {
-        clearInterval(timerInterval);
-        return;
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
       }
-      totalSeconds--;
-      const h = Math.floor(totalSeconds / 3600);
-      const m = Math.floor((totalSeconds % 3600) / 60);
-      const s = totalSeconds % 60;
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#45464d",
+              outline: "#76777d",
+              "on-tertiary-container": "#008ebf",
+              surface: "#f7f9fb",
+              "on-secondary-fixed-variant": "#004b73",
+              "error-container": "#ffdad6",
+              "surface-container-high": "#e6e8ea",
+              "on-secondary": "#ffffff",
+              "secondary-fixed": "#cce5ff",
+              secondary: "#006398",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-fixed-dim": "#7bd0ff",
+              "on-primary-fixed": "#131b2e",
+              "on-background": "#191c1e",
+              "on-primary": "#ffffff",
+              "primary-container": "#131b2e",
+              "primary-fixed-dim": "#bec6e0",
+              "tertiary-fixed": "#c4e7ff",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container": "#eceef0",
+              tertiary: "#000000",
+              "tertiary-container": "#001e2c",
+              "surface-container-highest": "#e0e3e5",
+              "surface-variant": "#e0e3e5",
+              "on-error-container": "#93000a",
+              "secondary-container": "#5bb8fe",
+              "on-primary-fixed-variant": "#3f465c",
+              "outline-variant": "#c6c6cd",
+              background: "#f7f9fb",
+              error: "#ba1a1a",
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "inverse-primary": "#bec6e0",
+              "on-secondary-fixed": "#001d31",
+              "on-surface": "#191c1e",
+              "on-secondary-container": "#00476e",
+              "inverse-surface": "#2d3133",
+              "on-tertiary-fixed-variant": "#004c69",
+              "primary-fixed": "#dae2fd",
+              "on-tertiary": "#ffffff",
+              "surface-tint": "#565e74",
+              "secondary-fixed-dim": "#93ccff",
+              primary: "#000000",
+              "on-tertiary-fixed": "#001e2c",
+              "surface-bright": "#f7f9fb",
+              "surface-dim": "#d8dadc",
+              "on-primary-container": "#7c839b",
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+            spacing: { "space-xs": "0.375rem", "space-lg": "2rem", "space-sm": "0.75rem", "margin-mobile": "1rem", margin: "2rem", gutter: "1.5rem", "space-md": "1.25rem", "space-xl": "3rem", "gutter-mobile": "1rem" },
+            fontFamily: {
+              display: ["Plus Jakarta Sans"],
+              "headline-sm": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "body-sm": ["Plus Jakarta Sans"],
+              "label-lg": ["Plus Jakarta Sans"],
+              "display-mobile": ["Plus Jakarta Sans"],
+              "label-md": ["Plus Jakarta Sans"],
+              "body-md": ["Plus Jakarta Sans"],
+              "body-lg": ["Plus Jakarta Sans"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "label-sm": ["Plus Jakarta Sans"],
+            },
+            fontSize: {
+              display: ["40px", { lineHeight: "52px", fontWeight: "700" }],
+              "headline-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+              "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "headline-lg": ["30px", { lineHeight: "38px", fontWeight: "700" }],
+              "body-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }],
+              "label-lg": ["14px", { lineHeight: "20px", fontWeight: "600" }],
+              "display-mobile": ["28px", { lineHeight: "36px", fontWeight: "700" }],
+              "label-md": ["12px", { lineHeight: "16px", fontWeight: "600" }],
+              "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }],
+              "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }],
+              "headline-lg-mobile": ["22px", { lineHeight: "30px", fontWeight: "700" }],
+              "label-sm": ["11px", { lineHeight: "14px", fontWeight: "500" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-surface font-body-md text-on-surface antialiased">
+    <header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+      <div class="h-20 max-w-[1200px] mx-auto px-margin flex items-center justify-between gap-gutter">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0"><span class="material-symbols-outlined text-[22px]">local_police</span></div>
+          <div class="flex flex-col">
+            <span class="font-headline-sm text-headline-sm text-on-surface leading-tight">Lost &amp; Found UII</span
+            ><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Kampus Terpadu • Temukan kembali barangmu</span>
+          </div>
+        </div>
+        <nav class="hidden lg:flex items-center gap-space-xs p-1" data-active-classes="bg-surface-container-high text-on-surface font-semibold rounded-full">
+          <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="beranda" href="#">Beranda</a
+          ><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="barang-temuan" href="#">Barang Temuan</a
+          ><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="cara-kerja" href="#">Cara Kerja</a
+          ><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="pos-satpam" href="#">Pos Satpam</a
+          ><a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" data-path="faq" href="#">FAQ</a>
+        </nav>
+        <div class="flex items-center gap-space-sm">
+          <a
+            class="hidden sm:inline-flex items-center gap-1.5 px-space-md py-2 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-[0_2px_8px_rgba(15,23,42,0.06)] hover:bg-surface-container transition-all"
+            data-path="saya-kehilangan"
+            href="#"
+            ><span>Saya Kehilangan</span><span class="material-symbols-outlined text-[16px] text-secondary">arrow_forward</span></a
+          ><a
+            class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md shadow-[0_4px_16px_rgba(15,23,42,0.12)] hover:opacity-95 transition-opacity"
+            data-path="saya-menemukan"
+            href="#"
+            ><span>Saya Menemukan</span></a
+          >
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-1 shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
+        </div>
+      </div>
+    </header>
+    <main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]">
+      <div class="flex flex-col w-full">
+        <!-- Content Area Wrapper -->
+        <div class="w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin py-space-md md:py-space-lg space-y-space-lg">
+          <!-- 1. Breadcrumbs & Top Bar Utility -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+            <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 flex-wrap">
+              <a class="hover:text-secondary flex items-center gap-1 transition-colors" data-path="beranda" href="#">
+                <span class="material-symbols-outlined text-[16px]">home</span>
+                <span>Beranda</span>
+              </a>
+              <span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+              <a class="hover:text-secondary transition-colors" data-path="saya-menemukan" href="#"> Saya Menemukan Barang </a>
+              <span class="material-symbols-outlined text-[14px] text-outline-variant">chevron_right</span>
+              <span class="font-label-md text-label-md text-on-surface font-semibold bg-surface-container-high px-2 py-0.5 rounded-full"> Laporan Temuan Berhasil </span>
+            </nav>
+            <div class="flex items-center gap-space-xs text-on-surface-variant">
+              <span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+              <span class="font-label-sm text-label-sm">Sinkronisasi Pos Keamanan Aktif</span>
+            </div>
+          </div>
+          <!-- 2. Top Stepper Status (Langkah 1 - 3) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
+            <!-- Step 1 Done -->
+            <div class="bg-surface-container-lowest rounded-xl p-space-sm flex items-center gap-space-sm shadow-sm">
+              <div class="w-9 h-9 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1">check</span>
+              </div>
+              <div class="min-w-0">
+                <p class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Langkah 1</p>
+                <p class="font-label-md text-label-md text-on-surface truncate">Detail Barang &amp; Kontak</p>
+              </div>
+            </div>
+            <!-- Step 2 Done -->
+            <div class="bg-surface-container-lowest rounded-xl p-space-sm flex items-center gap-space-sm shadow-sm">
+              <div class="w-9 h-9 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1">check</span>
+              </div>
+              <div class="min-w-0">
+                <p class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Langkah 2</p>
+                <p class="font-label-md text-label-md text-on-surface truncate">Verifikasi WhatsApp</p>
+              </div>
+            </div>
+            <!-- Step 3 Active / Milestone Completed -->
+            <div class="bg-primary text-on-primary rounded-xl p-space-sm flex items-center gap-space-sm shadow-md ring-1 ring-primary/10">
+              <div class="w-9 h-9 rounded-full bg-on-primary text-primary flex items-center justify-center shrink-0 font-label-md text-label-md font-bold">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: &quot;FILL&quot; 1">receipt_long</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <p class="font-label-sm text-label-sm text-on-primary/70 font-semibold uppercase tracking-wider">Langkah 3</p>
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                </div>
+                <p class="font-label-md text-label-md text-on-primary font-semibold truncate">Tiket Terbit &amp; Penyerahan</p>
+              </div>
+            </div>
+          </div>
+          <!-- Active State & Expired Toggle Controller (Simulation Bar) -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm bg-surface-container-low p-space-sm rounded-xl text-on-surface">
+            <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+              <span class="material-symbols-outlined text-[18px] text-secondary">tune</span>
+              <span>Simulasi Mode Tampilan (Hanya Pengujian):</span>
+            </div>
+            <div class="inline-flex p-1 bg-surface-container-high rounded-full font-label-md text-label-md">
+              <button class="px-space-md py-1 rounded-full bg-surface-container-lowest text-on-surface font-semibold shadow-sm transition-all flex items-center gap-1.5" id="btnStateActive" type="button">
+                <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                <span>Status Aktif (24 Jam)</span>
+              </button>
+              <button class="px-space-md py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5" id="btnStateExpired" type="button">
+                <span class="w-2 h-2 rounded-full bg-error"></span>
+                <span>Simulasi Kedaluwarsa</span>
+              </button>
+            </div>
+          </div>
+          <!-- MAIN VIEW CONTAINER: ACTIVE FLOW -->
+          <div class="space-y-space-lg" id="viewActiveState">
+            <!-- 3. Hero Success Card -->
+            <section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-xl shadow-[0_4px_24px_rgba(15,23,42,0.06)] relative overflow-hidden">
+              <div class="absolute -top-24 -right-24 w-72 h-72 bg-secondary-fixed/30 rounded-full blur-3xl pointer-events-none"></div>
+              <div class="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-space-lg">
+                <div class="space-y-space-md max-w-2xl">
+                  <!-- Badge Status -->
+                  <div class="flex items-center gap-space-sm flex-wrap">
+                    <div class="w-12 h-12 rounded-2xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 shadow-sm">
+                      <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: &quot;FILL&quot; 1">verified</span>
+                    </div>
+                    <div class="flex flex-col">
+                      <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">
+                        <span class="material-symbols-outlined text-[14px]">format_image_left</span> Unit Keamanan Terpadu UII
+                      </span>
+                      <span class="font-label-sm text-label-sm text-on-surface-variant">Sistem Lost &amp; Found Kampus Terpadu</span>
+                    </div>
+                  </div>
+                  <div class="space-y-space-xs">
+                    <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Laporan Temuan Berhasil Dicatat!</h1>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant">
+                      Terima kasih atas kepedulian dan integritas Anda. Tiket penyerahan fisik resmi telah diterbitkan secara otomatis dan salinan digital telah dikirimkan ke WhatsApp Anda.
+                    </p>
+                  </div>
+                  <!-- Monospace Ticket Number Pod -->
+                  <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+                    <div class="space-y-1">
+                      <div class="flex items-center gap-2">
+                        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Nomor Registrasi Tiket</span>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">
+                          <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
+                          Menunggu Penyerahan Fisik
+                        </span>
+                      </div>
+                      <div class="flex items-baseline gap-space-sm">
+                        <span class="font-display text-display text-on-surface font-mono tracking-wider select-all" id="ticketCodeDisplay">TM-7F3P9X</span>
+                        <button
+                          class="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all active:scale-95"
+                          id="copyTicketBtn"
+                          title="Salin Kode Tiket"
+                          type="button"
+                        >
+                          <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                          <span id="copyLabel">Salin Kode</span>
+                        </button>
+                      </div>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 pt-0.5">
+                        <span class="material-symbols-outlined text-[15px] text-secondary">schedule</span>
+                        <span>
+                          Didaftarkan:{" "}
+                          <strong id="scheduleDidaftarkan">-</strong>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-space-xs bg-surface-container-high/60 p-space-sm rounded-xl text-on-surface-variant font-body-sm text-body-sm">
+                    <span class="material-symbols-outlined text-[20px] text-secondary shrink-0 mt-0.5">info</span>
+                    <span> Tunjukkan <strong>Nomor Tiket</strong> atau pindai <strong>QR Code Pas Kilat</strong> kepada petugas Satpam di Pos Jaga terdekat untuk serah terima barang bukti. </span>
+                  </div>
+                </div>
+                <!-- Quick Action QR & Stamp on Right -->
+                <div class="w-full md:w-80 shrink-0 bg-surface-container-lowest p-space-md rounded-2xl shadow-md flex flex-col items-center text-center space-y-space-sm">
+                  <div class="flex items-center justify-between w-full font-label-sm text-label-sm text-on-surface-variant">
+                    <span class="inline-flex items-center gap-1 font-semibold text-on-surface">
+                      <span class="material-symbols-outlined text-[16px] text-secondary">qr_code_scanner</span>
+                      Drop-Off Pass
+                    </span>
+                    <span class="bg-secondary-fixed text-on-secondary-fixed px-2 py-0.5 rounded-full font-mono text-[10px]">UII-SEC</span>
+                  </div>
+                  <!-- Scannable Clean QR Mockup (Vector SVG) -->
+                  <div class="p-3 bg-white rounded-xl shadow-inner w-48 h-48 flex items-center justify-center">
+                    <svg class="w-full h-full text-on-surface" fill="currentColor" viewbox="0 0 160 160">
+                      <!-- Outer Corners Pattern -->
+                      <path d="M16 16h40v40H16V16zm8 8v24h24V24H24zm8 8h8v8h-8v-8zM104 16h40v40h-40V16zm8 8v24h24V24h-24zm8 8h8v8h-8v-8zM16 104h40v40H16v-40zm8 8v24h24v-24H24zm8 8h8v8h-8v-8z"></path>
+                      <!-- Positioning and timing sync marks -->
+                      <path
+                        d="M68 20h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8zm16 16h8v8h-8zm-8 16h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8zm16 16h8v8h-8zm-24 16h8v8h-8zm16 0h8v8h-8zM20 68h8v8h-8zm0 16h8v8h-8zm16-16h8v8h-8zm0 16h8v8h-8zm32-16h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm-48 16h8v8h-8zm16 0h8v8h-8zm32 0h8v8h-8zm-32 16h8v8h-8zm16 0h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8zm32 0h8v8h-8zm-16 16h8v8h-8zm16 0h8v8h-8zm-16 16h8v8h-8z"
+                      ></path>
+                      <!-- Center Lost and Found Security Badge Dot -->
+                      <circle class="text-secondary" cx="80" cy="80" fill="currentColor" r="10"></circle>
+                      <path d="M78 76h4v8h-4zm0 10h4v2h-4z" fill="#ffffff"></path>
+                    </svg>
+                  </div>
+                  <div class="space-y-1">
+                    <span class="font-headline-sm text-headline-sm font-mono tracking-widest text-on-surface">TM-7F3P9X</span>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Sebutkan tiket ini atau tunjukkan QR ke Satpam di meja serah terima.</p>
+                  </div>
+                  <div class="w-full pt-space-xs flex flex-col gap-1.5">
+                    <button
+                      class="w-full inline-flex items-center justify-center gap-1.5 px-space-md py-2 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm"
+                      onclick="alert('Tiket dan QR Code berhasil diunduh dalam format PNG resolusi tinggi.')"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[16px]">download</span>
+                      <span>Unduh Tiket (PNG)</span>
+                    </button>
+                    <button
+                      class="w-full inline-flex items-center justify-center gap-1.5 px-space-md py-2 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all"
+                      onclick="alert('Notifikasi konfirmasi &amp; tautan tiket berhasil dikirim ulang ke nomor WhatsApp yang terdaftar (+62 812-3456-xxxx).')"
+                      type="button"
+                    >
+                      <span class="material-symbols-outlined text-[16px] text-secondary">chat</span>
+                      <span>Kirim Ulang ke WhatsApp</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- 4. Prominent 24-Hour Countdown Alert Card -->
+            <section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm">
+              <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
+                <div class="flex items-start gap-space-md">
+                  <div class="w-12 h-12 rounded-2xl bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[26px]">hourglass_top</span>
+                  </div>
+                  <div class="space-y-1 max-w-xl">
+                    <div class="flex items-center gap-2">
+                      <span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-error">Peringatan Penting</span>
+                      <span class="font-label-sm text-label-sm text-on-surface-variant">• Maksimal 24 Jam</span>
+                    </div>
+                    <h2 class="font-headline-md text-headline-md text-on-surface">Batas Waktu Penyerahan Barang Fisik</h2>
+                    <p class="font-body-md text-body-md text-on-surface-variant">
+                      Bawa barang ke Pos Satpam sebelum <strong class="text-on-surface">Kamis, 21 November 2024, pukul 14:30 WIB</strong>. Laporan otomatis kedaluwarsa jika barang tidak diserahkan ke pos jaga dalam kurun waktu 24 jam.
+                    </p>
+                    <div class="pt-1 flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+                      <span class="material-symbols-outlined text-[16px] text-secondary">help_outline</span>
+                      <span>Mengapa 24 jam? Untuk mencegah klaim palsu dan menjaga akurasi data inventaris resmi kampus.</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Digital Countdown Display Box -->
+                <div class="w-full lg:w-auto flex flex-col items-center sm:items-end justify-center bg-surface-container-low p-space-md rounded-2xl shrink-0">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Sisa Waktu Penyerahan</span>
+                  <div class="flex items-center gap-2">
+                    <!-- Hours -->
+                    <div class="flex flex-col items-center">
+                      <div class="w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center font-display text-[26px] font-mono font-bold text-on-surface shadow-sm">
+                        <span id="hoursBox">23</span>
+                      </div>
+                      <span class="font-label-sm text-[10px] text-on-surface-variant mt-1">JAM</span>
+                    </div>
+                    <span class="font-display text-headline-md font-bold text-on-surface-variant -mt-4">:</span>
+                    <!-- Minutes -->
+                    <div class="flex flex-col items-center">
+                      <div class="w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center font-display text-[26px] font-mono font-bold text-on-surface shadow-sm">
+                        <span id="minutesBox">58</span>
+                      </div>
+                      <span class="font-label-sm text-[10px] text-on-surface-variant mt-1">MENIT</span>
+                    </div>
+                    <span class="font-display text-headline-md font-bold text-on-surface-variant -mt-4">:</span>
+                    <!-- Seconds -->
+                    <div class="flex flex-col items-center">
+                      <div class="w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center font-display text-[26px] font-mono font-bold text-error shadow-sm">
+                        <span id="secondsBox">40</span>
+                      </div>
+                      <span class="font-label-sm text-[10px] text-on-surface-variant mt-1">DETIK</span>
+                    </div>
+                  </div>
+                  <!-- Progress bar -->
+                  <div class="w-full bg-surface-container-high h-1.5 rounded-full mt-3 overflow-hidden">
+                    <div class="bg-secondary h-full rounded-full" style="width: 96%"></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- 6 & 7. Split Section: Lokasi Pos Satpam (Left 7 Cols) & Detail Ringkasan Barang (Right 5 Cols) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+              <!-- Left: Lokasi Pos Satpam Siaga (7 cols) -->
+              <div class="lg:col-span-7 space-y-space-md">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h2 class="font-headline-md text-headline-md text-on-surface">Lokasi &amp; Jam Operasional Pos Satpam</h2>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Pilih salah satu pos jaga terdekat untuk menyerahkan barang temuan.</p>
+                  </div>
+                  <a
+                    class="hidden sm:inline-flex items-center gap-1.5 px-space-sm py-1.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all"
+                    href="https://maps.google.com"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <span class="material-symbols-outlined text-[16px] text-secondary">near_me</span>
+                    <span>Buka Google Maps</span>
+                  </a>
+                </div>
+                <div class="space-y-space-sm">
+                  <!-- Pos 1: Posko Induk GKU -->
+                  <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm transition-all hover:shadow-md">
+                    <div class="flex items-start justify-between gap-space-sm">
+                      <div class="flex items-start gap-space-sm">
+                        <div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+                          <span class="material-symbols-outlined text-[22px]">corporate_fare</span>
+                        </div>
+                        <div class="space-y-1">
+                          <div class="flex items-center gap-2 flex-wrap">
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface">1. Posko Induk Keamanan GKU</h3>
+                            <span class="bg-secondary text-on-secondary px-2 py-0.5 rounded-full font-label-sm text-label-sm font-semibold">Rekomendasi Utama</span>
+                            <span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm">Buka 24 Jam</span>
+                          </div>
+                          <p class="font-body-md text-body-md text-on-surface-variant">Gedung Kuliah Umum Prof. Dr. Sardjito — Lantai Dasar Sayap Barat (Dekat Tangga Sentral).</p>
+                          <div class="pt-1 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm flex-wrap">
+                            <span class="inline-flex items-center gap-1 text-secondary font-medium"> <span class="material-symbols-outlined text-[16px]">lock</span> Brankas Khusus Elektronik/Valuable </span>
+                            <span>•</span>
+                            <span class="inline-flex items-center gap-1"> <span class="material-symbols-outlined text-[16px]">verified</span> Berita Acara (BAST) Langsung </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Pos 2: Pos Gerbang Utama -->
+                  <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm transition-all hover:shadow-md">
+                    <div class="flex items-start justify-between gap-space-sm">
+                      <div class="flex items-start gap-space-sm">
+                        <div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center shrink-0">
+                          <span class="material-symbols-outlined text-[22px]">door_sliding</span>
+                        </div>
+                        <div class="space-y-1">
+                          <div class="flex items-center gap-2 flex-wrap">
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface">2. Pos Gerbang Utama (Pintu Masuk)</h3>
+                            <span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm">Buka 24 Jam</span>
+                          </div>
+                          <p class="font-body-md text-body-md text-on-surface-variant">Jl. Kaliurang KM 14.5 (Pintu Masuk Gerbang Utama Kampus Terpadu UII).</p>
+                          <div class="pt-1 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm flex-wrap">
+                            <span class="inline-flex items-center gap-1 text-secondary font-medium"> <span class="material-symbols-outlined text-[16px]">electric_moped</span> Loket Drop-Off Cepat (Drive-Thru) </span>
+                            <span>•</span>
+                            <span>Mudah dijangkau kendaraan roda dua/empat</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Pos 3: Pos Parkir Sentral / GOR -->
+                  <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm transition-all hover:shadow-md">
+                    <div class="flex items-start justify-between gap-space-sm">
+                      <div class="flex items-start gap-space-sm">
+                        <div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center shrink-0">
+                          <span class="material-symbols-outlined text-[22px]">sports_soccer</span>
+                        </div>
+                        <div class="space-y-1">
+                          <div class="flex items-center gap-2 flex-wrap">
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface">3. Pos Parkir Sentral &amp; GOR UII</h3>
+                            <span class="bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full font-label-sm text-label-sm">06.00 - 22.00 WIB</span>
+                          </div>
+                          <p class="font-body-md text-body-md text-on-surface-variant">Kawasan Gedung Olahraga &amp; Area Parkir Timur Kampus Terpadu.</p>
+                          <div class="pt-1 flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm flex-wrap">
+                            <span class="inline-flex items-center gap-1 text-secondary font-medium"> <span class="material-symbols-outlined text-[16px]">key</span> Khusus Helm, Jaket &amp; Kunci Kendaraan </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Hotline / Contact Bar -->
+                <div class="bg-surface-container-low p-space-md rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+                  <div class="flex items-center gap-space-xs">
+                    <span class="material-symbols-outlined text-secondary text-[22px]">headset_mic</span>
+                    <div class="text-left">
+                      <p class="font-label-md text-label-md text-on-surface font-semibold">Butuh Bantuan Segera?</p>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant">Hubungi Command Center Satpam Kampus Terpadu</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <a
+                      class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-md py-1.5 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-high transition-colors"
+                      href="tel:0274898444"
+                    >
+                      <span class="material-symbols-outlined text-[16px]">call</span>
+                      <span>(0274) 898444</span>
+                    </a>
+                    <a
+                      class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity"
+                      href="https://wa.me/628112555844"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <span class="material-symbols-outlined text-[16px]">chat</span>
+                      <span>WhatsApp Darurat</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!-- Right: Detail Ringkasan Barang yang Dilaporkan (5 cols) -->
+              <div class="lg:col-span-5 space-y-space-md">
+                <div class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm space-y-space-md">
+                  <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+                      <span class="material-symbols-outlined text-secondary text-[20px]">inventory_2</span>
+                      <span>Ringkasan Temuan</span>
+                    </h2>
+                    <span class="bg-surface-container-high text-on-surface-variant px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-mono"> DATA-INPUT </span>
+                  </div>
+                  <!-- Item visual placeholder with photo notice -->
+                  <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center gap-space-sm">
+                    <div class="w-16 h-16 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant shrink-0 relative overflow-hidden">
+                      <img
+                        class="w-full h-full object-cover rounded-lg"
+                        data-alt="A clean top-down view of a modern metallic USB flash drive lying on a pristine wooden desk beside study notebooks, soft diffused campus library lighting with shallow depth of field, realistic documentary campus photography."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAElMoi9aqrX-6r1my_ZUuDpqCZlJ3wKHfVqFMGjVqVmV8gu4q1q1ogrAurKOWqLhl2_xuDvXnvMi5BXNTY1egEOlPxUyKADA9SaGeHH6ncYd0l4QD_h8a1pmFv1evUutPAxom0uZavwQwufkyYY5ApPaUxDh9HamBEJ4F1mWg82KOOH4kiA1xXCgg16J4QoDhsMKgxb6ez6ceg9m_n6pk5PiVaxAwqL_F9ukOCbbo"
+                      />
+                    </div>
+                    <div class="min-w-0">
+                      <span class="font-label-sm text-label-sm text-secondary font-semibold uppercase">Flashdisk Sandisk 64GB Merah</span>
+                      <p class="font-body-sm text-body-sm text-on-surface-variant truncate">Kategori: Elektronik &amp; Aksesoris</p>
+                      <span class="inline-flex items-center gap-1 text-[11px] text-on-surface-variant mt-0.5"> <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Menunggu Foto Resmi Petugas </span>
+                    </div>
+                  </div>
+                  <!-- Details List -->
+                  <dl class="space-y-space-xs font-body-sm text-body-sm">
+                    <div class="flex justify-between py-1.5 border-b border-surface-container-high">
+                      <dt class="text-on-surface-variant">Lokasi Penemuan</dt>
+                      <dd class="font-label-md text-label-md text-on-surface text-right">Gedung Kuliah Umum (GKU) Lt. 2, R. 2.14</dd>
+                    </div>
+                    <div class="flex justify-between py-1.5 border-b border-surface-container-high">
+                      <dt class="text-on-surface-variant">Waktu Ditemukan</dt>
+                      <dd class="font-label-md text-label-md text-on-surface text-right">Hari Ini, 20 Nov 2024 • 13:45 WIB</dd>
+                    </div>
+                    <div class="flex justify-between py-1.5 border-b border-surface-container-high">
+                      <dt class="text-on-surface-variant">Identitas Pelapor</dt>
+                      <dd class="font-label-md text-label-md text-on-surface text-right flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px] text-secondary">verified_user</span>
+                        <span>Civitas Peduli (Anonim Terjaga)</span>
+                      </dd>
+                    </div>
+                    <div class="flex justify-between py-1.5 border-b border-surface-container-high">
+                      <dt class="text-on-surface-variant">Nomor WhatsApp Pelapor</dt>
+                      <dd class="font-label-md text-label-md text-on-surface text-right font-mono">+62 812-3456-xxxx</dd>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                      <dt class="text-on-surface-variant">Status Publikasi Web</dt>
+                      <dd class="font-label-md text-label-md text-secondary text-right font-semibold">Tersimpan (Menunggu Verifikasi Fisik)</dd>
+                    </div>
+                  </dl>
+                  <!-- Verification Notice Card -->
+                  <div class="bg-surface-container-high/60 rounded-xl p-space-sm flex items-start gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+                    <span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">photo_camera</span>
+                    <p><strong class="text-on-surface">Foto Dokumentasi Resmi:</strong> Petugas Satpam akan memverifikasi kondisi fisik, mencocokkan nomor seri, serta mengunggah foto resmi ke etalase publik setelah barang Anda serahkan.</p>
+                  </div>
+                  <!-- Print / Save Receipt Action -->
+                  <button
+                    class="w-full inline-flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all shadow-sm"
+                    onclick="window.print()"
+                    type="button"
+                  >
+                    <span class="material-symbols-outlined text-[18px]">print</span>
+                    <span>Cetak / Simpan Bukti Tanda Terima (PDF)</span>
+                  </button>
+                </div>
+                <!-- Trust & Privacy Guarantee Card -->
+                <div class="bg-surface-container-low rounded-2xl p-space-md space-y-space-xs">
+                  <div class="flex items-center gap-2 text-on-surface font-headline-sm text-headline-sm">
+                    <span class="material-symbols-outlined text-secondary text-[20px]">security</span>
+                    <span>Jaminan Privasi Penemu</span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Nomor WhatsApp dan data kontak Anda tidak akan pernah dipublikasikan secara umum. Informasi kontak hanya digunakan Satpam bila diperlukan konfirmasi serah terima kepada pemilik sah.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 8. VARIANT STATE SECTION: EXPIRED SIMULATION (Hidden by default, toggled via test bar) -->
+          <div class="hidden space-y-space-lg" id="viewExpiredState">
+            <section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-xl shadow-md border-l-4 border-error space-y-space-md">
+              <div class="flex flex-col md:flex-row md:items-start justify-between gap-space-md">
+                <div class="flex items-start gap-space-md">
+                  <div class="w-14 h-14 rounded-2xl bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[32px]">event_busy</span>
+                  </div>
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="bg-error text-on-error px-2.5 py-0.5 rounded-full font-label-sm text-label-sm font-semibold"> STATUS: KEDALUWARSA (EXPIRED) </span>
+                      <span class="font-mono font-bold text-headline-sm text-on-surface-variant line-through"> TM-7F3P9X </span>
+                    </div>
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface">Tiket Tidak Berlaku Lagi</h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                      Batas waktu penyerahan barang 24 jam telah berakhir pada <strong class="text-on-surface">Kamis, 21 November 2024, pukul 14:30 WIB</strong>. Tiket registrasi mandiri ini telah otomatis dinonaktifkan dari sistem terpadu.
+                    </p>
+                  </div>
+                </div>
+                <div class="bg-surface-container-low p-space-sm rounded-xl text-center md:text-right shrink-0">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant block">Status Sinkronisasi</span>
+                  <span class="font-label-md text-label-md text-error font-semibold flex items-center justify-center md:justify-end gap-1"> <span class="material-symbols-outlined text-[16px]">cancel</span> Dihapus dari Antrean </span>
+                </div>
+              </div>
+              <div class="bg-surface-container-low rounded-xl p-space-md space-y-space-xs text-on-surface">
+                <h3 class="font-headline-sm text-headline-sm flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-secondary text-[20px]">tips_and_updates</span>
+                  <span>Apa yang Harus Dilakukan Sekarang?</span>
+                </h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">Jika barang temuan tersebut saat ini masih berada pada Anda, jangan khawatir. Anda tetap dapat menyerahkannya kepada petugas kampus melalui opsi berikut:</p>
+                <ul class="space-y-1 font-body-sm text-body-sm text-on-surface-variant list-disc list-inside pt-1">
+                  <li><strong>Buat Laporan Baru:</strong> Dapatkan nomor tiket baru dalam 1 menit tanpa perlu login.</li>
+                  <li><strong>Datang Langsung (Drop-Off Langsung):</strong> Bawa barang langsung ke Posko Induk GKU atau Pos Gerbang Utama. Petugas Satpam akan membuatkan BAST manual secara instan di tempat.</li>
+                </ul>
+              </div>
+              <div class="flex flex-col sm:flex-row items-center gap-space-sm pt-space-xs">
+                <a
+                  class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-lg py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm"
+                  data-path="saya-menemukan"
+                  href="#"
+                >
+                  <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                  <span>Buat Laporan Temuan Baru</span>
+                </a>
+                <a
+                  class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-lg py-2.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors"
+                  href="https://wa.me/628112555844"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <span class="material-symbols-outlined text-[18px] text-secondary">chat</span>
+                  <span>Tanya Petugas Satpam via WhatsApp</span>
+                </a>
+                <button class="w-full sm:w-auto ml-auto inline-flex items-center justify-center gap-1 text-secondary font-label-md text-label-md hover:underline" id="btnRestoreActive" type="button">
+                  <span class="material-symbols-outlined text-[16px]">refresh</span>
+                  <span>Kembalikan ke Tampilan Aktif</span>
+                </button>
+              </div>
+            </section>
+          </div>
+          <!-- 9. Navigation Actions at Bottom -->
+          <section class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-sm">
+              <div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[20px]">explore</span>
+              </div>
+              <div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface">Langkah Selanjutnya</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Pantau status publikasi barang atau jelajahi barang yang sedang dicari pemiliknya.</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-space-sm w-full sm:w-auto flex-wrap sm:flex-nowrap">
+              <a
+                class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-md py-2.5 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors"
+                data-path="beranda"
+                href="#"
+              >
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                <span>Kembali ke Beranda</span>
+              </a>
+              <a
+                class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-space-lg py-2.5 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity shadow-md"
+                data-path="barang-temuan"
+                href="#"
+              >
+                <span>Lihat Etalase Barang Temuan</span>
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+      <script>
+        (function initSuccessReportScreen() {
+          // 1. Copy Ticket Code Micro-interaction
+          const copyBtn = document.getElementById("copyTicketBtn");
+          const copyLabel = document.getElementById("copyLabel");
+          const ticketCode = "TM-7F3P9X";
 
-      if (hoursBox) hoursBox.textContent = String(h).padStart(2, '0');
-      if (minutesBox) minutesBox.textContent = String(m).padStart(2, '0');
-      if (secondsBox) secondsBox.textContent = String(s).padStart(2, '0');
-    }
-    const timerInterval = setInterval(updateCountdown, 1000);
+          if (copyBtn && copyLabel) {
+            copyBtn.addEventListener("click", async () => {
+              try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                  await navigator.clipboard.writeText(ticketCode);
+                }
+                copyLabel.textContent = "Tersalin!";
+                copyBtn.classList.add("bg-secondary-fixed", "text-on-secondary-fixed");
+                setTimeout(() => {
+                  copyLabel.textContent = "Salin Kode";
+                  copyBtn.classList.remove("bg-secondary-fixed", "text-on-secondary-fixed");
+                }, 2500);
+              } catch (err) {
+                copyLabel.textContent = "Tersalin!";
+                setTimeout(() => {
+                  copyLabel.textContent = "Salin Kode";
+                }, 2000);
+              }
+            });
+          }
 
-    // 3. Variant State Simulation Switcher (Active vs Expired)
-    const btnStateActive = document.getElementById('btnStateActive');
-    const btnStateExpired = document.getElementById('btnStateExpired');
-    const btnRestoreActive = document.getElementById('btnRestoreActive');
-    const viewActiveState = document.getElementById('viewActiveState');
-    const viewExpiredState = document.getElementById('viewExpiredState');
+          // 2. Interactive Countdown Timer (23h 58m 40s decrement)
+          let totalSeconds = 23 * 3600 + 58 * 60 + 40;
+          const hoursBox = document.getElementById("hoursBox");
+          const minutesBox = document.getElementById("minutesBox");
+          const secondsBox = document.getElementById("secondsBox");
 
-    function setActiveState() {
-      viewActiveState.classList.remove('hidden');
-      viewExpiredState.classList.add('hidden');
-      btnStateActive.className = 'px-space-md py-1 rounded-full bg-surface-container-lowest text-on-surface font-semibold shadow-sm transition-all flex items-center gap-1.5';
-      btnStateExpired.className = 'px-space-md py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5';
-    }
+          function updateCountdown() {
+            if (totalSeconds <= 0) {
+              clearInterval(timerInterval);
+              return;
+            }
+            totalSeconds--;
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
 
-    function setExpiredState() {
-      viewActiveState.classList.add('hidden');
-      viewExpiredState.classList.remove('hidden');
-      btnStateExpired.className = 'px-space-md py-1 rounded-full bg-surface-container-lowest text-error font-semibold shadow-sm transition-all flex items-center gap-1.5';
-      btnStateActive.className = 'px-space-md py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5';
-    }
+            if (hoursBox) hoursBox.textContent = String(h).padStart(2, "0");
+            if (minutesBox) minutesBox.textContent = String(m).padStart(2, "0");
+            if (secondsBox) secondsBox.textContent = String(s).padStart(2, "0");
+          }
+          const timerInterval = setInterval(updateCountdown, 1000);
 
-    if (btnStateActive && btnStateExpired) {
-      btnStateActive.addEventListener('click', setActiveState);
-      btnStateExpired.addEventListener('click', setExpiredState);
-    }
-    if (btnRestoreActive) {
-      btnRestoreActive.addEventListener('click', setActiveState);
-    }
-  })();
-</script></main><footer class="w-full bg-surface-container-lowest shadow-[0_-4px_24px_rgba(15,23,42,0.03)] mt-space-xl"><div class="max-w-[1200px] mx-auto px-margin py-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter"><div class="space-y-space-sm"><div class="flex items-center gap-space-xs"><div class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed"><span class="material-symbols-outlined text-[18px]">shield</span></div><span class="font-headline-sm text-headline-sm text-on-surface">Lost &amp; Found UII</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Sistem informasi inventarisasi pelaporan barang temuan dan kehilangan civitas akademika Universitas Islam Indonesia, terkoordinasi dengan Unit Keamanan Terpadu.</p><div class="pt-space-xs flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-secondary text-[16px]">verified</span><span>Layanan Resmi Kampus Terpadu</span></div></div><div class="space-y-space-sm"><h3 class="font-headline-sm text-headline-sm text-on-surface">Pos Satpam Siaga</h3><ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant"><li><strong class="text-on-surface block font-label-md text-label-md">Pos Gerbang Utama:</strong>Jl. Kaliurang KM 14.5 (Pintu Masuk Utama)</li><li><strong class="text-on-surface block font-label-md text-label-md">Pos Gedung Kuliah Umum (GKU):</strong>Lantai Dasar Sayap Barat Gedung Prof. Dr. Sardjito</li><li><strong class="text-on-surface block font-label-md text-label-md">Gedung Rektorat (GBPH Prabuningrat):</strong>Lobi Informasi Keamanan &amp; Ketertiban</li></ul></div><div class="space-y-space-sm"><h3 class="font-headline-sm text-headline-sm text-on-surface">Kontak Cepat Keamanan</h3><div class="space-y-space-xs"><div class="flex items-start gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">phone_in_talk</span><div><span class="font-label-sm text-label-sm text-on-surface-variant block">Hotline Keamanan 24 Jam</span><span class="font-label-md text-label-md text-on-surface">(0274) 898444 ext. 1111</span></div></div><div class="flex items-start gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">chat</span><div><span class="font-label-sm text-label-sm text-on-surface-variant block">WhatsApp Call Center</span><span class="font-label-md text-label-md text-on-surface">+62 811-2555-844</span></div></div><div class="flex items-start gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">mail</span><div><span class="font-label-sm text-label-sm text-on-surface-variant block">Surel Layanan</span><span class="font-label-md text-label-md text-on-surface">keamanan@uii.ac.id</span></div></div></div></div><div class="space-y-space-sm"><h3 class="font-headline-sm text-headline-sm text-on-surface">Tautan Cepat</h3><ul class="space-y-space-xs font-body-sm text-body-sm"><li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="beranda" href="#">Halaman Beranda</a></li><li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="barang-temuan" href="#">Daftar Barang Temuan Terkini</a></li><li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="cara-kerja" href="#">Prosedur Klaim Kepemilikan</a></li><li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="pos-satpam" href="#">Daftar Lokasi Pos Jaga</a></li><li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="faq" href="#">Pertanyaan Umum (FAQ)</a></li></ul></div></div><div class="mt-space-lg pt-space-md border-t border-surface-container-high flex flex-col sm:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface-variant"><p>© 2025 Universitas Islam Indonesia • Unit Keamanan &amp; Ketertiban Kampus Terpadu.</p><div class="flex items-center gap-space-md font-label-sm text-label-sm"><a class="hover:text-on-surface transition-colors" href="#">Kebijakan Privasi</a><span class="text-outline-variant">•</span><a class="hover:text-on-surface transition-colors" href="#">Ketentuan Layanan</a><span class="text-outline-variant">•</span><a class="hover:text-on-surface transition-colors" href="#">Panduan Verifikasi</a></div></div></div></footer></body></html>
+          // 3. Variant State Simulation Switcher (Active vs Expired)
+          const btnStateActive = document.getElementById("btnStateActive");
+          const btnStateExpired = document.getElementById("btnStateExpired");
+          const btnRestoreActive = document.getElementById("btnRestoreActive");
+          const viewActiveState = document.getElementById("viewActiveState");
+          const viewExpiredState = document.getElementById("viewExpiredState");
+
+          function setActiveState() {
+            viewActiveState.classList.remove("hidden");
+            viewExpiredState.classList.add("hidden");
+            btnStateActive.className = "px-space-md py-1 rounded-full bg-surface-container-lowest text-on-surface font-semibold shadow-sm transition-all flex items-center gap-1.5";
+            btnStateExpired.className = "px-space-md py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5";
+          }
+
+          function setExpiredState() {
+            viewActiveState.classList.add("hidden");
+            viewExpiredState.classList.remove("hidden");
+            btnStateExpired.className = "px-space-md py-1 rounded-full bg-surface-container-lowest text-error font-semibold shadow-sm transition-all flex items-center gap-1.5";
+            btnStateActive.className = "px-space-md py-1 rounded-full text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1.5";
+          }
+
+          if (btnStateActive && btnStateExpired) {
+            btnStateActive.addEventListener("click", setActiveState);
+            btnStateExpired.addEventListener("click", setExpiredState);
+          }
+          if (btnRestoreActive) {
+            btnRestoreActive.addEventListener("click", setActiveState);
+          }
+        })();
+      </script>
+    </main>
+    <footer class="w-full bg-surface-container-lowest shadow-[0_-4px_24px_rgba(15,23,42,0.03)] mt-space-xl">
+      <div class="max-w-[1200px] mx-auto px-margin py-space-xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+          <div class="space-y-space-sm">
+            <div class="flex items-center gap-space-xs">
+              <div class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed"><span class="material-symbols-outlined text-[18px]">shield</span></div>
+              <span class="font-headline-sm text-headline-sm text-on-surface">Lost &amp; Found UII</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Sistem informasi inventarisasi pelaporan barang temuan dan kehilangan civitas akademika Universitas Islam Indonesia, terkoordinasi dengan Unit Keamanan Terpadu.</p>
+            <div class="pt-space-xs flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+              <span class="material-symbols-outlined text-secondary text-[16px]">verified</span><span>Layanan Resmi Kampus Terpadu</span>
+            </div>
+          </div>
+          <div class="space-y-space-sm">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Pos Satpam Siaga</h3>
+            <ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface-variant">
+              <li><strong class="text-on-surface block font-label-md text-label-md">Pos Gerbang Utama:</strong>Jl. Kaliurang KM 14.5 (Pintu Masuk Utama)</li>
+              <li><strong class="text-on-surface block font-label-md text-label-md">Pos Gedung Kuliah Umum (GKU):</strong>Lantai Dasar Sayap Barat Gedung Prof. Dr. Sardjito</li>
+              <li><strong class="text-on-surface block font-label-md text-label-md">Gedung Rektorat (GBPH Prabuningrat):</strong>Lobi Informasi Keamanan &amp; Ketertiban</li>
+            </ul>
+          </div>
+          <div class="space-y-space-sm">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Kontak Cepat Keamanan</h3>
+            <div class="space-y-space-xs">
+              <div class="flex items-start gap-space-xs">
+                <span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">phone_in_talk</span>
+                <div><span class="font-label-sm text-label-sm text-on-surface-variant block">Hotline Keamanan 24 Jam</span><span class="font-label-md text-label-md text-on-surface">(0274) 898444 ext. 1111</span></div>
+              </div>
+              <div class="flex items-start gap-space-xs">
+                <span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">chat</span>
+                <div><span class="font-label-sm text-label-sm text-on-surface-variant block">WhatsApp Call Center</span><span class="font-label-md text-label-md text-on-surface">+62 811-2555-844</span></div>
+              </div>
+              <div class="flex items-start gap-space-xs">
+                <span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">mail</span>
+                <div><span class="font-label-sm text-label-sm text-on-surface-variant block">Surel Layanan</span><span class="font-label-md text-label-md text-on-surface">keamanan@uii.ac.id</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-space-sm">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Tautan Cepat</h3>
+            <ul class="space-y-space-xs font-body-sm text-body-sm">
+              <li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="beranda" href="#">Halaman Beranda</a></li>
+              <li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface">
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="barang-temuan" href="#">Daftar Barang Temuan Terkini</a>
+              </li>
+              <li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="cara-kerja" href="#">Prosedur Klaim Kepemilikan</a></li>
+              <li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="pos-satpam" href="#">Daftar Lokasi Pos Jaga</a></li>
+              <li class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[14px]">chevron_right</span><a data-path="faq" href="#">Pertanyaan Umum (FAQ)</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-space-lg pt-space-md border-t border-surface-container-high flex flex-col sm:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface-variant">
+          <p>© 2025 Universitas Islam Indonesia • Unit Keamanan &amp; Ketertiban Kampus Terpadu.</p>
+          <div class="flex items-center gap-space-md font-label-sm text-label-sm">
+            <a class="hover:text-on-surface transition-colors" href="#">Kebijakan Privasi</a><span class="text-outline-variant">•</span><a class="hover:text-on-surface transition-colors" href="#">Ketentuan Layanan</a
+            ><span class="text-outline-variant">•</span><a class="hover:text-on-surface transition-colors" href="#">Panduan Verifikasi</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
