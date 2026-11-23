@@ -22,6 +22,7 @@ import KebijakanPrivasi from "./pages/KebijakanPrivasi";
 // =========================================================================
 // 2. PORTAL SATPAM
 // =========================================================================
+import LoginSatpam from "./pages/satpam/LoginSatpam";
 import DashboardSatpam from "./pages/satpam/DashboardSatpam";
 import AntreanPenerimaan from "./pages/satpam/AntreanPenerimaan";
 import PenerimaanBarang from "./pages/satpam/PenerimaanBarang";
@@ -65,6 +66,7 @@ const screens = {
   cara_kerja_faq: CaraKerja,
   kebijakan_privasi: KebijakanPrivasi,
 
+  satpam_login: LoginSatpam,
   satpam_dashboard: DashboardSatpam,
   satpam_antrean: AntreanPenerimaan,
   satpam_penerimaan: PenerimaanBarang,
@@ -96,6 +98,16 @@ export default function App() {
   const [selectedFoundReport, setSelectedFoundReport] = useState(null);
   const [selectedPublicItem, setSelectedPublicItem] = useState(null);
 
+  // Sesi akun Satpam aktif (default null agar wajib login saat membuka portal satpam)
+  const [satpamUser, setSatpamUser] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("satpam_session");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const CurrentScreenComponent = screens[activeScreen] || LandingPage;
 
   const isSatpamPortal = activeScreen.startsWith("satpam_");
@@ -103,14 +115,39 @@ export default function App() {
   const isPublicPortal = !isSatpamPortal && !isAdminPortal;
 
   const handleNavigate = (target) => {
-    const destination =
+    let destination =
       target === "satpam_penerimaan" && !selectedFoundReport ? "satpam_antrean" : target;
+
+    // Proteksi rute: jika masuk ke satpam selain login dan belum login, arahkan ke login satpam
+    if (destination.startsWith("satpam_") && destination !== "satpam_login" && !satpamUser) {
+      destination = "satpam_login";
+    }
+
     if (screens[destination]) {
       if (destination === "satpam_antrean") setSelectedFoundReport(null);
       if (destination === "detail") setSelectedPublicItem(null);
       setActiveScreen(destination);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+  };
+
+  const handleSatpamLogin = (user) => {
+    setSatpamUser(user);
+    try {
+      sessionStorage.setItem("satpam_session", JSON.stringify(user));
+    } catch {}
+    setActiveScreen("satpam_dashboard");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSatpamLogout = () => {
+    setSatpamUser(null);
+    try {
+      sessionStorage.removeItem("satpam_session");
+      localStorage.removeItem("satpam_session");
+    } catch {}
+    setActiveScreen("satpam_login");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Memulai laporan kehilangan baru
@@ -123,13 +160,17 @@ export default function App() {
 
   const getPortalLabel = () => {
     if (isAdminPortal) return "Portal Admin BSI";
-    if (isSatpamPortal) return "Portal Satpam";
+    if (isSatpamPortal) return activeScreen === "satpam_login" ? "Login Satpam" : "Portal Satpam";
     return "Portal Publik";
   };
 
-  // Props khusus untuk setiap langkah laporan kehilangan
+  // Props khusus untuk setiap langkah laporan kehilangan & portal satpam
   const screenProps = {
     onNavigate: handleNavigate,
+    satpamUser,
+    onLoginSuccess: handleSatpamLogin,
+    onSatpamLogin: handleSatpamLogin,
+    onSatpamLogout: handleSatpamLogout,
   };
 
   if (activeScreen === "temuan_enhanced") {
@@ -212,11 +253,41 @@ export default function App() {
               </button>
             )}
 
+            {isSatpamPortal && activeScreen !== "satpam_login" && (
+              <button
+                onClick={handleSatpamLogout}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 transition-all shadow-sm cursor-pointer border border-amber-500/40"
+                title="Keluar dari Akun Satpam / Kembali ke Login"
+              >
+                <span className="material-symbols-outlined text-[15px]">logout</span>
+                <span className="hidden sm:inline">Logout Satpam</span>
+              </button>
+            )}
+
+            {isSatpamPortal && activeScreen === "satpam_login" && (
+              <button
+                onClick={() => {
+                  setSatpamUser({
+                    nrp: "SEC-042",
+                    name: "Bripka Hendra Kurniawan",
+                    jabatan: "Danru",
+                    pos: "Pos Induk GKU",
+                  });
+                  setActiveScreen("satpam_dashboard");
+                }}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
+                title="Lewati Login Langsung ke Dashboard"
+              >
+                <span className="material-symbols-outlined text-[15px]">dashboard</span>
+                <span className="hidden sm:inline">Buka Dashboard</span>
+              </button>
+            )}
+
             {!isSatpamPortal && (
               <button
-                onClick={() => handleNavigate("satpam_dashboard")}
+                onClick={() => handleNavigate("satpam_login")}
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Satpam Kampus UII"
+                title="Buka Portal Satpam Kampus UII (Login)"
               >
                 <span className="material-symbols-outlined text-[15px]">local_police</span>
                 <span className="hidden sm:inline">Satpam</span>
