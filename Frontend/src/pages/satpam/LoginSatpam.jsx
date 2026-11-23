@@ -1,48 +1,9 @@
 import React, { useState } from "react";
 
-// Master data kredensial satpam resmi (tersinkronisasi dengan Portal Admin BSI & Seeder DB)
-const VALID_GUARDS = [
-  {
-    nrp: "SEC-042",
-    username: "satpam_pos1",
-    name: "Bripka Hendra Kurniawan",
-    jabatan: "Komandan Regu (Danru)",
-    pos: "Pos Induk GKU (Sardjito)",
-    password: "password123",
-    status: "aktif",
-  },
-  {
-    nrp: "SEC-019",
-    username: "satpam_pos2",
-    name: "Aipda Agus Susanto",
-    jabatan: "Petugas Jaga Siaga",
-    pos: "Pos Gerbang Utama (Jl. Kaliurang)",
-    password: "password123",
-    status: "aktif",
-  },
-  {
-    nrp: "SEC-008",
-    username: "satpam_pos3",
-    name: "Sertu Bambang Supriyadi",
-    jabatan: "Petugas Verifikasi Lapangan",
-    pos: "Pos Masjid Ulil Albab",
-    password: "password123",
-    status: "aktif",
-  },
-  {
-    nrp: "SEC-035",
-    username: "satpam_joko",
-    name: "Bripka Joko Wahyono",
-    jabatan: "Dalam Penyelidikan",
-    pos: "Pos Perpustakaan Pusat",
-    password: "password123",
-    status: "ditangguhkan",
-    incidentNote: "Kasus INS-2024-0091: Indikasi Bypass Data Rahasia (Dibekukan oleh BSI)",
-  },
-];
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
-  const [nrpOrUsername, setNrpOrUsername] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
   const [password, setPassword] = useState("");
   const [selectedPos, setSelectedPos] = useState("Pos Induk GKU (Sardjito)");
   const [rememberMe, setRememberMe] = useState(true);
@@ -50,13 +11,13 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
 
-    const inputVal = nrpOrUsername.trim();
-    if (!inputVal) {
-      setErrorMessage("Silakan masukkan NRP atau Username Petugas Satpam.");
+    const username = usernameInput.trim();
+    if (!username) {
+      setErrorMessage("Silakan masukkan username Petugas Satpam.");
       return;
     }
     if (!password) {
@@ -65,82 +26,63 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
     }
 
     setIsLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const result = await response.json();
 
-    // Simulasi autentikasi dinas (400ms)
-    setTimeout(() => {
-      setIsLoading(false);
-
-      const upperInput = inputVal.toUpperCase();
-      const lowerInput = inputVal.toLowerCase();
-
-      // Cari berdasarkan NRP atau username
-      const matched = VALID_GUARDS.find(
-        (g) =>
-          g.nrp.toUpperCase() === upperInput ||
-          g.username.toLowerCase() === lowerInput
-      );
-
-      // Jika kredensial bebas diisi saat demo pengujian mandiri
-      let currentGuard = matched;
-      if (!currentGuard) {
-        // Fallback dinamis jika satpam memasukkan ID custom
-        if (password.length >= 6) {
-          currentGuard = {
-            nrp: upperInput.startsWith("SEC-") ? upperInput : `SEC-${upperInput}`,
-            username: lowerInput,
-            name: `Petugas Jaga (${upperInput})`,
-            jabatan: "Petugas Jaga Siaga",
-            pos: selectedPos,
-            status: "aktif",
-          };
-        } else {
-          setErrorMessage(
-            "Kredensial tidak valid. NRP atau kata sandi tidak ditemukan pada direktori LDAP BSI."
-          );
-          return;
-        }
-      }
-
-      // Validasi penolakan akun ditangguhkan
-      if (currentGuard.status === "ditangguhkan") {
+      if (!response.ok) {
         setErrorMessage(
-          `AKSES DITOLAK: Akun ${currentGuard.name} (${currentGuard.nrp}) saat ini DITANGGUHKAN oleh Admin BSI. Catatan: ${currentGuard.incidentNote}`
+          response.status === 401
+            ? "Username atau password salah."
+            : result.error || `Login gagal (HTTP ${response.status}).`
         );
         return;
       }
 
-      // Verifikasi kata sandi
+      const staff = result.staff;
       if (
-        matched &&
-        password !== matched.password &&
-        password !== "satpam123" &&
-        password !== "admin123"
+        !staff ||
+        !Number.isSafeInteger(Number(staff.staff_id)) ||
+        staff.role !== "satpam" ||
+        !staff.username ||
+        !staff.name
       ) {
-        setErrorMessage("Kata sandi dinas salah. Silakan periksa kembali.");
-        return;
+        throw new Error("Respons login tidak berisi akun Satpam yang valid.");
       }
 
-      // Sesi Login Berhasil
       const sessionData = {
-        nrp: currentGuard.nrp,
-        username: currentGuard.username,
-        name: currentGuard.name,
-        jabatan: currentGuard.jabatan,
-        pos: selectedPos || currentGuard.pos,
+        staff_id: Number(staff.staff_id),
+        username: staff.username,
+        name: staff.name,
+        role: staff.role,
+        pos: selectedPos,
         loginAt: new Date().toISOString(),
         rememberMe,
-        token: `mock_jwt_satpam_${currentGuard.nrp}_${Date.now()}`,
       };
 
       if (typeof onLoginSuccess === "function") {
         onLoginSuccess(sessionData);
       } else {
-        try {
-          localStorage.setItem("satpam_session", JSON.stringify(sessionData));
-        } catch {}
+        const storage = rememberMe ? localStorage : sessionStorage;
+        const otherStorage = rememberMe ? sessionStorage : localStorage;
+        otherStorage.removeItem("satpam_session");
+        storage.setItem("satpam_session", JSON.stringify(sessionData));
         if (onNavigate) onNavigate("satpam_dashboard");
       }
-    }, 400);
+    } catch (error) {
+      console.error("Gagal memproses login Satpam:", error);
+      setErrorMessage(
+        error instanceof TypeError
+          ? "Server login tidak dapat dihubungi."
+          : "Login gagal diproses. Silakan coba kembali."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -226,19 +168,20 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
               
               {/* Field 1: NRP / Username */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" htmlFor="guardNrp">
-                  NRP / ID Petugas Satpam <span className="text-red-500">*</span>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" htmlFor="guardUsername">
+                  Username Petugas Satpam <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
                     badge
                   </span>
                   <input
-                    id="guardNrp"
+                    id="guardUsername"
                     type="text"
-                    value={nrpOrUsername}
-                    onChange={(e) => setNrpOrUsername(e.target.value)}
-                    placeholder="Contoh: SEC-042 atau satpam_pos1"
+                    value={usernameInput}
+                    onChange={(e) => setUsernameInput(e.target.value)}
+                    placeholder="Masukkan username Satpam"
+                    maxLength={64}
                     className="w-full bg-slate-50 text-slate-900 font-medium rounded-xl pl-10 pr-4 py-3 border border-slate-200 focus:bg-white focus:border-uiiNavy focus:ring-1 focus:ring-uiiNavy text-sm transition outline-none"
                     autoComplete="username"
                     required
@@ -270,6 +213,7 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Masukkan kata sandi..."
+                    maxLength={72}
                     className="w-full bg-slate-50 text-slate-900 font-medium rounded-xl pl-10 pr-10 py-3 border border-slate-200 focus:bg-white focus:border-uiiNavy focus:ring-1 focus:ring-uiiNavy text-sm transition outline-none"
                     autoComplete="current-password"
                     required

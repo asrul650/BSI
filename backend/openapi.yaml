@@ -21,8 +21,9 @@ info:
     | Laporan kehilangan | `aktif` Aktif, `memiliki_kandidat` Memiliki Kandidat, `selesai` Selesai, `ditutup` Ditutup |
 
     ## Keamanan
-    - Staff: cookie sesi `lf_session` (HttpOnly, Secure, SameSite=Strict). Semua request ubah data wajib header `X-CSRF-Token` (didapat dari `POST /auth/login` atau `GET /auth/me`).
-    - Otorisasi dicek **per aksi dan per objek** di server (SEC-03). Default deny.
+    - Login Satpam memverifikasi akun database dan mengembalikan identitas staf. Proteksi rute saat ini berada di frontend; endpoint `/v1/staff/*` belum memvalidasi sesi server, sehingga belum boleh dipakai sebagai batas keamanan produksi.
+    - Kontrak cookie sesi `lf_session` dan CSRF di bawah adalah target pengembangan berikutnya, bukan perilaku backend saat ini.
+    - Otorisasi produksi harus dicek **per aksi dan per objek** di server (SEC-03). Default deny.
     - Rate limit: respons `429` dengan header `Retry-After`. Angka batas di FSD 6.1.
     - `Idempotency-Key` (UUID v4) wajib di semua `POST` publik pembuat laporan dan di aksi serah terima.
       Key yang sama + body sama -> respons asli diulang (header `Idempotent-Replayed: true`). Key sama + body beda -> `422 IDEMPOTENCY_KEY_REUSED`. TTL key 24 jam.
@@ -292,9 +293,7 @@ paths:
       tags: [auth]
       summary: Login staf (FR-05)
       description: |
-        Hash Argon2id/bcrypt. 5x gagal berturut-turut -> akun terkunci 15 menit dan dicatat (penanda A5 di 3x gagal).
-        Limit 20 percobaan/IP/jam. Sesi dibuat ulang setelah login (anti session fixation).
-        Idle 15 menit -> logout otomatis, maksimal 8 jam. Admin wajib `mfa_code`.
+        Username dan bcrypt password diverifikasi terhadap tabel `staff`. Hanya akun aktif dengan role `satpam` yang dapat masuk melalui portal Satpam. Lima password salah mengunci akun selama 15 menit.
 
         **Semua** kegagalan (salah username, salah password, akun terkunci, nonaktif, MFA salah)
         mengembalikan respons identik: `401` + `Username atau password salah`.
@@ -307,14 +306,10 @@ paths:
             schema: { $ref: '#/components/schemas/LoginRequest' }
       responses:
         '200':
-          description: Login berhasil. Header `Set-Cookie` berisi cookie sesi.
-          headers:
-            Set-Cookie:
-              schema: { type: string }
-              description: "lf_session=...; HttpOnly; Secure; SameSite=Strict; Path=/"
+          description: Login berhasil. Identitas staf dikembalikan untuk gate rute frontend.
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Session' }
+              schema: { $ref: '#/components/schemas/SatpamLoginResponse' }
         '401':
           description: Kredensial salah / akun terkunci / nonaktif. Pesan sama untuk semua.
           content:
@@ -2010,11 +2005,23 @@ components:
       required: [username, password]
       properties:
         username: { type: string, maxLength: 64 }
-        password: { type: string, minLength: 12, maxLength: 128, format: password }
+        password: { type: string, minLength: 1, maxLength: 72, format: password }
         mfa_code:
           type: string
           pattern: '^[0-9]{6}$'
           description: Wajib untuk admin.
+    SatpamLoginResponse:
+      type: object
+      required: [staff]
+      properties:
+        staff:
+          type: object
+          required: [staff_id, name, username, role]
+          properties:
+            staff_id: { type: integer }
+            name: { type: string }
+            username: { type: string }
+            role: { type: string, enum: [satpam] }
     Session:
       type: object
       required: [staff, csrf_token, idle_timeout_seconds, session_expires_at]

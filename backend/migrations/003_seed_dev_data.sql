@@ -46,6 +46,6 @@ ON CONFLICT DO NOTHING;
 
 INSERT INTO staff (name, username, password_hash, role, is_active)
 VALUES
-    ('Satpam Pos Utama', 'satpam_pos1', 'dev_hash_satpam_1', 'satpam', TRUE),
+    ('Satpam Pos Utama', 'satpam_pos1', '$2a$10$RfyTNoAxt30hNqr/HHZhMOXTMLjdJRkgFGDZltk1b.dir2kzBqvSK', 'satpam', TRUE),
     ('Admin Lost & Found', 'admin_lf', 'dev_hash_admin_1', 'admin', TRUE)
 ON CONFLICT (username) DO NOTHING;

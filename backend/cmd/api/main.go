@@ -30,6 +30,7 @@ func main() {
 
 	ho := handler.NewHandoverHandler(store)
 	audit := handler.NewAuditHandler(store)
+	auth := handler.NewAuthHandler(store)
 
 	otpService, err := service.NewOTPService(store)
 	if err != nil {
@@ -44,6 +45,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("POST /v1/auth/login", auth.LoginSatpam)
 	mux.HandleFunc("GET /v1/public/meta/form-options", pub.GetOptions)
 	mux.HandleFunc("GET /v1/public/items", pub.GetPublicItems)
 	mux.HandleFunc("POST /v1/public/lost-reports", pub.CreateLostReport)

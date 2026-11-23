@@ -101,8 +101,11 @@ export default function App() {
   // Sesi akun Satpam aktif (default null agar wajib login saat membuka portal satpam)
   const [satpamUser, setSatpamUser] = useState(() => {
     try {
-      const saved = sessionStorage.getItem("satpam_session");
-      return saved ? JSON.parse(saved) : null;
+      const saved =
+        localStorage.getItem("satpam_session") ||
+        sessionStorage.getItem("satpam_session");
+      const user = saved ? JSON.parse(saved) : null;
+      return user?.role === "satpam" ? user : null;
     } catch {
       return null;
     }
@@ -134,8 +137,13 @@ export default function App() {
   const handleSatpamLogin = (user) => {
     setSatpamUser(user);
     try {
-      sessionStorage.setItem("satpam_session", JSON.stringify(user));
-    } catch {}
+      const storage = user.rememberMe ? localStorage : sessionStorage;
+      const otherStorage = user.rememberMe ? sessionStorage : localStorage;
+      otherStorage.removeItem("satpam_session");
+      storage.setItem("satpam_session", JSON.stringify(user));
+    } catch (error) {
+      console.error("Sesi Satpam tidak dapat disimpan:", error);
+    }
     setActiveScreen("satpam_dashboard");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
