@@ -37,6 +37,7 @@ import DaftarLaporanKehilangan from "./pages/satpam/DaftarLaporanKehilangan";
 // =========================================================================
 // 3. PORTAL ADMINISTRATOR BSI
 // =========================================================================
+import LoginAdmin from "./pages/admin/LoginAdmin";
 import BerandaAdmin from "./pages/admin/BerandaAdmin";
 import PenandaAnomali from "./pages/admin/PenandaAnomali";
 import DetailInsiden from "./pages/admin/DetailInsiden";
@@ -78,6 +79,7 @@ const screens = {
   satpam_koreksi: KoreksiDataInventaris,
   satpam_kehilangan: DaftarLaporanKehilangan,
 
+  admin_login: LoginAdmin,
   admin_dashboard: BerandaAdmin,
   admin_anomali: PenandaAnomali,
   admin_detail_insiden: DetailInsiden,
@@ -113,19 +115,41 @@ export default function App() {
     }
   });
 
+  // Sesi akun Admin BSI aktif (default null agar wajib login saat membuka portal admin)
+  const [adminUser, setAdminUser] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("admin_session");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const CurrentScreenComponent = screens[activeScreen] || LandingPage;
 
   const isSatpamPortal = activeScreen.startsWith("satpam_");
   const isAdminPortal = activeScreen.startsWith("admin_");
   const isPublicPortal = !isSatpamPortal && !isAdminPortal;
+  const isLoginScreen = activeScreen === "satpam_login" || activeScreen === "admin_login";
 
   const handleNavigate = (target) => {
     let destination =
       target === "satpam_penerimaan" && !selectedFoundReport ? "satpam_antrean" : target;
 
+    // Aksi logout / kembali ke login dari portal admin
+    if (destination === "login" || destination === "logout") {
+      handleAdminLogout();
+      return;
+    }
+
     // Proteksi rute: jika masuk ke satpam selain login dan belum login, arahkan ke login satpam
     if (destination.startsWith("satpam_") && destination !== "satpam_login" && !satpamUser) {
       destination = "satpam_login";
+    }
+
+    // Proteksi rute: jika masuk ke admin selain login dan belum login, arahkan ke login admin
+    if (destination.startsWith("admin_") && destination !== "admin_login" && !adminUser) {
+      destination = "admin_login";
     }
 
     if (screens[destination]) {
@@ -161,6 +185,25 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleAdminLogin = (user) => {
+    setAdminUser(user);
+    try {
+      sessionStorage.setItem("admin_session", JSON.stringify(user));
+    } catch {}
+    setActiveScreen("admin_dashboard");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleAdminLogout = () => {
+    setAdminUser(null);
+    try {
+      sessionStorage.removeItem("admin_session");
+      localStorage.removeItem("admin_session");
+    } catch {}
+    setActiveScreen("admin_login");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   // Memulai laporan kehilangan baru
   const resetLostReport = () => {
     setLostReportDraft(null);
@@ -170,18 +213,21 @@ export default function App() {
   };
 
   const getPortalLabel = () => {
-    if (isAdminPortal) return "Portal Admin BSI";
+    if (isAdminPortal) return activeScreen === "admin_login" ? "Login Admin BSI" : "Portal Admin BSI";
     if (isSatpamPortal) return activeScreen === "satpam_login" ? "Login Satpam" : "Portal Satpam";
     return "Portal Publik";
   };
 
-  // Props khusus untuk setiap langkah laporan kehilangan & portal satpam
+  // Props khusus untuk setiap langkah laporan kehilangan & portal satpam & admin
   const screenProps = {
     onNavigate: handleNavigate,
     satpamUser,
-    onLoginSuccess: handleSatpamLogin,
+    onLoginSuccess: activeScreen === "admin_login" ? handleAdminLogin : handleSatpamLogin,
     onSatpamLogin: handleSatpamLogin,
     onSatpamLogout: handleSatpamLogout,
+    adminUser,
+    onAdminLogin: handleAdminLogin,
+    onAdminLogout: handleAdminLogout,
   };
 
   if (activeScreen === "temuan_enhanced") {
@@ -265,81 +311,75 @@ export default function App() {
     <div className="relative min-h-screen">
       <CurrentScreenComponent {...screenProps} />
 
-      {/* Floating 3-Way Portal Switcher */}
-      <aside aria-label="Portal Switcher" className="fixed bottom-4 right-4 z-50">
-        <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-slate-900/95 text-white shadow-2xl backdrop-blur-md border border-slate-700/80 text-xs font-semibold">
-          <div className="flex items-center gap-1.5 pl-3 pr-2 border-r border-slate-700/80">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-slate-300 hidden md:inline">Mode:</span>
-            <strong className="text-white font-medium">{getPortalLabel()}</strong>
+      {/* Floating 3-Way Portal Switcher (Disembunyikan saat di layar login satpam & admin) */}
+      {!isLoginScreen && (
+        <aside aria-label="Portal Switcher" className="fixed bottom-4 right-4 z-50">
+          <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-slate-900/95 text-white shadow-2xl backdrop-blur-md border border-slate-700/80 text-xs font-semibold">
+            <div className="flex items-center gap-1.5 pl-3 pr-2 border-r border-slate-700/80">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="text-slate-300 hidden md:inline">Mode:</span>
+              <strong className="text-white font-medium">{getPortalLabel()}</strong>
+            </div>
+
+            <div className="flex items-center gap-1">
+              {!isPublicPortal && (
+                <button
+                  onClick={() => handleNavigate("landing")}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-sm cursor-pointer"
+                  title="Buka Portal Publik Mahasiswa/Sivitas"
+                >
+                  <span className="material-symbols-outlined text-[15px]">public</span>
+                  <span className="hidden sm:inline">Publik</span>
+                </button>
+              )}
+
+              {isSatpamPortal && (
+                <button
+                  onClick={handleSatpamLogout}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 transition-all shadow-sm cursor-pointer border border-amber-500/40"
+                  title="Keluar dari Akun Satpam / Kembali ke Login"
+                >
+                  <span className="material-symbols-outlined text-[15px]">logout</span>
+                  <span className="hidden sm:inline">Logout Satpam</span>
+                </button>
+              )}
+
+              {!isSatpamPortal && (
+                <button
+                  onClick={() => handleNavigate(satpamUser ? "satpam_dashboard" : "satpam_login")}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
+                  title="Buka Portal Satpam Kampus UII"
+                >
+                  <span className="material-symbols-outlined text-[15px]">local_police</span>
+                  <span className="hidden sm:inline">Satpam</span>
+                </button>
+              )}
+
+              {isAdminPortal && (
+                <button
+                  onClick={handleAdminLogout}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-indigo-300 transition-all shadow-sm cursor-pointer border border-indigo-500/40"
+                  title="Keluar dari Akun Admin / Kembali ke Login"
+                >
+                  <span className="material-symbols-outlined text-[15px]">logout</span>
+                  <span className="hidden sm:inline">Logout Admin</span>
+                </button>
+              )}
+
+              {!isAdminPortal && (
+                <button
+                  onClick={() => handleNavigate(adminUser ? "admin_dashboard" : "admin_login")}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-sm cursor-pointer"
+                  title="Buka Portal Administrator BSI UII"
+                >
+                  <span className="material-symbols-outlined text-[15px]">admin_panel_settings</span>
+                  <span className="hidden sm:inline">Admin BSI</span>
+                </button>
+              )}
+            </div>
           </div>
-
-          <div className="flex items-center gap-1">
-            {!isPublicPortal && (
-              <button
-                onClick={() => handleNavigate("landing")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Publik Mahasiswa/Sivitas"
-              >
-                <span className="material-symbols-outlined text-[15px]">public</span>
-                <span className="hidden sm:inline">Publik</span>
-              </button>
-            )}
-
-            {isSatpamPortal && activeScreen !== "satpam_login" && (
-              <button
-                onClick={handleSatpamLogout}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 transition-all shadow-sm cursor-pointer border border-amber-500/40"
-                title="Keluar dari Akun Satpam / Kembali ke Login"
-              >
-                <span className="material-symbols-outlined text-[15px]">logout</span>
-                <span className="hidden sm:inline">Logout Satpam</span>
-              </button>
-            )}
-
-            {isSatpamPortal && activeScreen === "satpam_login" && (
-              <button
-                onClick={() => {
-                  setSatpamUser({
-                    nrp: "SEC-042",
-                    name: "Bripka Hendra Kurniawan",
-                    jabatan: "Danru",
-                    pos: "Pos Induk GKU",
-                  });
-                  setActiveScreen("satpam_dashboard");
-                }}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Lewati Login Langsung ke Dashboard"
-              >
-                <span className="material-symbols-outlined text-[15px]">dashboard</span>
-                <span className="hidden sm:inline">Buka Dashboard</span>
-              </button>
-            )}
-
-            {!isSatpamPortal && (
-              <button
-                onClick={() => handleNavigate("satpam_login")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Satpam Kampus UII (Login)"
-              >
-                <span className="material-symbols-outlined text-[15px]">local_police</span>
-                <span className="hidden sm:inline">Satpam</span>
-              </button>
-            )}
-
-            {!isAdminPortal && (
-              <button
-                onClick={() => handleNavigate("admin_dashboard")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Administrator BSI UII"
-              >
-                <span className="material-symbols-outlined text-[15px]">admin_panel_settings</span>
-                <span className="hidden sm:inline">Admin BSI</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </aside>
+        </aside>
+      )}
     </div>
   );
 }
