@@ -221,3 +221,40 @@ type CreateOTPParams struct {
 	ExpiresAt time.Time
 	IPHash    *string
 }
+
+// Staff auth (F-01)
+type Staff struct {
+	StaffID        int64
+	Name           string
+	Username       string
+	PasswordHash   string
+	Role           string
+	MFASecret      *string
+	MFALastStep    int64
+	IsActive       bool
+	FailedAttempts int
+	LockedUntil    *time.Time
+}
+
+type Session struct {
+	SessionID   int64
+	StaffID     int64
+	CSRFToken   string
+	MFAVerified bool
+	CreatedAt   time.Time
+	LastSeenAt  time.Time
+	ExpiresAt   time.Time
+
+	StaffName     string
+	StaffUsername string
+	StaffRole     string
+	StaffIsActive bool
+}
+
+type CreateSessionParams struct {
+	StaffID     int64
+	TokenHash   string
+	CSRFToken   string
+	MFAVerified bool
+	ExpiresAt   time.Time
+}
