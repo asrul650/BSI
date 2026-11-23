@@ -685,6 +685,52 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
 
+  /staff/items/{item_id}/start-verify:
+    post:
+      tags: [staff-items]
+      summary: Memulai verifikasi klaim barang
+      description: |
+        Mengunci barang yang masih berstatus `Barang Ditemukan`, menyimpan klaim pemohon,
+        memperbarui status menjadi `Proses Verifikasi`, dan mencatat riwayat status dalam satu transaksi.
+        `staff_id` berasal dari sesi Satpam di frontend dan diverifikasi sebagai akun Satpam aktif.
+      operationId: startItemVerification
+      security:
+        - cookieAuth: []
+          csrfToken: []
+      parameters:
+        - $ref: '#/components/parameters/ItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/StartVerificationRequest' }
+      responses:
+        '200':
+          description: Verifikasi berhasil dimulai.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [item_id, status, claim]
+                properties:
+                  item_id: { $ref: '#/components/schemas/ItemId' }
+                  status: { type: string, enum: [proses_verifikasi] }
+                  claim:
+                    type: object
+                    properties:
+                      claimant_name: { type: string }
+                      claimant_id_type: { type: string }
+                      claimant_identity_last4: { type: string, pattern: '^[0-9]{4}$' }
+                      claimant_wa: { $ref: '#/components/schemas/PhoneNumber' }
+                      lost_report_id:
+                        allOf: [{ $ref: '#/components/schemas/LostReportCode' }]
+                        nullable: true
+                      reject_count: { type: integer, minimum: 0 }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
   /staff/items/{item_id}/reveal:
     post:
       tags: [staff-items]
@@ -2277,6 +2323,22 @@ components:
           type: string
           format: binary
           description: Foto penerima + barang. **Bukan** foto KTP/KTM.
+    StartVerificationRequest:
+      type: object
+      required: [staff_id, claimant_name, claimant_id_type, id_last4, claimant_wa]
+      properties:
+        staff_id:
+          type: integer
+          format: int64
+          minimum: 1
+          description: ID Satpam dari sesi frontend, diverifikasi aktif dan ber-role satpam oleh server.
+        claimant_name: { type: string, minLength: 3, maxLength: 60 }
+        claimant_id_type: { type: string, enum: [ktm, ktp, sim, paspor, lainnya] }
+        id_last4: { type: string, pattern: '^[0-9]{4}$' }
+        claimant_wa: { $ref: '#/components/schemas/PhoneNumber' }
+        lost_report_id:
+          allOf: [{ $ref: '#/components/schemas/LostReportCode' }]
+          nullable: true
 
     # ---------------------------------------------------------------- admin
     StaffCreate:

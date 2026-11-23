@@ -64,6 +64,16 @@ type ReceivedItemParams struct {
 	StaffID     int64
 }
 
+type StartVerificationParams struct {
+	ItemID                string
+	LostReportID          string
+	ClaimantName          string
+	ClaimantIDType        string
+	ClaimantIdentityLast4 string
+	ClaimantWA            string
+	StaffID               int64
+}
+
 type FoundReport struct {
 	ReportID       string    `json:"report_id"`
 	Status         string    `json:"status"`
@@ -150,11 +160,13 @@ type MatchCandidate struct {
 }
 
 type ClaimInfo struct {
-	ClaimantName   string `json:"claimant_name"`
-	ClaimantIDType string `json:"claimant_id_type"`
-	ClaimantWA     string `json:"claimant_wa"`
-	RejectReason   string `json:"reject_reason,omitempty"`
-	RejectCount    int    `json:"reject_count,omitempty"`
+	ClaimantName          string `json:"claimant_name"`
+	ClaimantIDType        string `json:"claimant_id_type"`
+	ClaimantIdentityLast4 string `json:"claimant_identity_last4,omitempty"`
+	ClaimantWA            string `json:"claimant_wa"`
+	LostReportID          string `json:"lost_report_id,omitempty"`
+	RejectReason          string `json:"reject_reason,omitempty"`
+	RejectCount           int    `json:"reject_count,omitempty"`
 }
 
 type HandoverInfo struct {

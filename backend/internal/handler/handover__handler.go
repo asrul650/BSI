@@ -2,8 +2,12 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
+	"io"
+	"log"
 	"net/http"
 	"strings"
+	"unicode/utf8"
 
 	"LostandFound/internal/repo"
 )
@@ -17,9 +21,12 @@ func NewHandoverHandler(store *repo.Store) *HandoverHandler {
 }
 
 type startVerifyRequest struct {
-	ClaimantName   string `json:"claimant_name"`
-	ClaimantIDType string `json:"claimant_id_type"`
-	ClaimantWA     string `json:"claimant_wa"`
+	StaffID               int64  `json:"staff_id"`
+	ClaimantName          string `json:"claimant_name"`
+	ClaimantIDType        string `json:"claimant_id_type"`
+	ClaimantIdentityLast4 string `json:"id_last4"`
+	ClaimantWA            string `json:"claimant_wa"`
+	LostReportID          string `json:"lost_report_id"`
 }
 
 type rejectClaimRequest struct {
@@ -36,22 +43,53 @@ func (h *HandoverHandler) StartVerification(w http.ResponseWriter, r *http.Reque
 	itemID := strings.TrimSpace(r.PathValue("item_id"))
 
 	var req startVerifyRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	decoder := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4<<10))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&req); err != nil {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "JSON tidak valid"})
 		return
 	}
-	if strings.TrimSpace(req.ClaimantName) == "" || strings.TrimSpace(req.ClaimantIDType) == "" {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "Nama dan jenis identitas pemohon wajib diisi"})
+	if err := decoder.Decode(&struct{}{}); !errors.Is(err, io.EOF) {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "JSON tidak valid"})
 		return
 	}
 
-	item, err := h.store.StartVerification(itemID, repo.ClaimInfo{
-		ClaimantName:   req.ClaimantName,
-		ClaimantIDType: req.ClaimantIDType,
-		ClaimantWA:     req.ClaimantWA,
+	req.ClaimantName = strings.TrimSpace(req.ClaimantName)
+	req.ClaimantIDType = strings.ToLower(strings.TrimSpace(req.ClaimantIDType))
+	req.ClaimantIdentityLast4 = strings.TrimSpace(req.ClaimantIdentityLast4)
+	req.ClaimantWA = strings.TrimSpace(req.ClaimantWA)
+	req.LostReportID = strings.TrimSpace(req.LostReportID)
+	if !validStartVerificationRequest(req) {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "Lengkapi nama, jenis identitas, 4 digit terakhir identitas, WhatsApp, dan sesi Satpam yang valid.",
+		})
+		return
+	}
+
+	item, err := h.store.StartVerification(r.Context(), repo.StartVerificationParams{
+		ItemID:                itemID,
+		LostReportID:          req.LostReportID,
+		ClaimantName:          req.ClaimantName,
+		ClaimantIDType:        req.ClaimantIDType,
+		ClaimantIdentityLast4: req.ClaimantIdentityLast4,
+		ClaimantWA:            req.ClaimantWA,
+		StaffID:               req.StaffID,
 	})
 	if err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
+		switch {
+		case errors.Is(err, repo.ErrVerificationItemNotFound):
+			writeJSON(w, http.StatusNotFound, map[string]string{"error": err.Error()})
+		case errors.Is(err, repo.ErrVerificationStaffNotFound):
+			writeJSON(w, http.StatusForbidden, map[string]string{"error": err.Error()})
+		case errors.Is(err, repo.ErrVerificationItemUnavailable),
+			errors.Is(err, repo.ErrVerificationMatchNotFound):
+			writeJSON(w, http.StatusConflict, map[string]string{"error": err.Error()})
+		default:
+			log.Printf("Gagal memulai verifikasi barang %q: %v", itemID, err)
+			writeJSON(w, http.StatusInternalServerError, map[string]string{
+				"error": "Verifikasi tidak dapat disimpan. Silakan coba kembali.",
+			})
+		}
 		return
 	}
 
@@ -70,6 +108,36 @@ func (h *HandoverHandler) StartVerification(w http.ResponseWriter, r *http.Reque
 		"status":  item.Status,
 		"claim":   item.Claim,
 	})
+}
+
+func validStartVerificationRequest(req startVerifyRequest) bool {
+	if req.StaffID <= 0 ||
+		utf8.RuneCountInString(req.ClaimantName) < 3 ||
+		utf8.RuneCountInString(req.ClaimantName) > 60 ||
+		len(req.ClaimantIdentityLast4) != 4 ||
+		len(req.LostReportID) > 20 {
+		return false
+	}
+
+	switch req.ClaimantIDType {
+	case "ktm", "ktp", "sim", "paspor", "lainnya":
+	default:
+		return false
+	}
+
+	for _, digit := range req.ClaimantIdentityLast4 {
+		if digit < '0' || digit > '9' {
+			return false
+		}
+	}
+
+	digitCount := 0
+	for _, digit := range req.ClaimantWA {
+		if digit >= '0' && digit <= '9' {
+			digitCount++
+		}
+	}
+	return digitCount >= 8 && len(req.ClaimantWA) <= 20
 }
 
 func (h *HandoverHandler) RejectClaim(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +160,7 @@ func (h *HandoverHandler) RejectClaim(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.store.AddAuditLog("reject_claim", item.ItemID, "satpam",
-	"Alasan: "+req.Reason, "A3")
+		"Alasan: "+req.Reason, "A3")
 
 	writeJSON(w, http.StatusOK, map[string]any{
 		"item_id": item.ItemID,
@@ -126,7 +194,7 @@ func (h *HandoverHandler) CompleteHandover(w http.ResponseWriter, r *http.Reques
 		anomalies = append(anomalies, "A7")
 	}
 	h.store.AddAuditLog("handover", item.ItemID, "satpam",
-	"Penerima: "+req.ReceiverName, anomalies...)
+		"Penerima: "+req.ReceiverName, anomalies...)
 
 	writeJSON(w, http.StatusOK, map[string]any{
 		"item_id":  item.ItemID,

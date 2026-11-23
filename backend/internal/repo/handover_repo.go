@@ -1,35 +1,148 @@
 package repo
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
+
+	"github.com/jackc/pgx/v5"
 )
 
-func (s *Store) StartVerification(itemID string, claim ClaimInfo) (ItemData, error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+var (
+	ErrVerificationItemNotFound    = errors.New("barang tidak ditemukan")
+	ErrVerificationItemUnavailable = errors.New("barang tidak berstatus Barang Ditemukan")
+	ErrVerificationStaffNotFound   = errors.New("akun Satpam tidak ditemukan atau tidak aktif")
+	ErrVerificationMatchNotFound   = errors.New("laporan kehilangan bukan kandidat barang ini")
+)
 
-	idx := s.findItemIndex(itemID)
-	if idx == -1 {
-		return ItemData{}, errors.New("barang tidak ditemukan")
-	}
-	if s.items[idx].Status != "barang_ditemukan" {
-		return ItemData{}, errors.New("barang tidak dalam status barang_ditemukan")
-	}
-	prevRejects := 0
-	if s.items[idx].Claim != nil {
-		prevRejects = s.items[idx].Claim.RejectCount
+func (s *Store) StartVerification(ctx context.Context, params StartVerificationParams) (ItemData, error) {
+	itemID := strings.TrimSpace(params.ItemID)
+	if itemID == "" {
+		return ItemData{}, ErrVerificationItemNotFound
 	}
 
-	s.items[idx].Status = "proses_verifikasi"
-	s.items[idx].Claim = &ClaimInfo{
-		ClaimantName:   strings.TrimSpace(claim.ClaimantName),
-		ClaimantIDType: strings.TrimSpace(claim.ClaimantIDType),
-		ClaimantWA:     strings.TrimSpace(claim.ClaimantWA),
-		RejectCount:    prevRejects,
+	tx, err := s.db.Begin(ctx)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("memulai transaksi verifikasi: %w", err)
 	}
-	return s.items[idx], nil
+	defer tx.Rollback(ctx)
+
+	var previousStatus string
+	err = tx.QueryRow(ctx, `
+		SELECT status
+		FROM item
+		WHERE item_id = $1
+		FOR UPDATE
+	`, itemID).Scan(&previousStatus)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ItemData{}, ErrVerificationItemNotFound
+	}
+	if err != nil {
+		return ItemData{}, fmt.Errorf("mengambil status barang untuk verifikasi: %w", err)
+	}
+	if previousStatus != "Barang Ditemukan" {
+		return ItemData{}, ErrVerificationItemUnavailable
+	}
+
+	var staffID int64
+	err = tx.QueryRow(ctx, `
+		SELECT staff_id
+		FROM staff
+		WHERE staff_id = $1
+			AND role = 'satpam'
+			AND is_active = TRUE
+	`, params.StaffID).Scan(&staffID)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return ItemData{}, ErrVerificationStaffNotFound
+	}
+	if err != nil {
+		return ItemData{}, fmt.Errorf("memvalidasi akun Satpam untuk verifikasi: %w", err)
+	}
+
+	lostReportID := strings.TrimSpace(params.LostReportID)
+	if lostReportID != "" {
+		var isMatch bool
+		err = tx.QueryRow(ctx, `
+			SELECT EXISTS (
+				SELECT 1
+				FROM matching_result
+				WHERE item_id = $1 AND lost_report_id = $2
+			)
+		`, itemID, lostReportID).Scan(&isMatch)
+		if err != nil {
+			return ItemData{}, fmt.Errorf("memvalidasi pasangan laporan kehilangan: %w", err)
+		}
+		if !isMatch {
+			return ItemData{}, ErrVerificationMatchNotFound
+		}
+	}
+
+	var rejectCount int
+	err = tx.QueryRow(ctx, `
+		SELECT COUNT(*)
+		FROM claim
+		WHERE item_id = $1 AND result = 'Tidak Cocok'
+	`, itemID).Scan(&rejectCount)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("menghitung klaim yang pernah ditolak: %w", err)
+	}
+
+	claimantName := strings.TrimSpace(params.ClaimantName)
+	claimantIDType := strings.TrimSpace(params.ClaimantIDType)
+	claimantIdentityLast4 := strings.TrimSpace(params.ClaimantIdentityLast4)
+	claimantWA := strings.TrimSpace(params.ClaimantWA)
+
+	_, err = tx.Exec(ctx, `
+		INSERT INTO claim (
+			item_id,
+			lost_report_id,
+			claimant_name,
+			id_type,
+			id_last4,
+			claimant_whatsapp,
+			processed_by_staff_id
+		)
+		VALUES ($1, NULLIF($2, ''), $3, $4, $5, $6, $7)
+	`, itemID, lostReportID, claimantName, claimantIDType, claimantIdentityLast4, claimantWA, staffID)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("menyimpan data pemohon verifikasi: %w", err)
+	}
+
+	_, err = tx.Exec(ctx, `
+		UPDATE item
+		SET status = 'Proses Verifikasi', updated_at = NOW()
+		WHERE item_id = $1
+	`, itemID)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("memperbarui status barang untuk verifikasi: %w", err)
+	}
+
+	_, err = tx.Exec(ctx, `
+		INSERT INTO item_history (item_id, previous_status, new_status, staff_id, reason)
+		VALUES ($1, $2, 'Proses Verifikasi', $3, 'Memulai verifikasi klaim')
+	`, itemID, previousStatus, staffID)
+	if err != nil {
+		return ItemData{}, fmt.Errorf("mencatat riwayat status verifikasi: %w", err)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return ItemData{}, fmt.Errorf("menyimpan transaksi verifikasi: %w", err)
+	}
+
+	return ItemData{
+		ItemID: itemID,
+		Status: "proses_verifikasi",
+		Claim: &ClaimInfo{
+			ClaimantName:          claimantName,
+			ClaimantIDType:        claimantIDType,
+			ClaimantIdentityLast4: claimantIdentityLast4,
+			ClaimantWA:            claimantWA,
+			LostReportID:          lostReportID,
+			RejectCount:           rejectCount,
+		},
+	}, nil
 }
 
 func (s *Store) RejectClaim(itemID, reason string) (ItemData, error) {

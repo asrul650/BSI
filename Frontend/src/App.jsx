@@ -97,6 +97,8 @@ export default function App() {
   const [lostReportResult, setLostReportResult] = useState(null);
   const [selectedFoundReport, setSelectedFoundReport] = useState(null);
   const [selectedPublicItem, setSelectedPublicItem] = useState(null);
+  const [showClaimGuide, setShowClaimGuide] = useState(false);
+  const [claimVerification, setClaimVerification] = useState(null);
 
   // Sesi akun Satpam aktif (default null agar wajib login saat membuka portal satpam)
   const [satpamUser, setSatpamUser] = useState(() => {
@@ -129,6 +131,7 @@ export default function App() {
     if (screens[destination]) {
       if (destination === "satpam_antrean") setSelectedFoundReport(null);
       if (destination === "detail") setSelectedPublicItem(null);
+      if (destination !== "detail") setShowClaimGuide(false);
       setActiveScreen(destination);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -182,8 +185,9 @@ export default function App() {
   };
 
   if (activeScreen === "temuan_enhanced") {
-    screenProps.onSelectFoundItem = (item) => {
+    screenProps.onSelectFoundItem = (item, openClaimGuide = false) => {
       setSelectedPublicItem(item);
+      setShowClaimGuide(openClaimGuide);
       setActiveScreen("detail");
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -191,6 +195,7 @@ export default function App() {
 
   if (activeScreen === "detail") {
     screenProps.item = selectedPublicItem;
+    screenProps.showClaimGuide = showClaimGuide;
   }
 
   if (activeScreen === "satpam_antrean") {
@@ -203,6 +208,26 @@ export default function App() {
 
   if (activeScreen === "satpam_penerimaan") {
     screenProps.foundReport = selectedFoundReport;
+  }
+
+  if (activeScreen === "satpam_verifikasi_1") {
+    screenProps.verification = claimVerification;
+    screenProps.onVerificationStarted = (verification) => {
+      setClaimVerification(verification);
+      handleNavigate("satpam_verifikasi_3");
+    };
+  }
+
+  if (activeScreen === "satpam_verifikasi_3") {
+    screenProps.verification = claimVerification;
+    screenProps.onVerificationCompleted = () => {
+      setClaimVerification(null);
+      handleNavigate("satpam_inventaris");
+    };
+    screenProps.onVerificationRejected = () => {
+      setClaimVerification(null);
+      handleNavigate("satpam_inventaris");
+    };
   }
 
   if (activeScreen === "lapor_1") {

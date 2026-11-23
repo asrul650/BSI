@@ -134,6 +134,18 @@ export default function DaftarTemuanEnhanced({ onNavigate, onSelectFoundItem }) 
         if (detailRows[1]?.querySelector("span:last-child")) {
           detailRows[1].querySelector("span:last-child").textContent = dateText;
         }
+
+        let claimButton = card.querySelector("[data-claim-item]");
+        if (!claimButton) {
+          claimButton = el.ownerDocument.createElement("button");
+          claimButton.type = "button";
+          claimButton.dataset.claimItem = "true";
+          claimButton.className =
+            "mx-4 mb-4 mt-auto inline-flex items-center justify-center gap-2 rounded-xl bg-uiiNavy px-4 py-3 text-sm font-bold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-uiiNavy focus:ring-offset-2";
+          card.append(claimButton);
+        }
+        claimButton.textContent = "Klaim di Pos Satpam";
+        claimButton.setAttribute("aria-label", `Cara klaim barang ${item.item_id || item.id || ""} di Pos Satpam`);
       });
     };
 
@@ -181,7 +193,7 @@ export default function DaftarTemuanEnhanced({ onNavigate, onSelectFoundItem }) 
       if (itemCard) {
         e.preventDefault();
         const item = items.find((entry) => (entry.item_id || entry.id) === itemCard.dataset.itemId);
-        if (item) onSelectFoundItem?.(item);
+        if (item) onSelectFoundItem?.(item, Boolean(target.closest("[data-claim-item]")));
         return;
       }
 
