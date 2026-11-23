@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 // =========================================================================
 // 1. PORTAL PUBLIK
@@ -18,6 +20,11 @@ import LaporTemuanSukses from "./pages/LaporTemuanSukses";
 import CaraKerja from "./pages/CaraKerja";
 import FAQ from "./pages/FAQ";
 import KebijakanPrivasi from "./pages/KebijakanPrivasi";
+
+// =========================================================================
+// 1b. LOGIN STAF
+// =========================================================================
+import StaffLogin from "./pages/auth/StaffLogin";
 
 // =========================================================================
 // 2. PORTAL SATPAM
@@ -96,11 +103,69 @@ export default function App() {
   const [selectedFoundReport, setSelectedFoundReport] = useState(null);
   const [selectedPublicItem, setSelectedPublicItem] = useState(null);
 
+  // Sesi staf hanya disimpan di memori React (state ini), tidak pernah di
+  // localStorage/sessionStorage. Hilang begitu tab ditutup atau di-refresh,
+  // sama seperti cookie sesi (lf_session) yang memang HttpOnly.
+  const [staffSession, setStaffSession] = useState(null);
+  const [staffSessionChecked, setStaffSessionChecked] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    fetch(`${API_BASE_URL}/auth/me`, { credentials: "include" })
+      .then(async (response) => {
+        if (!active) return;
+        if (!response.ok) {
+          setStaffSession(null);
+          return;
+        }
+        const result = await response.json();
+        if (active) setStaffSession(result);
+      })
+      .catch(() => {
+        if (active) setStaffSession(null);
+      })
+      .finally(() => {
+        if (active) setStaffSessionChecked(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleStaffLoginSuccess = (session) => {
+    setStaffSession(session);
+    setActiveScreen(session.staff.role === "admin" ? "admin_dashboard" : "satpam_dashboard");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleStaffLogout = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+        headers: staffSession?.csrf_token ? { "X-CSRF-Token": staffSession.csrf_token } : {},
+      });
+    } catch {
+      // Tetap bersihkan sesi di sisi klien walau request logout gagal terkirim.
+    }
+    setStaffSession(null);
+    setActiveScreen("landing");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const CurrentScreenComponent = screens[activeScreen] || LandingPage;
 
   const isSatpamPortal = activeScreen.startsWith("satpam_");
   const isAdminPortal = activeScreen.startsWith("admin_");
   const isPublicPortal = !isSatpamPortal && !isAdminPortal;
+
+  const staffRole = staffSession?.staff?.role;
+  const needsStaffLogin =
+    staffSessionChecked &&
+    ((isSatpamPortal && !staffRole) || (isAdminPortal && staffRole !== "admin"));
+  const staffSessionPending = (isSatpamPortal || isAdminPortal) && !staffSessionChecked;
 
   const handleNavigate = (target) => {
     const destination =
@@ -131,6 +196,11 @@ export default function App() {
   const screenProps = {
     onNavigate: handleNavigate,
   };
+
+  if (isSatpamPortal || isAdminPortal) {
+    screenProps.staffSession = staffSession;
+    screenProps.onSessionExpired = handleStaffLogout;
+  }
 
   if (activeScreen === "temuan_enhanced") {
     screenProps.onSelectFoundItem = (item) => {
@@ -187,55 +257,95 @@ export default function App() {
     });
   }
 
+  let mainScreen;
+  if (staffSessionPending) {
+    mainScreen = (
+      <div className="min-h-screen flex items-center justify-center text-on-surface-variant">
+        Memeriksa sesi staf...
+      </div>
+    );
+  } else if (needsStaffLogin) {
+    mainScreen = <StaffLogin onLoginSuccess={handleStaffLoginSuccess} onNavigate={handleNavigate} />;
+  } else {
+    mainScreen = <CurrentScreenComponent {...screenProps} />;
+  }
+
+  // Widget mengambang ini TIDAK pernah muncul di build produksi untuk
+  // pengunjung yang belum login staf (F-02): tombol pindah portal publik
+  // hanya untuk developer (import.meta.env.DEV), dan pil "login sebagai X"
+  // hanya muncul kalau staffSession memang ada.
+  const showDevSwitcher = import.meta.env.DEV;
+  const showFloatingWidget = showDevSwitcher || Boolean(staffSession);
+
   return (
     <div className="relative min-h-screen">
-      <CurrentScreenComponent {...screenProps} />
+      {mainScreen}
 
-      {/* Floating 3-Way Portal Switcher */}
-      <aside aria-label="Portal Switcher" className="fixed bottom-4 right-4 z-50">
-        <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-slate-900/95 text-white shadow-2xl backdrop-blur-md border border-slate-700/80 text-xs font-semibold">
-          <div className="flex items-center gap-1.5 pl-3 pr-2 border-r border-slate-700/80">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-slate-300 hidden md:inline">Mode:</span>
-            <strong className="text-white font-medium">{getPortalLabel()}</strong>
+      {showFloatingWidget && (
+        <aside aria-label="Status portal" className="fixed bottom-4 right-4 z-50">
+          <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-slate-900/95 text-white shadow-2xl backdrop-blur-md border border-slate-700/80 text-xs font-semibold">
+            {staffSession && (
+              <div className="flex items-center gap-1.5 pl-3 pr-1 border-r border-slate-700/80">
+                <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span className="text-slate-300 hidden md:inline">Staf:</span>
+                <strong className="text-white font-medium">{staffSession.staff.name}</strong>
+                <button
+                  onClick={handleStaffLogout}
+                  className="ml-1 p-1.5 rounded-full bg-red-600 hover:bg-red-500 text-white transition-all cursor-pointer"
+                  title="Keluar dari sesi staf"
+                >
+                  <span className="material-symbols-outlined text-[14px]">logout</span>
+                </button>
+              </div>
+            )}
+
+            {showDevSwitcher && (
+              <>
+                <div className="flex items-center gap-1.5 pl-3 pr-2 border-r border-slate-700/80">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span className="text-slate-300 hidden md:inline">Mode:</span>
+                  <strong className="text-white font-medium">{getPortalLabel()}</strong>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  {!isPublicPortal && (
+                    <button
+                      onClick={() => handleNavigate("landing")}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-sm cursor-pointer"
+                      title="Buka Portal Publik Mahasiswa/Sivitas"
+                    >
+                      <span className="material-symbols-outlined text-[15px]">public</span>
+                      <span className="hidden sm:inline">Publik</span>
+                    </button>
+                  )}
+
+                  {!isSatpamPortal && (
+                    <button
+                      onClick={() => handleNavigate("satpam_dashboard")}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
+                      title="Buka Portal Satpam Kampus UII (dev only)"
+                    >
+                      <span className="material-symbols-outlined text-[15px]">local_police</span>
+                      <span className="hidden sm:inline">Satpam</span>
+                    </button>
+                  )}
+
+                  {!isAdminPortal && (
+                    <button
+                      onClick={() => handleNavigate("admin_dashboard")}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-sm cursor-pointer"
+                      title="Buka Portal Administrator BSI UII (dev only)"
+                    >
+                      <span className="material-symbols-outlined text-[15px]">admin_panel_settings</span>
+                      <span className="hidden sm:inline">Admin BSI</span>
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
-
-          <div className="flex items-center gap-1">
-            {!isPublicPortal && (
-              <button
-                onClick={() => handleNavigate("landing")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Publik Mahasiswa/Sivitas"
-              >
-                <span className="material-symbols-outlined text-[15px]">public</span>
-                <span className="hidden sm:inline">Publik</span>
-              </button>
-            )}
-
-            {!isSatpamPortal && (
-              <button
-                onClick={() => handleNavigate("satpam_dashboard")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Satpam Kampus UII"
-              >
-                <span className="material-symbols-outlined text-[15px]">local_police</span>
-                <span className="hidden sm:inline">Satpam</span>
-              </button>
-            )}
-
-            {!isAdminPortal && (
-              <button
-                onClick={() => handleNavigate("admin_dashboard")}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-sm cursor-pointer"
-                title="Buka Portal Administrator BSI UII"
-              >
-                <span className="material-symbols-outlined text-[15px]">admin_panel_settings</span>
-                <span className="hidden sm:inline">Admin BSI</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </aside>
+        </aside>
+      )}
     </div>
   );
 }

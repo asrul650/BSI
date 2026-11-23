@@ -5,7 +5,7 @@ const rawHTML = "<aside class=\"fixed left-0 top-0 h-screen w-72 bg-surface-cont
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
-export default function AntreanPenerimaan({ onNavigate, onSelectFoundReport }) {
+export default function AntreanPenerimaan({ onNavigate, onSelectFoundReport, staffSession, onSessionExpired }) {
   const containerRef = useRef(null);
   const templateRowRef = useRef(null);
 
@@ -127,9 +127,13 @@ export default function AntreanPenerimaan({ onNavigate, onSelectFoundReport }) {
 
       try {
         const [reportsResponse, optionsResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/v1/staff/found-reports/pending`),
+          fetch(`${API_BASE_URL}/v1/staff/found-reports/pending`, { credentials: 'include' }),
           fetch(`${API_BASE_URL}/v1/public/meta/form-options`),
         ]);
+        if (reportsResponse.status === 401 && onSessionExpired) {
+          onSessionExpired();
+          return;
+        }
         if (!reportsResponse.ok || !optionsResponse.ok) {
           throw new Error('Gagal mengambil antrean barang temuan dari server.');
         }

@@ -5,7 +5,7 @@ const rawHTML = "<aside class=\"fixed left-0 top-0 h-screen w-72 bg-surface-cont
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
-export default function PenerimaanBarang({ onNavigate, foundReport }) {
+export default function PenerimaanBarang({ onNavigate, foundReport, staffSession, onSessionExpired }) {
   const containerRef = useRef(null);
   const intakePhotoRef = useRef(null);
 
@@ -287,9 +287,17 @@ export default function PenerimaanBarang({ onNavigate, foundReport }) {
           `${API_BASE_URL}/v1/staff/found-reports/${encodeURIComponent(
             foundReport.report_id,
           )}/receipt/send`,
-          { method: 'POST' },
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: staffSession?.csrf_token ? { 'X-CSRF-Token': staffSession.csrf_token } : {},
+          },
         )
           .then(async (response) => {
+            if (response.status === 401 && onSessionExpired) {
+              onSessionExpired();
+              throw new Error('Sesi berakhir, silakan login kembali.');
+            }
             const result = await response.json().catch(() => ({}));
             if (!response.ok) {
               throw new Error(result.error || 'Gagal mengirim bukti penerimaan.');
@@ -615,7 +623,11 @@ export default function PenerimaanBarang({ onNavigate, foundReport }) {
 
         fetch(`${API_BASE_URL}/v1/staff/found-reports/${encodeURIComponent(foundReport.report_id)}/receive`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(staffSession?.csrf_token ? { 'X-CSRF-Token': staffSession.csrf_token } : {}),
+          },
           body: JSON.stringify({
             storage_rack: storageRack,
             condition,
@@ -623,6 +635,10 @@ export default function PenerimaanBarang({ onNavigate, foundReport }) {
           }),
         })
           .then(async (response) => {
+            if (response.status === 401 && onSessionExpired) {
+              onSessionExpired();
+              throw new Error('Sesi berakhir, silakan login kembali.');
+            }
             const result = await response.json().catch(() => ({}));
             if (!response.ok) throw new Error(result.error || 'Gagal menyimpan penerimaan barang.');
 
