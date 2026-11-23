@@ -20,6 +20,7 @@ import KebijakanPrivasi from './pages/KebijakanPrivasi';
 // =========================================================================
 // 2. PORTAL INTERNAL SATPAM (Unit Keamanan Kampus Terpadu UII)
 // =========================================================================
+import LoginSatpam from './pages/satpam/LoginSatpam';
 import DashboardSatpam from './pages/satpam/DashboardSatpam';
 import AntreanPenerimaan from './pages/satpam/AntreanPenerimaan';
 import PenerimaanBarang from './pages/satpam/PenerimaanBarang';
@@ -60,6 +61,7 @@ const screens = {
   kebijakan_privasi: KebijakanPrivasi,
 
   // === Alur Portal Satpam (Dipisahkan) ===
+  satpam_login: LoginSatpam,
   satpam_dashboard: DashboardSatpam,
   satpam_antrean: AntreanPenerimaan,
   satpam_penerimaan: PenerimaanBarang,
@@ -84,6 +86,25 @@ const screens = {
 export default function App() {
   const [activeScreen, setActiveScreen] = useState('landing');
 
+  // Sesi akun Satpam aktif (tersimpan di localStorage)
+  const [satpamUser, setSatpamUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("satpam_session");
+      return saved
+        ? JSON.parse(saved)
+        : {
+            nrp: "SEC-042",
+            username: "satpam_pos1",
+            name: "Bripka Hendra Kurniawan",
+            jabatan: "Komandan Regu (Danru)",
+            pos: "Pos Induk GKU (Sardjito)",
+            token: "mock_jwt_satpam_SEC-042",
+          };
+    } catch {
+      return null;
+    }
+  });
+
   const CurrentScreenComponent = screens[activeScreen] || LandingPage;
   const isSatpamPortal = activeScreen.startsWith('satpam_');
   const isAdminPortal = activeScreen.startsWith('admin_');
@@ -96,15 +117,39 @@ export default function App() {
     }
   };
 
+  const handleSatpamLogin = (user) => {
+    setSatpamUser(user);
+    try {
+      localStorage.setItem("satpam_session", JSON.stringify(user));
+    } catch {}
+    handleNavigate('satpam_dashboard');
+  };
+
+  const handleSatpamLogout = () => {
+    setSatpamUser(null);
+    try {
+      localStorage.removeItem("satpam_session");
+    } catch {}
+    handleNavigate('satpam_login');
+  };
+
   const getPortalLabel = () => {
     if (isAdminPortal) return 'Portal Admin BSI';
-    if (isSatpamPortal) return 'Portal Satpam';
+    if (isSatpamPortal) return activeScreen === 'satpam_login' ? 'Login Satpam' : 'Portal Satpam';
     return 'Portal Publik';
+  };
+
+  const screenProps = {
+    onNavigate: handleNavigate,
+    satpamUser,
+    onLoginSuccess: handleSatpamLogin,
+    onSatpamLogin: handleSatpamLogin,
+    onSatpamLogout: handleSatpamLogout,
   };
 
   return (
     <div className="relative min-h-screen">
-      <CurrentScreenComponent onNavigate={handleNavigate} />
+      <CurrentScreenComponent {...screenProps} />
 
       {/* Floating 3-Way Portal Switcher (Publik, Satpam, Admin BSI) */}
       <aside aria-label="Portal Switcher" className="fixed bottom-4 right-4 z-50">
@@ -127,9 +172,20 @@ export default function App() {
               </button>
             )}
 
+            {isSatpamPortal && activeScreen !== 'satpam_login' && (
+              <button
+                onClick={() => handleNavigate('satpam_login')}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 transition-all shadow-sm cursor-pointer border border-amber-500/40"
+                title="Buka Form Login Satpam (Untuk Demo / Backend)"
+              >
+                <span className="material-symbols-outlined text-[15px]">login</span>
+                <span className="hidden sm:inline">Layar Login</span>
+              </button>
+            )}
+
             {!isSatpamPortal && (
               <button
-                onClick={() => handleNavigate('satpam_dashboard')}
+                onClick={() => handleNavigate(satpamUser ? 'satpam_dashboard' : 'satpam_login')}
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-500 text-white transition-all shadow-sm cursor-pointer"
                 title="Buka Portal Satpam Kampus UII"
               >

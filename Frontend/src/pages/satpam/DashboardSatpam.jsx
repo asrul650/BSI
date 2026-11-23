@@ -21,14 +21,26 @@ export default function DashboardSatpam({ onNavigate }) {
       const lowerText = text.toLowerCase();
 
       // =========================================================================
-      // 0. Kembali ke Portal Publik
+      // 0a. Logout Petugas Satpam
+      // =========================================================================
+      if (
+        path === 'logout' ||
+        title.includes('keluar portal') ||
+        title.includes('logout petugas') ||
+        lowerText.includes('logout petugas') ||
+        lowerText.includes('keluar sesi')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('satpam_login');
+        return;
+      }
+
+      // =========================================================================
+      // 0b. Kembali ke Portal Publik
       // =========================================================================
       if (
         path === 'portal-publik' ||
-        lowerText.includes('portal publik') ||
-        path === 'logout' ||
-        title.includes('keluar portal') ||
-        title.includes('logout petugas')
+        lowerText.includes('portal publik')
       ) {
         e.preventDefault();
         if (onNavigate) onNavigate('landing');
