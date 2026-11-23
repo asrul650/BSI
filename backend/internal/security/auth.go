@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"golang.org/x/crypto/argon2"
 )
@@ -200,4 +201,98 @@ func GenerateCSRFToken() (string, error) {
 		return "", fmt.Errorf("generate CSRF token: %w", err)
 	}
 	return hex.EncodeToString(token), nil
+}
+
+// ---------------------------------------------------------------- Password policy
+
+const (
+	MinPasswordLength = 8
+	MaxPasswordLength = 128
+)
+
+var (
+	ErrPasswordTooShort  = errors.New("password minimal 8 karakter")
+	ErrPasswordTooLong   = errors.New("password maksimal 128 karakter")
+	ErrPasswordTooCommon = errors.New("password terlalu umum, gunakan password lain")
+)
+
+// commonPasswords adalah daftar kecil password umum yang ditolak walau
+// panjangnya cukup. Dicek tanpa membedakan huruf besar/kecil. Bukan daftar
+// lengkap (itu tugas pemindai eksternal) -- hanya penjegal kasus paling
+// gampang ditebak.
+var commonPasswords = map[string]struct{}{
+	"12345678":      {},
+	"123456789":     {},
+	"1234567890":    {},
+	"87654321":      {},
+	"password":      {},
+	"password1":     {},
+	"password12":    {},
+	"password123":   {},
+	"password1234":  {},
+	"qwerty123":     {},
+	"qwerty1234":    {},
+	"qwertyuiop":    {},
+	"11111111":      {},
+	"00000000":      {},
+	"abc123456":     {},
+	"abcd1234":      {},
+	"letmein1":      {},
+	"letmein123":    {},
+	"welcome1":      {},
+	"welcome123":    {},
+	"admin1234":     {},
+	"admin12345":    {},
+	"iloveyou1":     {},
+	"123123123":     {},
+	"sunshine1":     {},
+	"princess1":     {},
+	"football1":     {},
+	"monkey123":     {},
+	"dragon123":     {},
+	"baseball1":     {},
+	"trustno1":      {},
+	"superman1":     {},
+	"michael123":    {},
+	"shadow1234":    {},
+	"master1234":    {},
+	"jennifer1":     {},
+	"whatever1":     {},
+	"qazwsx123":     {},
+	"zaq12wsx1":     {},
+	"asdfghjk1":     {},
+	"1q2w3e4r5t":    {},
+	"qwerty12345":   {},
+	"passw0rd1":     {},
+	"p@ssw0rd1":     {},
+	"changeme1":     {},
+	"changeme123":   {},
+	"root1234":      {},
+	"temp12345":     {},
+	"lostandfound":  {},
+	"lostandfound1": {},
+	"lostfound123":  {},
+	"uiikampus123":  {},
+	"satpamuii123":  {},
+	"adminlf12345":  {},
+}
+
+// ValidatePasswordPolicy mengecek panjang (8-128 karakter, dihitung per
+// rune bukan per byte) dan menolak password yang ada di commonPasswords.
+// Tidak ada pembatasan jenis karakter -- semua karakter diizinkan.
+func ValidatePasswordPolicy(password string) error {
+	length := utf8.RuneCountInString(password)
+
+	switch {
+	case length < MinPasswordLength:
+		return ErrPasswordTooShort
+	case length > MaxPasswordLength:
+		return ErrPasswordTooLong
+	}
+
+	if _, common := commonPasswords[strings.ToLower(password)]; common {
+		return ErrPasswordTooCommon
+	}
+
+	return nil
 }

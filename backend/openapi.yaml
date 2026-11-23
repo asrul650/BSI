@@ -1996,7 +1996,7 @@ components:
       required: [username, password]
       properties:
         username: { type: string, maxLength: 64 }
-        password: { type: string, minLength: 12, maxLength: 128, format: password }
+        password: { type: string, minLength: 8, maxLength: 128, format: password }
         mfa_code:
           type: string
           pattern: '^[0-9]{6}$'

@@ -76,7 +76,7 @@ export default function StaffLogin({ onLoginSuccess, onNavigate }) {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
-            minLength={12}
+            minLength={8}
             autoComplete="current-password"
             className="h-11 px-3 rounded-lg bg-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/40"
           />

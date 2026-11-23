@@ -166,7 +166,7 @@ func TestLoginSucceedsForSatpamWithoutMFA(t *testing.T) {
 func TestLoginRejectsUnknownUsernameWithGenericError(t *testing.T) {
 	svc := NewAuthService(newFakeAuthRepo())
 
-	_, err := svc.Login(context.Background(), "tidak_ada", "apapun", "")
+	_, err := svc.Login(context.Background(), "tidak_ada", "apapun-saja", "")
 	if !errors.Is(err, ErrInvalidCredentials) {
 		t.Fatalf("expected ErrInvalidCredentials, got %v", err)
 	}
@@ -201,7 +201,7 @@ func TestLoginLocksAccountAfterThresholdFailures(t *testing.T) {
 
 	svc := NewAuthService(repoFake)
 	for i := 0; i < LoginLockThreshold; i++ {
-		if _, err := svc.Login(context.Background(), "satpam_pos1", "salah", ""); !errors.Is(err, ErrInvalidCredentials) {
+		if _, err := svc.Login(context.Background(), "satpam_pos1", "password-salah", ""); !errors.Is(err, ErrInvalidCredentials) {
 			t.Fatalf("attempt %d: expected ErrInvalidCredentials, got %v", i, err)
 		}
 	}
@@ -239,6 +239,41 @@ func TestLoginRequiresValidMFAForAdmin(t *testing.T) {
 	// Dengan mfa_code salah -> tetap gagal generik.
 	if _, err := svc.Login(context.Background(), "admin_lf", "password-admin", "000000"); !errors.Is(err, ErrInvalidCredentials) {
 		t.Fatalf("expected ErrInvalidCredentials with wrong MFA code, got %v", err)
+	}
+}
+
+func TestLoginRejectsPasswordUnderMinimumLength(t *testing.T) {
+	repoFake := newFakeAuthRepo()
+	repoFake.staffByUsername["satpam_pos1"] = repo.Staff{
+		StaffID:      1,
+		Username:     "satpam_pos1",
+		PasswordHash: mustHash(t, "password-benar"),
+		Role:         "satpam",
+		IsActive:     true,
+	}
+
+	svc := NewAuthService(repoFake)
+
+	// 7 karakter -> ditolak sebelum sempat dibandingkan ke hash asli.
+	if _, err := svc.Login(context.Background(), "satpam_pos1", "pendek7", ""); !errors.Is(err, ErrInvalidCredentials) {
+		t.Fatalf("expected ErrInvalidCredentials for 7-char password, got %v", err)
+	}
+}
+
+func TestLoginRejectsCommonPassword(t *testing.T) {
+	repoFake := newFakeAuthRepo()
+	repoFake.staffByUsername["satpam_pos1"] = repo.Staff{
+		StaffID:      1,
+		Username:     "satpam_pos1",
+		PasswordHash: mustHash(t, "password-benar"),
+		Role:         "satpam",
+		IsActive:     true,
+	}
+
+	svc := NewAuthService(repoFake)
+
+	if _, err := svc.Login(context.Background(), "satpam_pos1", "password123", ""); !errors.Is(err, ErrInvalidCredentials) {
+		t.Fatalf("expected ErrInvalidCredentials for common password, got %v", err)
 	}
 }
 

@@ -66,6 +66,15 @@ type LoginResult struct {
 func (a *AuthService) Login(ctx context.Context, username, password, mfaCode string) (LoginResult, error) {
 	username = strings.TrimSpace(username)
 
+	// Password yang jelas-jelas tidak mungkin jadi password akun manapun di
+	// sistem ini (terlalu pendek/panjang, atau ada di daftar password umum)
+	// ditolak sebelum menyentuh DB. Tetap jalankan Argon2id atas hash dummy
+	// supaya waktu respons sama dengan jalur gagal lain.
+	if err := security.ValidatePasswordPolicy(password); err != nil {
+		security.VerifyPasswordConstantTime(password, "")
+		return LoginResult{}, ErrInvalidCredentials
+	}
+
 	staff, err := a.repo.GetStaffByUsername(ctx, username)
 	if err != nil {
 		if !errors.Is(err, repo.ErrStaffNotFound) {
