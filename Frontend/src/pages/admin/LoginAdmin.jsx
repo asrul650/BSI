@@ -401,3 +401,4 @@ export default function LoginAdmin({ onNavigate, onLoginSuccess }) {
     </div>
   );
 }
+
