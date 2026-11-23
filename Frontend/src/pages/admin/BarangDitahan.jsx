@@ -221,13 +221,20 @@ export default function BarangDitahan({ onNavigate }) {
       // =========================================================================
       if (
         path === 'portal-publik' ||
-        lowerText.includes('kembali ke publik') ||
+        lowerText.includes('kembali ke publik')
+      ) {
+        e.preventDefault();
+        if (onNavigate) onNavigate('landing');
+        return;
+      }
+
+      if (
         path === 'logout' ||
         path === 'login' ||
         title.includes('keluar dari portal')
       ) {
         e.preventDefault();
-        if (onNavigate) onNavigate('landing');
+        if (onNavigate) onNavigate('admin_login');
         return;
       }
 
