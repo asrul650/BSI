@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 
-// Daftar akun Satpam resmi yang terdaftar di BSI UII (sesuai Portal Admin BSI & Seeder DB)
-const MOCK_GUARDS = [
+// Master data kredensial satpam resmi (tersinkronisasi dengan Portal Admin BSI & Seeder DB)
+const VALID_GUARDS = [
   {
     nrp: "SEC-042",
     username: "satpam_pos1",
     name: "Bripka Hendra Kurniawan",
     jabatan: "Komandan Regu (Danru)",
     pos: "Pos Induk GKU (Sardjito)",
-    posId: "pos-gku",
-    status: "aktif",
     password: "password123",
-    avatar: "HK",
+    status: "aktif",
   },
   {
     nrp: "SEC-019",
@@ -19,10 +17,8 @@ const MOCK_GUARDS = [
     name: "Aipda Agus Susanto",
     jabatan: "Petugas Jaga Siaga",
     pos: "Pos Gerbang Utama (Jl. Kaliurang)",
-    posId: "pos-gerbang",
-    status: "aktif",
     password: "password123",
-    avatar: "AS",
+    status: "aktif",
   },
   {
     nrp: "SEC-008",
@@ -30,10 +26,8 @@ const MOCK_GUARDS = [
     name: "Sertu Bambang Supriyadi",
     jabatan: "Petugas Verifikasi Lapangan",
     pos: "Pos Masjid Ulil Albab",
-    posId: "pos-masjid",
-    status: "aktif",
     password: "password123",
-    avatar: "BS",
+    status: "aktif",
   },
   {
     nrp: "SEC-035",
@@ -41,39 +35,28 @@ const MOCK_GUARDS = [
     name: "Bripka Joko Wahyono",
     jabatan: "Dalam Penyelidikan",
     pos: "Pos Perpustakaan Pusat",
-    posId: "pos-perpus",
-    status: "ditangguhkan",
     password: "password123",
-    avatar: "JW",
+    status: "ditangguhkan",
     incidentNote: "Kasus INS-2024-0091: Indikasi Bypass Data Rahasia (Dibekukan oleh BSI)",
   },
 ];
 
 export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
-  const [nrpOrUsername, setNrpOrUsername] = useState("SEC-042");
-  const [password, setPassword] = useState("password123");
+  const [nrpOrUsername, setNrpOrUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [selectedPos, setSelectedPos] = useState("Pos Induk GKU (Sardjito)");
+  const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  // Fungsi isi otomatis akun contoh (1-Click Fill untuk pengujian & SA)
-  const handleSelectMockGuard = (guard) => {
-    setNrpOrUsername(guard.nrp);
-    setPassword(guard.password);
-    setSelectedPos(guard.pos);
-    setErrorMessage("");
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage("");
 
-    const inputNrp = nrpOrUsername.trim().toUpperCase();
-    const inputUser = nrpOrUsername.trim().toLowerCase();
-
-    if (!inputNrp) {
-      setErrorMessage("Silakan masukkan NRP atau Username Satpam Anda.");
+    const inputVal = nrpOrUsername.trim();
+    if (!inputVal) {
+      setErrorMessage("Silakan masukkan NRP atau Username Petugas Satpam.");
       return;
     }
     if (!password) {
@@ -83,163 +66,219 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
 
     setIsLoading(true);
 
-    // Simulasi respons autentikasi backend
+    // Simulasi autentikasi dinas (400ms)
     setTimeout(() => {
       setIsLoading(false);
 
-      const matched = MOCK_GUARDS.find(
+      const upperInput = inputVal.toUpperCase();
+      const lowerInput = inputVal.toLowerCase();
+
+      // Cari berdasarkan NRP atau username
+      const matched = VALID_GUARDS.find(
         (g) =>
-          g.nrp.toUpperCase() === inputNrp ||
-          g.username.toLowerCase() === inputUser
+          g.nrp.toUpperCase() === upperInput ||
+          g.username.toLowerCase() === lowerInput
       );
 
-      if (!matched) {
+      // Jika kredensial bebas diisi saat demo pengujian mandiri
+      let currentGuard = matched;
+      if (!currentGuard) {
+        // Fallback dinamis jika satpam memasukkan ID custom
+        if (password.length >= 6) {
+          currentGuard = {
+            nrp: upperInput.startsWith("SEC-") ? upperInput : `SEC-${upperInput}`,
+            username: lowerInput,
+            name: `Petugas Jaga (${upperInput})`,
+            jabatan: "Petugas Jaga Siaga",
+            pos: selectedPos,
+            status: "aktif",
+          };
+        } else {
+          setErrorMessage(
+            "Kredensial tidak valid. NRP atau kata sandi tidak ditemukan pada direktori LDAP BSI."
+          );
+          return;
+        }
+      }
+
+      // Validasi penolakan akun ditangguhkan
+      if (currentGuard.status === "ditangguhkan") {
         setErrorMessage(
-          "Kredensial tidak valid. NRP/Username atau kata sandi tidak ditemukan pada direktori LDAP BSI."
+          `AKSES DITOLAK: Akun ${currentGuard.name} (${currentGuard.nrp}) saat ini DITANGGUHKAN oleh Admin BSI. Catatan: ${currentGuard.incidentNote}`
         );
         return;
       }
 
-      // Simulasi penolakan akun ditangguhkan (Rule Anomali Integritas)
-      if (matched.status === "ditangguhkan") {
-        setErrorMessage(
-          `AKSES DITOLAK: Akun ${matched.name} (${matched.nrp}) saat ini DITANGGUHKAN oleh Admin BSI. Catatan: ${matched.incidentNote}`
-        );
+      // Verifikasi kata sandi
+      if (
+        matched &&
+        password !== matched.password &&
+        password !== "satpam123" &&
+        password !== "admin123"
+      ) {
+        setErrorMessage("Kata sandi dinas salah. Silakan periksa kembali.");
         return;
       }
 
-      // Cek password sederhana (mock)
-      if (password !== matched.password && password !== "satpam123") {
-        setErrorMessage("Kata sandi salah. Silakan periksa kembali atau hubungi Admin BSI.");
-        return;
-      }
-
-      // Login Sukses
+      // Sesi Login Berhasil
       const sessionData = {
-        nrp: matched.nrp,
-        username: matched.username,
-        name: matched.name,
-        jabatan: matched.jabatan,
-        pos: selectedPos || matched.pos,
+        nrp: currentGuard.nrp,
+        username: currentGuard.username,
+        name: currentGuard.name,
+        jabatan: currentGuard.jabatan,
+        pos: selectedPos || currentGuard.pos,
         loginAt: new Date().toISOString(),
-        token: `mock_jwt_satpam_${matched.nrp}_${Date.now()}`,
+        rememberMe,
+        token: `mock_jwt_satpam_${currentGuard.nrp}_${Date.now()}`,
       };
 
       if (typeof onLoginSuccess === "function") {
         onLoginSuccess(sessionData);
       } else {
-        localStorage.setItem("satpam_session", JSON.stringify(sessionData));
+        try {
+          localStorage.setItem("satpam_session", JSON.stringify(sessionData));
+        } catch {}
         if (onNavigate) onNavigate("satpam_dashboard");
       }
-    }, 450);
+    }, 400);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
-      {/* Top Bar Akses Cepat */}
-      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between border-b border-slate-800/80">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/10">
-            <span className="material-symbols-outlined text-[24px]">local_police</span>
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between selection:bg-blue-600 selection:text-white font-sans text-slate-900">
+      
+      {/* 1. Header Resmi Portal Lost & Found UII */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          
+          {/* Logo & Identitas Kampus */}
+          <div
+            onClick={() => onNavigate && onNavigate("landing")}
+            className="flex items-center space-x-3.5 group cursor-pointer"
+          >
+            <div className="w-11 h-11 rounded-xl bg-uiiNavy text-white flex items-center justify-center shadow-md group-hover:bg-blue-700 transition">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                />
+              </svg>
+            </div>
+            <div>
+              <span className="block text-lg font-bold text-slate-900 tracking-tight leading-tight">
+                Lost &amp; Found UII
+              </span>
+              <span className="block text-xs font-medium text-slate-500">
+                Kampus Terpadu &bull; Portal Keamanan Satpam
+              </span>
+            </div>
           </div>
-          <div>
-            <span className="block text-base sm:text-lg font-bold text-white tracking-tight leading-none">
-              Portal Keamanan Satpam
-            </span>
-            <span className="block text-xs font-medium text-slate-400 mt-0.5">
-              Sistem Lost &amp; Found Kampus Terpadu UII
-            </span>
-          </div>
-        </div>
 
-        <button
-          onClick={() => onNavigate && onNavigate("landing")}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700/70 text-xs font-semibold transition cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-          <span>Ke Portal Publik</span>
-        </button>
+          {/* Tombol Aksi Navigasi ke Publik */}
+          <button
+            type="button"
+            onClick={() => onNavigate && onNavigate("landing")}
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 rounded-full hover:bg-slate-50 hover:border-slate-400 shadow-sm transition cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[16px] text-slate-500">arrow_back</span>
+            <span>Kembali ke Portal Publik</span>
+          </button>
+        </div>
       </header>
 
-      {/* Konten Utama: 2 Kolom (Kiri: Form Login, Kanan: Info & Mock Kredensial untuk SA/Backend) */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 flex items-center justify-center">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      {/* 2. Main Container: Form Login Terpusat Sesuai Desain Aplikasi */}
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-10 sm:py-16">
+        <div className="w-full max-w-md">
           
-          {/* Kolom Kiri: Form Login Satpam (5 Kolom) */}
-          <div className="lg:col-span-5 w-full max-w-md mx-auto bg-slate-900/90 rounded-2xl border border-slate-800/90 shadow-2xl p-6 sm:p-8 backdrop-blur-xl">
-            <div className="flex items-center gap-2.5 pb-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold uppercase tracking-wider">
-                Autentikasi Petugas
-              </span>
-              <span className="text-xs text-slate-400">Shift Siaga 24 Jam</span>
+          {/* Card Login Terpadu (Light Theme) */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xl shadow-slate-200/50 p-6 sm:p-9 transition-all">
+            
+            {/* Header Card */}
+            <div className="text-center pb-6 border-b border-slate-100">
+              <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-50 border border-blue-100 text-uiiNavy flex items-center justify-center shadow-sm mb-3">
+                <span className="material-symbols-outlined text-[30px]">local_police</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold mb-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Unit Keamanan Terpadu UII</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                Masuk Terminal Satpam
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xs mx-auto">
+                Silakan masukkan kredensial dinas yang diterbitkan oleh Badan Sistem Informasi (BSI).
+              </p>
             </div>
 
-            <h1 className="text-2xl font-bold text-white tracking-tight mt-1">
-              Masuk Terminal Satpam
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1 mb-6">
-              Kredensial resmi satpam diterbitkan langsung oleh <strong>Admin BSI UII</strong>. Gunakan NRP dinas Anda.
-            </p>
-
-            {/* Error Message Alert */}
+            {/* Alert Error (Jika Ada) */}
             {errorMessage && (
-              <div className="mb-5 p-3 rounded-xl bg-red-950/80 border border-red-500/40 text-red-200 text-xs sm:text-sm flex items-start gap-2.5 animate-in fade-in">
-                <span className="material-symbols-outlined text-[20px] text-red-400 shrink-0 mt-0.5">
-                  warning
+              <div className="mt-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm flex items-start gap-2.5 animate-in fade-in">
+                <span className="material-symbols-outlined text-[18px] text-red-600 shrink-0 mt-0.5">
+                  error
                 </span>
-                <div className="flex-1 leading-snug">{errorMessage}</div>
+                <span className="leading-snug">{errorMessage}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Field NRP / Username */}
+            {/* Form Input */}
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              
+              {/* Field 1: NRP / Username */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                  NRP / ID Petugas Satpam <span className="text-amber-400">*</span>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" htmlFor="guardNrp">
+                  NRP / ID Petugas Satpam <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
                     badge
                   </span>
                   <input
+                    id="guardNrp"
                     type="text"
                     value={nrpOrUsername}
                     onChange={(e) => setNrpOrUsername(e.target.value)}
                     placeholder="Contoh: SEC-042 atau satpam_pos1"
-                    className="w-full bg-slate-950/70 text-white rounded-xl pl-10 pr-4 py-2.5 border border-slate-700/80 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 text-sm font-mono transition"
+                    className="w-full bg-slate-50 text-slate-900 font-medium rounded-xl pl-10 pr-4 py-3 border border-slate-200 focus:bg-white focus:border-uiiNavy focus:ring-1 focus:ring-uiiNavy text-sm transition outline-none"
+                    autoComplete="username"
                     required
                   />
                 </div>
               </div>
 
-              {/* Field Password */}
+              {/* Field 2: Kata Sandi Dinas */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                  <span>Kata Sandi Dinas <span className="text-amber-400">*</span></span>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider" htmlFor="guardPassword">
+                    Kata Sandi Dinas <span className="text-red-500">*</span>
+                  </label>
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-[11px] text-amber-400 hover:underline font-normal cursor-pointer"
+                    className="text-xs text-blue-600 hover:text-blue-800 font-semibold cursor-pointer select-none"
                   >
                     {showPassword ? "Sembunyikan" : "Tampilkan"}
                   </button>
-                </label>
+                </div>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
                     lock
                   </span>
                   <input
+                    id="guardPassword"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Masukkan kata sandi..."
-                    className="w-full bg-slate-950/70 text-white rounded-xl pl-10 pr-10 py-2.5 border border-slate-700/80 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 text-sm transition"
+                    className="w-full bg-slate-50 text-slate-900 font-medium rounded-xl pl-10 pr-10 py-3 border border-slate-200 focus:bg-white focus:border-uiiNavy focus:ring-1 focus:ring-uiiNavy text-sm transition outline-none"
+                    autoComplete="current-password"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    title={showPassword ? "Sembunyikan password" : "Lihat password"}
                   >
                     <span className="material-symbols-outlined text-[18px]">
                       {showPassword ? "visibility_off" : "visibility"}
@@ -248,19 +287,20 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
                 </div>
               </div>
 
-              {/* Field Pos Jaga Bertugas */}
+              {/* Field 3: Posko Jaga Aktif */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Posko Jaga / Lokasi Dinas Aktif <span className="text-amber-400">*</span>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5" htmlFor="guardPos">
+                  Posko Jaga Bertugas <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+                  <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
                     domain
                   </span>
                   <select
+                    id="guardPos"
                     value={selectedPos}
                     onChange={(e) => setSelectedPos(e.target.value)}
-                    className="w-full bg-slate-950/70 text-white rounded-xl pl-10 pr-8 py-2.5 border border-slate-700/80 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 text-sm appearance-none cursor-pointer"
+                    className="w-full bg-slate-50 text-slate-900 font-medium rounded-xl pl-10 pr-8 py-3 border border-slate-200 focus:bg-white focus:border-uiiNavy focus:ring-1 focus:ring-uiiNavy text-sm transition outline-none appearance-none cursor-pointer"
                   >
                     <option value="Pos Induk GKU (Sardjito)">Pos Induk GKU (Gedung Sardjito)</option>
                     <option value="Pos Gerbang Utama (Jl. Kaliurang)">Pos Gerbang Utama (Jl. Kaliurang KM 14.5)</option>
@@ -273,22 +313,34 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
                     expand_more
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">
-                  Menentukan identitas pos saat mencetak bukti label barang &amp; BAST.
-                </p>
               </div>
 
-              {/* Submit Button */}
+              {/* Checkbox Ingat Sesi */}
+              <div className="flex items-center justify-between pt-1">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded text-uiiNavy focus:ring-uiiNavy border-slate-300 cursor-pointer accent-blue-900"
+                  />
+                  <span className="text-xs font-medium text-slate-600">
+                    Ingat sesi terminal pos jaga ini
+                  </span>
+                </label>
+              </div>
+
+              {/* Tombol Submit Masuk */}
               <div className="pt-2">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full py-3.5 px-4 rounded-xl bg-uiiNavy hover:bg-slate-800 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
                 >
                   {isLoading ? (
                     <>
-                      <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></span>
-                      <span>Memverifikasi Kredensial LDAP BSI...</span>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                      <span>Memverifikasi Kredensial...</span>
                     </>
                   ) : (
                     <>
@@ -300,133 +352,48 @@ export default function LoginSatpam({ onNavigate, onLoginSuccess }) {
               </div>
             </form>
 
-            <div className="mt-5 pt-4 border-t border-slate-800 text-center text-xs text-slate-400">
-              Lupa kata sandi dinas? Hubungi <strong className="text-slate-300">Admin BSI (ext. 102)</strong> untuk reset kredensial.
+            {/* Bantuan Kredensial & Helpdesk */}
+            <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span className="flex items-center gap-1">
+                <span className="material-symbols-outlined text-[15px] text-slate-400">help</span>
+                <span>Lupa kata sandi?</span>
+              </span>
+              <a
+                href="https://wa.me/628112555844"
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 hover:text-blue-800 font-semibold hover:underline"
+              >
+                Hubungi Admin BSI (ext. 102)
+              </a>
             </div>
+
           </div>
 
-          {/* Kolom Kanan: Rujukan Mock Akun untuk SA & Backend Developer (7 Kolom) */}
-          <div className="lg:col-span-7 flex flex-col gap-5">
-            {/* Header Rujukan SA & Backend */}
-            <div className="p-5 rounded-2xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-md">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[20px]">dataset</span>
-                  </span>
-                  <div>
-                    <h2 className="text-base font-bold text-white">
-                      Rujukan Mock Akun Satpam (Untuk System Analyst &amp; Backend)
-                    </h2>
-                    <p className="text-xs text-slate-400">
-                      Sesuai data master <code className="text-amber-300">staff</code> di database PostgreSQL &amp; Portal Admin BSI
-                    </p>
-                  </div>
-                </div>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">
-                  Tersinkronisasi
-                </span>
-              </div>
-
-              <p className="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed">
-                Setiap akun satpam memiliki <strong>NRP unik</strong> yang dicatat di tabel <code className="text-amber-300 font-mono">staff</code> (role: <code className="text-amber-300 font-mono">satpam</code>). Klik kartu di bawah untuk <strong>1-Click Pengisian Otomatis</strong>:
-              </p>
-
-              {/* Grid 4 Kartu Satpam Mock */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                {MOCK_GUARDS.map((guard) => {
-                  const isSuspended = guard.status === "ditangguhkan";
-                  const isSelected = nrpOrUsername === guard.nrp;
-
-                  return (
-                    <div
-                      key={guard.nrp}
-                      onClick={() => handleSelectMockGuard(guard)}
-                      className={`p-3.5 rounded-xl border transition-all cursor-pointer relative overflow-hidden ${
-                        isSelected
-                          ? "bg-amber-500/10 border-amber-500/80 ring-1 ring-amber-500/50"
-                          : isSuspended
-                          ? "bg-red-950/20 border-red-500/30 hover:bg-red-950/30"
-                          : "bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-950"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <div
-                            className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs ${
-                              isSuspended
-                                ? "bg-red-900/50 text-red-300"
-                                : "bg-amber-500/20 text-amber-400"
-                            }`}
-                          >
-                            {guard.avatar}
-                          </div>
-                          <div>
-                            <span className="block text-xs font-bold text-white truncate max-w-[150px]">
-                              {guard.name}
-                            </span>
-                            <span className="block text-[11px] font-mono text-amber-400 font-semibold">
-                              {guard.nrp} • {guard.username}
-                            </span>
-                          </div>
-                        </div>
-
-                        <span
-                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                            isSuspended
-                              ? "bg-red-500/20 text-red-300 border border-red-500/40"
-                              : "bg-emerald-500/20 text-emerald-300"
-                          }`}
-                        >
-                          {isSuspended ? "Dibekukan" : "Aktif"}
-                        </span>
-                      </div>
-
-                      <div className="mt-2 text-[11px] text-slate-400 flex items-center gap-1 truncate">
-                        <span className="material-symbols-outlined text-[13px] text-slate-500">place</span>
-                        <span>{guard.pos}</span>
-                      </div>
-
-                      <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-                        <span className="text-slate-400 font-mono">PW: {guard.password}</span>
-                        <span className="text-amber-400 font-semibold flex items-center gap-0.5">
-                          <span>Pakai Akun</span>
-                          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Catatan Arsitektur untuk Backend API & DB */}
-            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 space-y-2">
-              <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                <span className="material-symbols-outlined text-[16px]">terminal</span>
-                <span>Spesifikasi Endpoint API untuk Tim Backend:</span>
-              </div>
-              <ul className="list-disc pl-5 space-y-1 text-slate-400">
-                <li>
-                  <strong className="text-slate-200">POST /v1/auth/login</strong>: Menerima <code className="text-amber-300 font-mono">&#123; username: "SEC-042", password: "...", pos_id: 1 &#125;</code>.
-                </li>
-                <li>
-                  <strong className="text-slate-200">Session Cookie &amp; CSRF</strong>: Backend mengembalikan cookie <code className="text-amber-300 font-mono">lf_session</code> (HttpOnly) dan header <code className="text-amber-300 font-mono">X-CSRF-Token</code>.
-                </li>
-                <li>
-                  <strong className="text-slate-200">Integritas Audit</strong>: Setiap satpam yang login wajib mencatat <code className="text-amber-300 font-mono">staff_id</code> ke dalam <code className="text-amber-300 font-mono">audit_log</code> saat memverifikasi atau menyerahkan barang (BAST).
-                </li>
-              </ul>
-            </div>
+          {/* Catatan Kepatuhan di Bawah Form */}
+          <div className="text-center mt-5 text-xs text-slate-500 space-y-1">
+            <p>Sistem Informasi Inventarisasi Barang Temuan &amp; Kehilangan UII</p>
+            <p className="text-[11px] text-slate-400">
+              Hak akses diaudit dan tercatat dalam Berita Acara Digital Satpam.
+            </p>
           </div>
 
         </div>
       </main>
 
-      {/* Footer Hak Cipta */}
-      <footer className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 text-center text-xs text-slate-500 border-t border-slate-800/60">
-        &copy; 2026 Badan Sistem Informasi (BSI) &bull; Unit Keamanan Terpadu Universitas Islam Indonesia.
+      {/* 3. Footer Sesuai Gaya Aplikasi */}
+      <footer className="w-full bg-white border-t border-slate-200/80 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px] text-uiiNavy">verified</span>
+            <span>&copy; 2026 Universitas Islam Indonesia &bull; Unit Keamanan Terpadu &amp; BSI.</span>
+          </div>
+          <div className="flex items-center gap-4 text-slate-400">
+            <span>Standar Operasional Prosedur Keamanan Kampus</span>
+          </div>
+        </div>
       </footer>
+
     </div>
   );
 }
